@@ -3564,3 +3564,34 @@ body.theme-paper #page-site-settings .ss-select {
   color: rgba(201,168,76,.4);
   letter-spacing: .08em;
 }
+
+/* huda-mobile-perf-v56 */
+html { -webkit-text-size-adjust: 100%; }
+body { overscroll-behavior-y: contain; }
+@media (max-width: 600px) {
+  #app-logo-bar { height: calc(48px + env(safe-area-inset-top,0px)) !important; }
+  body { padding-top: calc(48px + env(safe-area-inset-top,0px)) !important; }
+  .ms-flow, #ms-flow-text, .quran-page, .ayah {
+    font-size: clamp(1.15rem, 4.6vw, 1.45rem) !important;
+    line-height: 2.05 !important;
+    word-spacing: 0.05em;
+  }
+  .tafsir-popup, #tafsir-popup {
+    max-height: min(88vh, 640px) !important;
+    border-radius: 18px 18px 0 0 !important;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  button, .card, .home-card, a {
+    -webkit-tap-highlight-color: transparent;
+  }
+  /* لمس أسهل */
+  .ms-vn {
+    padding: 0.15em 0.25em !important;
+    min-width: 1.6em;
+    display: inline-block;
+    text-align: center;
+  }
+}
+/* تسريع الرندر */
+img, svg { max-width: 100%; height: auto; }
+.splash, #splash { transition: opacity .25s ease; }

@@ -1148,13 +1148,55 @@ function filterS(v){renderSList(v);}
     var ex = document.getElementById('ayah-ctx-menu'); if(ex) ex.remove();
     var m = document.createElement('div');
     m.id = 'ayah-ctx-menu';
-    m.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,rgba(13,43,30,.98),rgba(3,10,6,.99));border:1px solid rgba(201,168,76,.3);border-radius:16px;padding:.7rem;z-index:5000;display:flex;gap:.5rem;direction:rtl;box-shadow:0 10px 40px rgba(0,0,0,.6);';
-    m.innerHTML = '<button onclick="msPlayFrom('+an+');this.closest(\'#ayah-ctx-menu\').remove();" style="background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);color:#C9A84C;padding:.45rem .9rem;border-radius:10px;cursor:pointer;font-family:Tajawal,sans-serif;font-size:.82rem;">▶ استمع</button>'
-      + '<button onclick="var t=document.getElementById(\'ms-flow-text\');if(t&&navigator.clipboard)navigator.clipboard.writeText(t.textContent.trim()).then(function(){if(typeof showToast!==\'undefined\')showToast(\'✅ تم النسخ\');});this.closest(\'#ayah-ctx-menu\').remove();" style="background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);color:#C9A84C;padding:.45rem .9rem;border-radius:10px;cursor:pointer;font-family:Tajawal,sans-serif;font-size:.82rem;">📋 نسخ السورة</button>'
-      + '<button onclick="this.closest(\'#ayah-ctx-menu\').remove();" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);padding:.45rem .7rem;border-radius:10px;cursor:pointer;">✕</button>';
+    m.style.cssText = 'position:fixed;bottom:calc(90px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);max-width:94vw;background:linear-gradient(135deg,rgba(13,43,30,.98),rgba(3,10,6,.99));border:1px solid rgba(201,168,76,.3);border-radius:16px;padding:.7rem;z-index:5000;display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center;direction:rtl;box-shadow:0 10px 40px rgba(0,0,0,.6);';
+    var btnCss = 'background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);color:#C9A84C;padding:.5rem .85rem;border-radius:10px;cursor:pointer;font-family:Tajawal,sans-serif;font-size:.82rem;min-height:40px;';
+    m.innerHTML =
+      '<button type="button" data-act="taf" style="'+btnCss+'">📖 تفسير</button>' +
+      '<button type="button" data-act="play" style="'+btnCss+'">▶ استمع</button>' +
+      '<button type="button" data-act="copy" style="'+btnCss+'">📋 نسخ</button>' +
+      '<button type="button" data-act="x" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.45);padding:.5rem .7rem;border-radius:10px;cursor:pointer;min-height:40px;">✕</button>';
+    m.addEventListener('click', function(ev){
+      var b = ev.target && ev.target.closest('button'); if(!b) return;
+      var act = b.getAttribute('data-act');
+      if(act==='taf'){ m.remove(); if(typeof openTafsirPopup==='function') openTafsirPopup(sn,an); else if(typeof openTafseer==='function') openTafseer(sn,an,''); }
+      else if(act==='play'){ m.remove(); if(typeof msPlayFrom==='function') msPlayFrom(an); }
+      else if(act==='copy'){
+        var txt = '';
+        try {
+          var node = document.querySelector('.ms-vn[data-a="'+an+'"]');
+          if(node && node.previousSibling) txt = (node.previousSibling.textContent||'').trim();
+        } catch(e){}
+        if(!txt){ var t=document.getElementById('ms-flow-text'); if(t) txt=t.textContent.trim(); }
+        if(navigator.clipboard && txt) navigator.clipboard.writeText(txt).then(function(){ if(typeof showToast==='function') showToast('✅ تم النسخ'); });
+        m.remove();
+      } else { m.remove(); }
+    });
     document.body.appendChild(m);
-    setTimeout(function(){ var el=document.getElementById('ayah-ctx-menu'); if(el) el.remove(); }, 5000);
+    setTimeout(function(){ var el=document.getElementById('ayah-ctx-menu'); if(el) el.remove(); }, 8000);
   };
+
+  // ضغط مطوّل على الموبايل لفتح قائمة الآية (التفسير / استمع)
+  (function(){
+    var timer=null, startX=0, startY=0;
+    document.addEventListener('touchstart', function(e){
+      var vn = e.target && e.target.closest && e.target.closest('.ms-vn');
+      if(!vn) return;
+      startX = (e.touches[0]||{}).clientX||0; startY = (e.touches[0]||{}).clientY||0;
+      clearTimeout(timer);
+      timer = setTimeout(function(){
+        var s = +vn.getAttribute('data-s'), a = +vn.getAttribute('data-a');
+        if(s && a && typeof _showAyahMenu==='function'){ _showAyahMenu(s,a); if(navigator.vibrate) try{navigator.vibrate(12);}catch(err){} }
+      }, 450);
+    }, {passive:true});
+    document.addEventListener('touchmove', function(e){
+      if(!timer) return;
+      var t=e.touches[0]; if(!t) return;
+      if(Math.abs(t.clientX-startX)>12 || Math.abs(t.clientY-startY)>12){ clearTimeout(timer); timer=null; }
+    }, {passive:true});
+    document.addEventListener('touchend', function(){ clearTimeout(timer); timer=null; }, {passive:true});
+    document.addEventListener('touchcancel', function(){ clearTimeout(timer); timer=null; }, {passive:true});
+  })();
+
 
   // ── Load surah ──
   function _cacheKey(n){ return 'hq_s'+n; }

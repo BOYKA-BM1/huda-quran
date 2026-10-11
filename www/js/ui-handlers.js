@@ -864,73 +864,43 @@
   window.openTafsirPopup = function (s, a) {
     _taf = { s: +s, a: +a };
     var pop = $('tafsir-popup'), ov = $('tafsir-overlay'); if (!pop) return;
-    var isEn = false;
-    $('tafsir-title').textContent = isEn
-      ? ('Tafsir — ' + surahName(s) + ' : ' + a)
-      : ('تفسير سورة ' + surahName(s) + ' — الآية ' + toAr(a));
+    $('tafsir-title').textContent = 'تفسير سورة ' + (typeof surahName === 'function' ? surahName(s) : s) + ' — الآية ' + (typeof toAr === 'function' ? toAr(a) : a);
     $('tafsir-ayah-text').textContent = '';
     var body = $('tafsir-body'); body.textContent = '';
-    var ld = el('div', 'tafsir-popup-loading', isEn ? 'Loading...' : 'جارٍ التحميل...'); body.appendChild(ld);
+    body.appendChild(el('div', 'tafsir-popup-loading', 'جارٍ التحميل...'));
     pop.style.display = 'flex'; pop.classList.add('show'); if (ov) { ov.style.display = 'block'; ov.classList.add('show'); }
-    var F = window.HudaQuran ? window.HudaQuran.fetch : fetch;
 
-    // نص الآية عربي دائمًا
-    F('https://api.alquran.cloud/v1/surah/' + s + '/quran-uthmani').then(function (r) { return r.json(); }).then(function (j) {
-      var x = (j.data.ayahs || []).filter(function (y) { return y.numberInSurah === +a; })[0];
-      if (x) $('tafsir-ayah-text').textContent = x.text;
-    }).catch(function () {});
-
-    if (isEn) {
-      // ترجمة إنجليزية + تفسير إنجليزي إن توفر
-      var enUrl = 'https://api.alquran.cloud/v1/ayah/' + s + ':' + a + '/editions/en.sahih,en.maududi';
-      F(enUrl).then(function (r) { return r.json(); }).then(function (j) {
-        body.textContent = '';
-        var list = Array.isArray(j.data) ? j.data : (j.data ? [j.data] : []);
-        if (!list.length) {
-          // محلي en.sahih
-          return fetch('data/quran/en.sahih/' + s + '.json').then(function (r) { return r.ok ? r.json() : null; }).then(function (loc) {
-            body.textContent = '';
-            var ays = (loc && loc.data && loc.data.ayahs) || [];
-            var hit = ays.filter(function (x) { return +x.numberInSurah === +a; })[0];
-            if (hit && hit.text) {
-              body.appendChild(el('div', null, hit.text));
-              var src = el('div', null, 'Source: Sahih International'); src.style.cssText = 'font-size:.7rem;color:var(--tm);margin-top:.6rem;'; body.appendChild(src);
-            } else {
-              body.appendChild(el('div', 'tafsir-popup-loading', 'No English tafsir available'));
-            }
-          });
-        }
-        list.forEach(function (item, idx) {
-          var t = item.text || '';
-          if (!t) return;
-          var label = (item.edition && item.edition.englishName) || (idx === 0 ? 'Translation' : 'Tafsir');
-          var h = el('div', null, label); h.style.cssText = 'font-weight:700;color:var(--gold);margin:0.4rem 0 0.2rem;font-size:.8rem;'; body.appendChild(h);
-          body.appendChild(el('div', null, t));
-        });
-      }).catch(function () {
-        body.textContent = '';
-        fetch('data/quran/en.sahih/' + s + '.json').then(function (r) { return r.ok ? r.json() : null; }).then(function (loc) {
-          var ays = (loc && loc.data && loc.data.ayahs) || [];
-          var hit = ays.filter(function (x) { return +x.numberInSurah === +a; })[0];
-          if (hit && hit.text) {
-            body.appendChild(el('div', null, hit.text));
-            var src = el('div', null, 'Source: Sahih International'); src.style.cssText = 'font-size:.7rem;color:var(--tm);margin-top:.6rem;'; body.appendChild(src);
-          } else {
-            body.appendChild(el('div', 'tafsir-popup-loading', 'Failed to load English tafsir'));
-          }
-        }).catch(function () {
-          body.appendChild(el('div', 'tafsir-popup-loading', 'Failed to load English tafsir'));
-        });
-      });
-    } else {
-      F('https://api.alquran.cloud/v1/ayah/' + s + ':' + a + '/editions/ar.muyassar').then(function (r) { return r.json(); }).then(function (j) {
-        var t = (j.data && (j.data.text || (j.data[0] && j.data[0].text))) || '';
-        body.textContent = '';
-        if (!t) { body.appendChild(el('div', 'tafsir-popup-loading', 'لم يتوفر التفسير')); return; }
-        body.appendChild(el('div', null, t));
-        var src = el('div', null, 'المصدر: التفسير الميسَّر — مجمع الملك فهد'); src.style.cssText = 'font-size:.7rem;color:var(--tm);margin-top:.6rem;'; body.appendChild(src);
-      }).catch(function () { body.textContent = ''; body.appendChild(el('div', 'tafsir-popup-loading', '⚠ تعذّر تحميل التفسير — تحقق من الاتصال')); });
+    function done(ay, tx) {
+      if (ay) $('tafsir-ayah-text').textContent = ay;
+      body.textContent = '';
+      if (!tx) { body.appendChild(el('div', 'tafsir-popup-loading', 'لم يتوفر التفسير')); return; }
+      body.appendChild(el('div', null, tx));
+      var src = el('div', null, 'المصدر: التفسير الميسَّر — مجمع الملك فهد');
+      src.style.cssText = 'font-size:.7rem;color:var(--tm);margin-top:.6rem;';
+      body.appendChild(src);
     }
+
+    Promise.all([
+      fetch('data/quran/ar.muyassar/' + s + '.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
+      fetch('data/quran/quran-uthmani/' + s + '.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
+    ]).then(function (pair) {
+      var loc = pair[0], uth = pair[1];
+      var tHit = loc && loc.data && loc.data.ayahs && loc.data.ayahs.filter(function (y) { return +y.numberInSurah === +a || +y.number === +a; })[0];
+      var uHit = uth && uth.data && uth.data.ayahs && uth.data.ayahs.filter(function (y) { return +y.numberInSurah === +a; })[0];
+      if (tHit && (tHit.text || tHit.tafsir)) {
+        done(uHit && uHit.text ? uHit.text : '', tHit.text || tHit.tafsir || '');
+        return;
+      }
+      var F = window.HudaQuran ? window.HudaQuran.fetch : fetch;
+      return F('https://api.alquran.cloud/v1/ayah/' + s + ':' + a + '/editions/ar.muyassar').then(function (r) { return r.json(); }).then(function (j) {
+        var tx = (j.data && (j.data.text || (j.data[0] && j.data[0].text))) || '';
+        var ay = (uHit && uHit.text) || '';
+        done(ay, tx);
+      });
+    }).catch(function () {
+      body.textContent = '';
+      body.appendChild(el('div', 'tafsir-popup-loading', '⚠ تعذّر تحميل التفسير — تحقق من الاتصال'));
+    });
   };
   window.closeTafsir = function () {
     var p = $('tafsir-popup'), o = $('tafsir-overlay');
