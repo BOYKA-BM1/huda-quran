@@ -1663,7 +1663,7 @@ buildLocSelector();
   // legacy redirects from old URLs
   if(hash==='adhan'){   SP('prayer'); setTimeout(function(){ switchPrayerTab('adhan'); },100); return; }
   if(hash==='reciters'){ SP('quran'); setTimeout(function(){ switchQuranTab('reciters'); },100); return; }
-  var validPages = ['home','mushaf','zakat','prayer','quran','wird','hadiths','quiz','ai','asma','khatma','qibla','tracker','hijri','seerah','hifz','tajweed','mosques','ramadan','prophets2','fiqh','stats','themes','notifs','notes','favorites','prophets','hisn'];
+  var validPages = ['home','mushaf','zakat','prayer','quran','wird','hadiths','nawawi','quiz','ai','asma','khatma','qibla','tracker','hijri','seerah','hifz','tajweed','mosques','ramadan','prophets2','fiqh','stats','themes','notifs','notes','favorites','prophets','hisn'];
   var startPage = validPages.indexOf(hash) !== -1 ? hash : 'home';
   SP(startPage, false);
 })();

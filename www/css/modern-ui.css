@@ -3584,3 +3584,21 @@ body.in-reader {
 .ms-flow, #ms-content, #ms-flow-text {
   touch-action: pan-y;
 }
+
+/* ── الأربعون النووية ── */
+.nawawi-wrap{max-width:720px;margin:0 auto;padding:1.2rem 1rem 4rem;direction:rtl;}
+.nawawi-hero{text-align:center;margin-bottom:1.25rem;padding:1.2rem 1rem;border-radius:18px;background:linear-gradient(145deg,rgba(13,43,30,.9),rgba(8,28,20,.95));border:1px solid rgba(201,168,76,.22);}
+.nawawi-hero-icon{font-size:2rem;margin-bottom:.35rem;}
+.nawawi-hero-title{font-family:'Scheherazade New',serif;font-size:1.55rem;color:var(--gold,#c9a84c);margin:0 0 .35rem;}
+.nawawi-hero-sub{font-size:.85rem;color:rgba(240,230,200,.85);margin:0 0 .25rem;line-height:1.6;}
+.nawawi-hero-note{font-size:.72rem;color:var(--tm,rgba(200,190,160,.55));margin:0;line-height:1.5;}
+.nawawi-search{width:100%;box-sizing:border-box;padding:.75rem 1rem;border-radius:12px;border:1px solid rgba(201,168,76,.25);background:rgba(0,0,0,.25);color:var(--text,#e8e0d0);font-family:Tajawal,sans-serif;font-size:.9rem;margin-bottom:.6rem;direction:rtl;}
+.nawawi-counter{font-size:.75rem;color:var(--tm);margin-bottom:.85rem;text-align:center;}
+.nawawi-card{background:linear-gradient(160deg,rgba(13,43,30,.75),rgba(6,20,14,.9));border:1px solid rgba(201,168,76,.2);border-radius:16px;padding:1rem 1.05rem;margin-bottom:.85rem;box-shadow:0 6px 20px rgba(0,0,0,.2);}
+.nawawi-card-top{display:flex;gap:.75rem;align-items:flex-start;margin-bottom:.65rem;}
+.nawawi-num{flex-shrink:0;width:36px;height:36px;border-radius:10px;background:rgba(201,168,76,.18);border:1px solid rgba(201,168,76,.35);color:#f0d080;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:.95rem;}
+.nawawi-title{font-weight:700;color:#f0d080;font-size:.95rem;line-height:1.4;}
+.nawawi-rawi{font-size:.75rem;color:var(--tm);margin-top:.15rem;}
+.nawawi-text{font-family:'Scheherazade New','Amiri Quran',serif;font-size:1.12rem;line-height:2;color:var(--text,#efe6d5);text-align:justify;}
+.nawawi-copy{margin-top:.75rem;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.28);color:#c9a84c;border-radius:10px;padding:.4rem .85rem;font-family:Tajawal,sans-serif;font-size:.8rem;cursor:pointer;}
+.nawawi-copy:active{transform:scale(.97);}

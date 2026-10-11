@@ -232,6 +232,7 @@
       <button onclick="SP('qibla')" style="--c:#7A5BD0"><i><svg class="ic" aria-hidden="true"><use href="#i-compass"/></svg></i><b>القبلة</b><small>اتجاه القبلة بدقة</small></button>
       <button onclick="SP('zakat')" style="--c:#D08A1E"><i><svg class="ic" aria-hidden="true"><use href="#i-coin"/></svg></i><b>حاسبة الزكاة</b><small>احسب زكاة مالك</small></button>
       <button onclick="SP('hadiths')" style="--c:#C0504A"><i><svg class="ic" aria-hidden="true"><use href="#i-scroll"/></svg></i><b>الأحاديث</b><small>أحاديث نبوية مختارة</small></button>
+      <button onclick="SP('nawawi')" style="--c:#8B6914"><i><svg class="ic" aria-hidden="true"><use href="#i-book"/></svg></i><b>الأربعون النووية</b><small>٤٢ حديثًا جامعة لأصول الدين</small></button>
       <button onclick="SP('khatma')" style="--c:#2A9BAA"><i><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></i><b>خطة الختمة</b><small>ختم القرآن بانتظام</small></button>
       <button onclick="SP('hijri')" style="--c:#8C6F3A"><i><svg class="ic" aria-hidden="true"><use href="#i-home"/></svg></i><b>التقويم الهجري</b><small>المناسبات والأيام البيض</small></button>
       <button id="pwa-install-btn" onclick="installPWA()" style="--c:#5B6B63"><i><svg class="ic" aria-hidden="true"><use href="#i-down"/></svg></i><b>ثبّت التطبيق</b><small>للعمل بدون متصفح</small></button>
@@ -1377,7 +1378,23 @@
     <div class="hadith-counter" id="hadith-counter"></div>
     <div id="hadith-list"></div>
   </div>
-</div
+</div>
+
+
+<!-- ══ الأربعون النووية ══ -->
+<div class="pg" id="page-nawawi">
+  <div class="nawawi-wrap">
+    <div class="nawawi-hero">
+      <div class="nawawi-hero-icon">📿</div>
+      <h2 class="nawawi-hero-title">الأربعون النووية</h2>
+      <p class="nawawi-hero-sub">للإمام النووي رحمه الله — ٤٢ حديثًا جامعة لأصول الإسلام</p>
+      <p class="nawawi-hero-note">سميت بالأربعين تغليبًا، وعددها اثنان وأربعون حديثًا صحيحة أو حسنة</p>
+    </div>
+    <input class="nawawi-search" id="nawawi-search" type="search" placeholder="🔍 ابحث برقم أو كلمة..." oninput="filterNawawi()"/>
+    <div class="nawawi-counter" id="nawawi-counter">42 / 42 حديثًا</div>
+    <div id="nawawi-list"></div>
+  </div>
+</div>
 
 <!-- ══ صفحة الذكاء الاصطناعي ══ -->
 <div class="pg" id="page-ai" class="ai-page">
@@ -1574,6 +1591,7 @@
 <script src="js/adhan-live.js"></script>
 <script src="js/pwa.js"></script>
 <script src="js/mobile-fix.js"></script>
+<script src="js/nawawi40.js"></script>
 
 
 <!-- ══════ لوحة القراءات العشر ══════ -->
