@@ -72,29 +72,5 @@
     if (o) { o.classList.remove('show'); o.style.display = 'none'; }
   };
 
-  /* تثبيت PWA — بدون عناصر ثابتة على الشاشة */
-  var _dp = null;
-  window.addEventListener('beforeinstallprompt', function (e) {
-    e.preventDefault();
-    _dp = e;
-    var btn = $('pwa-install-btn');
-    if (btn) btn.style.display = 'flex';
-  });
-
-  window.installPWA = async function () {
-    if (_dp) {
-      _dp.prompt();
-      try {
-        var res = await _dp.userChoice;
-        if (res && res.outcome === 'accepted') toast('✅ تم تثبيت التطبيق');
-      } catch (e) {}
-      _dp = null;
-      return;
-    }
-    var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-    var msg = isIOS
-      ? 'على آيفون: اضغط مشاركة ثم «إضافة إلى الشاشة الرئيسية»'
-      : 'من قائمة المتصفح ⋮ اختَر «تثبيت التطبيق» أو «إضافة إلى الشاشة الرئيسية»';
-    toast(msg);
-  };
+  /* تثبيت PWA: انتقل إلى js/pwa.js */
 })();

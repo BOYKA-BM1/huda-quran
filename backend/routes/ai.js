@@ -7,8 +7,8 @@ const { callAI, openStream } = require('../services/aiService');
 const { buildRagContext } = require('../services/islamicDb');
 
 const VALID_ROLES    = new Set(['user', 'assistant']);
-const MAX_MSG_LENGTH = 2000;
-const MAX_MESSAGES   = 20;
+const MAX_MSG_LENGTH = 4000;
+const MAX_MESSAGES   = 30;
 
 // حدّ أشد لطلبات الذكاء الاصطناعي (فوق الحد العام)
 const aiLimiter = rateLimit({

@@ -347,27 +347,7 @@ function showToast(msg){
 }
 
 
-// ══ PWA Install ══
-var _pwaPrompt = null;
-window.addEventListener('beforeinstallprompt', function(e){
-  e.preventDefault();
-  _pwaPrompt = e;
-  var btn = document.getElementById('pwa-install-btn');
-  if(btn) btn.style.display = 'inline-flex';
-});
-
-function installPWA(){
-  if(!_pwaPrompt){ showToast('افتح في المتصفح لتثبيت التطبيق'); return; }
-  _pwaPrompt.prompt();
-  _pwaPrompt.userChoice.then(function(r){
-    if(r.outcome==='accepted'){
-      showToast('تم تثبيت التطبيق بنجاح 🎉');
-      var btn = document.getElementById('pwa-install-btn');
-      if(btn) btn.style.display = 'none';
-    }
-    _pwaPrompt = null;
-  });
-}
+// ══ PWA Install: انقل إلى js/pwa.js (مكان واحد فقط) ══
 
 
 // ══ Keyboard Shortcuts ══

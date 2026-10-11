@@ -6,7 +6,7 @@ const REQUEST_TIMEOUT_MS = 20_000;
 function buildMessages(messages, ragContext) {
   const trimmed = messages.slice(-10).map(m => ({ role: m.role, content: m.content }));
   const systemContent = ragContext
-    ? `${config.aiSystem}\n\n--- معلومات من قاعدة البيانات الإسلامية (اعتمد عليها أولاً) ---\n${ragContext}\n---`
+    ? `${config.aiSystem}\n\n--- معلومات من قاعدة البيانات الإسلامية (استخدمها فقط إن كانت مرتبطة فعلاً بسؤال المستخدم، وإلا تجاهلها تماماً) ---\n${ragContext}\n---`
     : config.aiSystem;
   return [{ role: 'system', content: systemContent }, ...trimmed];
 }

@@ -1,0 +1,7 @@
+1) cd backend
+2) cp .env.example .env
+3) افتح .env وضع مفتاح Groq في GROQ_API_KEY=
+4) npm install && npm start
+5) تيرمنال آخر: من جذر المشروع: npx serve www -p 8080
+6) من الموبايل: http://IP-الكمبيوتر:8080
+7) تأكد: http://IP-الكمبيوتر:3000/api/ai/health

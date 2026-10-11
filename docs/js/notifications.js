@@ -135,30 +135,5 @@ window.scheduleAdhkar = function() {
   }, evening - now);
 };
 
-// ══ زر تثبيت التطبيق (PWA Install) ══
-let _deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  _deferredPrompt = e;
-  // إظهار زر التثبيت
-  const btn = document.getElementById('pwa-install-btn');
-  if (btn) btn.style.display = 'flex';
-});
+// زر التثبيت يعيش الآن في js/pwa.js
 
-window.installPWA = async function() {
-  if (!_deferredPrompt) {
-    showToast('التطبيق مثبّت بالفعل أو المتصفح لا يدعم التثبيت');
-    return;
-  }
-  _deferredPrompt.prompt();
-  const { outcome } = await _deferredPrompt.userChoice;
-  if (outcome === 'accepted') showToast('✅ تم تثبيت التطبيق!');
-  _deferredPrompt = null;
-  const btn = document.getElementById('pwa-install-btn');
-  if (btn) btn.style.display = 'none';
-};
-
-window.addEventListener('appinstalled', () => {
-  showToast('✅ هُدى القرآن مثبّت على جهازك');
-  _deferredPrompt = null;
-});

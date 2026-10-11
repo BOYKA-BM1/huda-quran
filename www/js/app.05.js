@@ -1136,11 +1136,32 @@ window.qaSendMsg=function(){
     return pump();
   })
   .catch(function(e){
-    if(tp) tp.remove();
-    {
+    // Fallback: طلب غير متدفق
+    return fetch(HUDA_BACKEND_URL+'/ai/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ messages:_msgs.slice(-12) })
+    }).then(function(r){
+      if(!r.ok) return r.json().then(function(j){ throw j; });
+      return r.json();
+    }).then(function(j){
+      if(tp) tp.remove();
+      if(j && j.success && j.reply){
+        _add('bot', j.reply);
+        _msgs.push({role:'assistant',content:j.reply});
+        return;
+      }
+      throw j || new Error('no reply');
+    }).catch(function(err){
+      if(tp) tp.remove();
       _msgs.pop();
-      _add('bot','⚠️ المساعد الذكي يحتاج تشغيل السيرفر الخلفي.\n\nشغّل من مجلد المشروع:\n```\ncd backend && npm install && npm start\n```\nوتأكد من إضافة GROQ_API_KEY في ملف backend/.env');
-    }
+      var msg = (err && (err.error || err.message)) || '';
+      if(/Failed to fetch|NetworkError|Load failed/i.test(String(msg)) || !msg){
+        _add('bot','⚠️ تعذّر الاتصال بالسيرفر.\nتأكد أن السيرفر يعمل:\ncd backend && npm start\nوالرابط في config.js صحيح (مثل http://192.168.1.73:3000/api)');
+      } else {
+        _add('bot','⚠️ '+msg+'\nإن استمرت المشكلة: غيّر GROQ_MODELS إلى openai/gpt-oss-20b في backend/.env');
+      }
+    });
   })
   .finally(function(){_busy=false;if(btn)btn.disabled=false;if(inp)inp.focus();});
 }
