@@ -1,0 +1,1985 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>هُدى القرآن — المصحف الشريف الكامل</title>
+<meta name="description" content="المصحف الشريف الكامل مع التلاوة وأوقات الصلاة والأذكار والقبلة">
+<meta name="theme-color" content="#E9E1CC">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="هُدى القرآن">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" type="image/png" href="icons/icon-96.png">
+<link rel="stylesheet" href="css/fonts.css"> <!-- FONTS:LOCAL -->
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/native.css">
+<link rel="stylesheet" href="css/features.css">
+<link rel="stylesheet" href="css/v3.css">
+<link rel="stylesheet" href="css/paper.css">
+<link rel="stylesheet" href="css/upgrade.css">
+<link rel="stylesheet" href="css/dock.css">
+<link rel="stylesheet" href="css/modern-ui.css">
+</head>
+<body>
+
+<!-- Logo bar (clean) -->
+<div id="app-logo-bar" style="position:fixed;top:0;left:0;right:0;z-index:800;height:calc(52px + env(safe-area-inset-top,0px));padding-top:env(safe-area-inset-top,0px);display:flex;align-items:center;justify-content:space-between;padding-left:12px;padding-right:12px;background:rgba(3,10,6,0.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(201,168,76,0.18);direction:rtl;">
+  <button onclick="openMenu()" style="width:40px;height:40px;border-radius:12px;border:1px solid rgba(201,168,76,0.25);background:rgba(201,168,76,0.1);color:#C9A84C;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">☰</button>
+  <div onclick="SP('home')" style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+    <div style="text-align:left;">
+      <div style="font-family:Scheherazade New,serif;font-size:1.05rem;color:#C9A84C;font-weight:700;line-height:1.2;">هُدى القرآن</div>
+      <div style="font-size:0.65rem;color:#8FA89E;">المصحف الشريف</div>
+    </div>
+    <img src="icons/logo.svg" alt="هدى القرآن" style="width:36px;height:36px;border-radius:10px;object-fit:contain;">
+  </div>
+</div>
+<style>
+  body { padding-top: calc(52px + env(safe-area-inset-top, 0px)) !important; }
+  #fab-menu { display: none !important; }
+  #rd-top { top: calc(52px + env(safe-area-inset-top, 0px)) !important; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7M6 10v10h12V10"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M5 4h9a4 4 0 014 4v12H9a4 4 0 01-4-4zM5 16a4 4 0 014-4h9"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z"/></symbol>
+<symbol id="i-beads" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="6" cy="10" r="2"/><circle cx="18" cy="10" r="2"/><circle cx="8" cy="17" r="2"/><circle cx="16" cy="17" r="2"/></symbol>
+<symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 017-2.5A4 4 0 0119 10c0 5.6-7 10-7 10z"/></symbol>
+<symbol id="i-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5c0-1 1.2-1.5 2.5-1.5s2.5.6 2.5 1.6-1.2 1.4-2.5 1.7-2.5.7-2.5 1.7 1.2 1.5 2.5 1.5 2.5-.5 2.5-1.5"/></symbol>
+<symbol id="i-more" viewBox="0 0 24 24"><path d="M5 12h.01M12 12h.01M19 12h.01" stroke-width="3"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></symbol>
+<symbol id="i-scroll" viewBox="0 0 24 24"><path d="M6 4h10a2 2 0 012 2v12a2 2 0 002 2H8a2 2 0 01-2-2zM9 8h6M9 12h6"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></symbol>
+<symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v11m-4-4l4 4 4-4M5 20h14"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5l11 7-11 7z" fill="currentColor"/></symbol>
+<symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14" stroke-width="3"/></symbol>
+<symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M6 4h12v16l-6-4-6 4z"/></symbol>
+<symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.800l7.600-4.600M8.200 13.200l7.600 4.600"/></symbol>
+<symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v2.500M12 18.500V21M3 12h2.500M18.500 12H21M5.600 5.600l1.800 1.800M16.600 16.600l1.800 1.800M5.600 18.400l1.800-1.800M16.600 7.400l1.800-1.800"/></symbol>
+<symbol id="i-auto" viewBox="0 0 24 24"><path d="M6 6l6 6 6-6M6 13l6 6 6-6"/></symbol>
+<symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6" transform="scale(-1 1) translate(-24 0)"/></symbol>
+<symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></symbol>
+<symbol id="i-prev" viewBox="0 0 24 24"><path d="M6 5v14l9-7z" fill="currentColor"/><path d="M18.500 5v14" stroke-width="2.500"/></symbol>
+<symbol id="i-next" viewBox="0 0 24 24"><path d="M18 5v14l-9-7z" fill="currentColor"/><path d="M5.500 5v14" stroke-width="2.500"/></symbol>
+</defs></svg>
+<!-- SPLASH SCREEN -->
+<div id="splash">
+  <div class="splash-logo-wrap" style="background:transparent;border:none;box-shadow:none;width:140px;height:140px;padding:0;overflow:hidden;border-radius:32px;">
+    <img src="icons/logo.svg" alt="هدى القرآن" style="width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 16px rgba(201,168,76,0.35));">
+  </div>
+  <div class="splash-title">هُدى القرآن</div>
+  <div class="splash-ayah">﴿ إِنَّ هَٰذَا الْقُرْآنَ يَهْدِي لِلَّتِي هِيَ أَقْوَمُ ﴾</div>
+  <div class="splash-bar"><div class="splash-progress"></div></div>
+</div>
+
+<!-- Floating menu button (replaces bottom/top bars) -->
+<button id="fab-menu" onclick="openMenu()" aria-label="القائمة" title="القائمة">☰</button>
+
+<!-- FOCUS MODE BUTTON -->
+
+<!-- SCROLL TO TOP -->
+<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="للأعلى">⬆</button>
+
+<!-- ══════ Auth Overlay ══════ -->
+
+<!-- User Dropdown -->
+
+
+<!-- GEO BG -->
+<div class="gbg">
+<svg class="g1" viewBox="0 0 200 200"><polygon points="100,10 190,55 190,145 100,190 10,145 10,55" fill="none" stroke="#C9A84C" stroke-width=".5"/><polygon points="100,30 170,67.5 170,132.5 100,170 30,132.5 30,67.5" fill="none" stroke="#C9A84C" stroke-width=".4"/><polygon points="100,50 150,80 150,120 100,150 50,120 50,80" fill="none" stroke="#C9A84C" stroke-width=".3"/><line x1="100" y1="10" x2="100" y2="190" stroke="#C9A84C" stroke-width=".25"/><line x1="10" y1="55" x2="190" y2="145" stroke="#C9A84C" stroke-width=".25"/><line x1="190" y1="55" x2="10" y2="145" stroke="#C9A84C" stroke-width=".25"/></svg>
+<svg class="g2" viewBox="0 0 200 200"><circle cx="100" cy="100" r="90" fill="none" stroke="#C9A84C" stroke-width=".5"/><circle cx="100" cy="100" r="60" fill="none" stroke="#C9A84C" stroke-width=".4"/><circle cx="100" cy="100" r="30" fill="none" stroke="#C9A84C" stroke-width=".3"/><polygon points="100,10 190,100 100,190 10,100" fill="none" stroke="#C9A84C" stroke-width=".4"/><polygon points="100,40 160,100 100,160 40,100" fill="none" stroke="#C9A84C" stroke-width=".3"/><line x1="100" y1="10" x2="100" y2="190" stroke="#C9A84C" stroke-width=".2"/><line x1="10" y1="100" x2="190" y2="100" stroke="#C9A84C" stroke-width=".2"/></svg>
+<svg class="g3" viewBox="0 0 200 200"><polygon points="100,5 122,72 195,72 136,116 158,183 100,140 42,183 64,116 5,72 78,72" fill="none" stroke="#C9A84C" stroke-width=".5"/><circle cx="100" cy="100" r="50" fill="none" stroke="#C9A84C" stroke-width=".4"/></svg>
+</div>
+<!-- cache-bar removed per user request -->
+<div class="offline-badge" id="ofbadge"><div class="offline-dot" id="odot"></div></div>
+
+<!-- NAV -->
+<!-- Overlay -->
+<div id="nav-overlay" onclick="closeMenu()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1100;backdrop-filter:blur(3px);"></div>
+
+<!-- Drawer من الشمال -->
+<div id="nav-drawer" style="position:fixed;top:0;right:-300px;width:270px;height:100vh;background:linear-gradient(180deg,rgba(3,10,6,.99),rgba(13,43,30,.98));border-left:none;z-index:1200;transition:right .32s cubic-bezier(.4,0,.2,1);overflow-y:auto;backdrop-filter:blur(30px);box-shadow:none;">
+  <div style="padding:1.2rem 1.4rem .8rem;border-bottom:1px solid rgba(201,168,76,.12);display:flex;align-items:center;justify-content:space-between;">
+    <div onclick="closeMenu();SP('home')" style="cursor:pointer;">
+      <svg width="120" height="38" viewBox="0 0 140 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="dlg1" x1="0" y1="0" x2="140" y2="0" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#c9a84c"/><stop offset="50%" stop-color="#f0d080"/><stop offset="100%" stop-color="#c9a84c"/>
+          </linearGradient>
+        </defs>
+        <path d="M18 6 C10 8 5 15 6 23 C7 31 14 37 22 37 C16 34 12 28 12 21 C12 14 15 9 20 7 Z" fill="#f0d080" opacity="0.85"/>
+        <circle cx="28" cy="10" r="2" fill="#f0d080" opacity="0.7"/>
+        <circle cx="24" cy="6" r="1.2" fill="#f0d080" opacity="0.5"/>
+        <text x="100" y="22" text-anchor="middle" font-family="'Scheherazade New',serif" font-size="17" fill="url(#dlg1)">هُدى القرآن</text>
+        <text x="100" y="35" text-anchor="middle" font-family="'Tajawal',sans-serif" font-size="7.5" fill="#c9a84c" opacity="0.6">المصحف الشريف الكامل</text>
+      </svg>
+    </div>
+    
+  </div>
+  <div style="padding:.5rem .85rem 1.2rem;display:flex;flex-direction:column;gap:.15rem;" id="drawer-links">
+
+    <div class="nav-sec">
+      <div class="nav-sec-t">التنقّل</div>
+      <button class="dnb" id="nav-home" onclick="closeMenu();SP('home')">🏠 الرئيسية</button>
+      <button class="dnb" id="nav-prayer" onclick="closeMenu();SP('prayer')">🕌 الصلاة والأذان</button>
+      <button class="dnb" id="nav-search" onclick="closeMenu();SP('search')">🔍 بحث في القرآن</button>
+    </div>
+
+    <div class="nav-sec">
+      <div class="nav-sec-t">الحفظ والتعلّم</div>
+      <button class="dnb" id="nav-hifz" onclick="closeMenu();SP('hifz')">🧠 وضع الحفظ</button>
+      <button class="dnb" id="nav-tajweed" onclick="closeMenu();SP('tajweed')">🌈 تلوين التجويد</button>
+      <button class="dnb" id="nav-ai" onclick="closeMenu();SP('ai')">🤖 سؤال وجواب</button>
+      <button class="dnb" id="nav-seerah" onclick="closeMenu();SP('seerah')">🌙 السيرة النبوية</button>
+      <button class="dnb" id="nav-prophets2" onclick="closeMenu();SP('prophets2')">👳 قصص الأنبياء</button>
+      <button class="dnb" id="nav-fiqh" onclick="closeMenu();SP('fiqh')">📋 الفقه الميسّر</button>
+      <button class="dnb" id="nav-asma" onclick="closeMenu();SP('asma')">✨ أسماء الله الحسنى</button>
+    </div>
+
+    <div class="nav-sec">
+      <div class="nav-sec-t">متابعتي</div>
+      <button class="dnb" id="nav-favorites" onclick="closeMenu();SP('favorites')">⭐ المفضلة</button>
+      <button class="dnb" id="nav-notes" onclick="closeMenu();SP('notes')">📝 ملاحظاتي</button>
+      <button class="dnb" id="nav-tracker" onclick="closeMenu();SP('tracker')">☑️ متابعة الصلوات</button>
+      <button class="dnb" id="nav-stats" onclick="closeMenu();SP('stats')">📊 إحصائياتي</button>
+    </div>
+
+    <div class="nav-sec">
+      <div class="nav-sec-t">المزيد</div>
+      <button class="dnb" id="nav-mosques" onclick="closeMenu();SP('mosques')">🗺️ المساجد القريبة</button>
+      <button class="dnb" id="nav-ramadan" onclick="closeMenu();SP('ramadan')">🌙 وضع رمضان</button>
+      <button class="dnb" id="nav-profile" onclick="closeMenu();SP('profile')">👤 ملفي الشخصي</button>
+      <button class="dnb" id="nav-community" onclick="closeMenu();SP('community')">👥 المجتمع</button>
+      <button class="dnb" id="nav-site-settings" onclick="closeMenu();SP('site-settings')">⚙️ الإعدادات</button>
+    </div>
+
+    <button onclick="closeMenu()" class="nav-close-btn">✕ إغلاق القائمة</button>
+    <div style="height:1.2rem;"></div>
+  </div>
+</div>
+
+<!-- NAV BAR (hidden per user request) -->
+<nav style="display:none!important;visibility:hidden!important;height:0!important;overflow:hidden!important;">
+  <div class="nl" onclick="SP('home')" title="هُدى القرآن">
+    <svg width="140" height="44" viewBox="0 0 140 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="lg1" x1="0" y1="0" x2="140" y2="0" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#c9a84c"/>
+          <stop offset="50%" stop-color="#f0d080"/>
+          <stop offset="100%" stop-color="#c9a84c"/>
+        </linearGradient>
+        <linearGradient id="lg2" x1="0" y1="0" x2="0" y2="44" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#f0d080" stop-opacity="0.9"/>
+          <stop offset="100%" stop-color="#c9a84c" stop-opacity="0.7"/>
+        </linearGradient>
+        <filter id="glow"><feGaussianBlur stdDeviation="1.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      <!-- Crescent moon icon -->
+      <g filter="url(#glow)">
+        <path d="M18 6 C10 8 5 15 6 23 C7 31 14 37 22 37 C16 34 12 28 12 21 C12 14 15 9 20 7 Z" fill="url(#lg2)" opacity="0.9"/>
+        <circle cx="28" cy="10" r="2" fill="#f0d080" opacity="0.8"/>
+        <circle cx="24" cy="6" r="1.2" fill="#f0d080" opacity="0.6"/>
+        <circle cx="32" cy="7" r="1" fill="#f0d080" opacity="0.5"/>
+      </g>
+      <!-- هُدى القرآن text -->
+      <text x="100" y="22" text-anchor="middle" font-family="'Scheherazade New','Amiri',serif" 
+            font-size="17" fill="url(#lg1)" filter="url(#glow)" letter-spacing="0.5">هُدى القرآن</text>
+      <!-- Subtitle -->
+      <text x="100" y="35" text-anchor="middle" font-family="'Tajawal','Cairo',sans-serif" 
+            font-size="7.5" fill="#c9a84c" opacity="0.65" letter-spacing="0.8">المصحف الشريف الكامل</text>
+      <!-- Decorative line under text -->
+      <line x1="52" y1="38.5" x2="148" y2="38.5" stroke="url(#lg1)" stroke-width="0.6" opacity="0.4"/>
+      <circle cx="52"  cy="38.5" r="1.2" fill="#c9a84c" opacity="0.5"/>
+      <circle cx="148" cy="38.5" r="1.2" fill="#c9a84c" opacity="0.5"/>
+      <circle cx="100" cy="38.5" r="1.5" fill="#f0d080" opacity="0.7"/>
+    </svg>
+  </div>
+  <button id="menu-btn" onclick="openMenu()" aria-label="القائمة">☰</button>
+</nav>
+
+
+
+<!-- HOME -->
+<div class="pg on" id="page-home">
+  <div id="home-v3">
+    <div class="hv-top">
+      <div><div class="hv-loc" id="hv-loc">📍 ...</div><div class="hv-date" id="hv-date"></div></div>
+      <button class="ib" data-mode-btn onclick="toggleMode()" aria-label="تبديل المظهر" title="تبديل المظهر"><span data-mode-lbl style="display:none"></span>◐</button>
+    </div>
+    <div class="hv-card">
+      <div class="hv-nx"><div><small>الصلاة القادمة</small><h2 id="hv-next">—</h2></div>
+        <label class="hv-adh">الأذان <button class="hsw" id="hv-adh" role="switch" aria-label="تفعيل الأذان التلقائي" onclick="toggleAT('auto');HudaHome.sync()"></button></label></div>
+      <svg id="hv-arc" viewBox="0 0 300 150" role="img" aria-label="مسار الشمس ومواقيت الصلاة"></svg>
+      <div class="hv-cd" id="hv-cd">--:--:--</div>
+    </div>
+    <div class="hv-pts" id="hv-pts"></div>
+    <div class="hv-cont" onclick="SP('mushaf')" role="button" tabindex="0">
+      <svg class="ic" aria-hidden="true" style="width:28px;height:28px;color:var(--gold)"><use href="#i-book"/></svg><div style="flex:1"><b>تابع القراءة</b><small id="hv-cont">افتح المصحف</small></div><span style="color:var(--gold)">‹</span>
+    </div>
+    <div id="hv-goal"></div>
+    <div id="hv-daily"></div>
+    <div class="hv-sec"><h3>الخدمات</h3><small>كل أدواتك في متناولك</small></div>
+    <div class="hv-svc">
+      <button onclick="SP('mushaf')" style="--c:#B8913A"><i><svg class="ic" aria-hidden="true"><use href="#i-book"/></svg></i><b>القرآن الكريم</b><small>قراءة وتدبر واستماع</small></button>
+      <button onclick="SP('wird')" style="--c:#2E9E73"><i><svg class="ic" aria-hidden="true"><use href="#i-heart"/></svg></i><b>ورد اليوم</b><small>آية وحديث ودعاء يومي</small></button>
+      <button onclick="SP('hisn')" style="--c:#C9A84C"><i><svg class="ic" aria-hidden="true"><use href="#i-book"/></svg></i><b>حصن المسلم</b><small>أذكار وأدعية مأثورة</small></button>
+      <button onclick="SP('tasbeeh')" style="--c:#3B7DD8"><i><svg class="ic" aria-hidden="true"><use href="#i-beads"/></svg></i><b>المسبحة</b><small>ذكر وتسبيح بعدّاد</small></button>
+      <button onclick="SP('qibla')" style="--c:#7A5BD0"><i><svg class="ic" aria-hidden="true"><use href="#i-compass"/></svg></i><b>القبلة</b><small>اتجاه القبلة بدقة</small></button>
+      <button onclick="SP('zakat')" style="--c:#D08A1E"><i><svg class="ic" aria-hidden="true"><use href="#i-coin"/></svg></i><b>حاسبة الزكاة</b><small>احسب زكاة مالك</small></button>
+      <button onclick="SP('hadiths')" style="--c:#C0504A"><i><svg class="ic" aria-hidden="true"><use href="#i-scroll"/></svg></i><b>الأحاديث</b><small>أحاديث نبوية مختارة</small></button>
+      <button onclick="SP('khatma')" style="--c:#2A9BAA"><i><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></i><b>خطة الختمة</b><small>ختم القرآن بانتظام</small></button>
+      <button onclick="SP('hijri')" style="--c:#8C6F3A"><i><svg class="ic" aria-hidden="true"><use href="#i-home"/></svg></i><b>التقويم الهجري</b><small>المناسبات والأيام البيض</small></button>
+      <button id="pwa-install-btn" onclick="installPWA()" style="--c:#5B6B63"><i><svg class="ic" aria-hidden="true"><use href="#i-down"/></svg></i><b>ثبّت التطبيق</b><small>للعمل بدون متصفح</small></button>
+    </div>
+  </div>
+  <div id="friday-banner" style="display:none;"></div>
+  <!-- دعاء اليوم -->
+  <div id="home-dua-card" style="margin:0 1rem 1rem;background:linear-gradient(135deg,rgba(13,59,46,.8),rgba(3,10,6,.9));border:1px solid rgba(201,168,76,.3);border-radius:18px;padding:1.2rem;direction:rtl;cursor:pointer;" onclick="SP('wird')">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;">
+      <span style="color:var(--gold);font-size:.78rem;font-weight:700;">🌅 دعاء اليوم</span>
+      <span id="home-dua-date" style="color:var(--tm);font-size:.7rem;"></span>
+    </div>
+    <div id="home-dua-text" style="font-family:'Scheherazade New',serif;font-size:1.15rem;color:#f0d080;line-height:2;text-align:center;"></div>
+    <div style="text-align:center;margin-top:.5rem;color:var(--tm);font-size:.7rem;">اضغط لمزيد من الأدعية</div>
+  </div>
+  </div>
+
+<!-- ══ المصحف: تمرير متواصل أو صفحات ══ -->
+<div class="pg" id="page-mushaf">
+  <div class="rd-top" id="rd-top" style="position:relative;top:0;margin:0.5rem 0 1.25rem 0;z-index:5;">
+    <button class="ib" onclick="HudaMushaf.openIndex()" aria-label="الفهرس"><svg class="ic" aria-hidden="true"><use href="#i-more"/></svg></button>
+    <button class="ib" onclick="HudaMushaf.openSearch()" aria-label="بحث"><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg></button>
+    <!-- القراءات صارت داخل قائمة القراء -->
+    <button class="ib" type="button" onclick="mushafFs(-2)" aria-label="تصغير الخط" title="تصغير">أ−</button>
+    <button class="ib" type="button" onclick="mushafFs(2)" aria-label="تكبير الخط" title="تكبير">أ+</button>
+    <div class="rd-ttl"><h2 id="mp-title">—</h2><small id="mp-juz"></small></div>
+    <button class="ib" onclick="SP('home')" aria-label="رجوع"><svg class="ic" aria-hidden="true"><use href="#i-back"/></svg></button>
+  </div>
+  <div id="rd-scroll">
+    <div style="text-align:center"><button class="rd-pv" id="rd-prev" onclick="HudaMushaf.prevSurah()">‹ السورة السابقة</button></div>
+    <div id="rd-flow" class="rd-flow"></div>
+    <div id="rd-sent" style="height:2px"></div>
+  </div>
+  <div id="rd-paged" hidden>
+    <div class="mp-wrap" id="mp-wrap"><div class="mp-page"><div class="mp-in" id="mp-in"></div><div class="mp-pn" id="mp-pn"></div></div></div>
+    <div class="mp-sc">
+      <div class="l"><button id="mp-prev" aria-label="الصفحة السابقة">›</button><span id="mp-lbl">صفحة ١ من ٦٠٤</span><button id="mp-next" aria-label="الصفحة التالية">‹</button></div>
+      <input type="range" id="mp-range" min="1" max="604" value="1" aria-label="التنقل بين الصفحات">
+    </div>
+  </div>
+</div>
+<div class="shbg" id="rd-set" style="display:none!important" onclick="if(event.target===this)HudaMushaf.closeSheets()"><div class="sh" role="dialog" aria-label="إعدادات القراءة">
+  <div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0;color:var(--tl)">إعدادات القراءة</h2><button class="ib" onclick="HudaMushaf.closeSheets()" aria-label="إغلاق">✕</button></div>
+  <div class="st-row"><span>حجم الخط</span><div class="st-fs"><button onclick="HudaMushaf.fs(-2)" aria-label="تصغير">أ-</button><b id="st-fsv">٣٦</b><button onclick="HudaMushaf.fs(2)" aria-label="تكبير">أ+</button></div></div>
+  <div class="st-row"><span>طريقة القراءة</span><div class="mi-seg" style="margin:0;min-width:200px" id="st-mode"><button data-m="scroll">تمرير</button><button data-m="page">صفحات</button></div></div>
+  <div class="st-row"><span>سرعة التمرير التلقائي</span><input type="range" id="st-sp" min="1" max="10" value="2" aria-label="سرعة التمرير" style="width:140px;accent-color:var(--gold)"></div>
+  <div class="st-row"><span>الترجمة تحت الآية</span><select id="st-tr" aria-label="الترجمة" style="padding:.45rem .6rem;border-radius:10px;border:1px solid var(--brd);font:inherit"><option value="">بدون ترجمة</option></select></div>
+  <div class="st-row"><span>وضع الحفظ <small style="display:block;color:var(--tm);font-size:.7rem">يخفي النص حتى تضغط على الآية</small></span><button class="hsw" id="st-hifz" role="switch" aria-label="وضع الحفظ" onclick="HudaMushaf.toggleHifz()"></button></div>
+  <div class="st-row"><span>هدف القراءة اليومي (صفحات)</span><div class="st-fs"><button onclick="HudaMushaf.goalStep(-1)" aria-label="تقليل">−</button><b id="st-goal">٥</b><button onclick="HudaMushaf.goalStep(1)" aria-label="زيادة">+</button></div></div>
+  <div class="st-row"><span>المظهر</span><button class="mb" data-mode-btn onclick="toggleMode()"><span data-mode-lbl>الوضع الزمردي</span></button></div>
+</div></div>
+<div class="shbg" id="rd-sch" onclick="if(event.target===this)HudaMushaf.closeSheets()"><div class="sh" role="dialog" aria-label="بحث في القرآن">
+  <div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0;color:var(--tl)">بحث في القرآن</h2><button class="ib" onclick="HudaMushaf.closeSheets()" aria-label="إغلاق">✕</button></div>
+  <div style="display:flex;gap:.5rem;margin:.7rem 0"><input id="rd-q" placeholder="اكتب كلمات من الآية…" aria-label="بحث" style="flex:1;padding:.7rem .9rem;border-radius:12px;border:1px solid var(--brd);font:inherit;font-size:1rem"><button class="ib" id="rd-mic" onclick="HudaMushaf.voice()" aria-label="بحث صوتي" style="display:none"><svg class="ic" aria-hidden="true"><use href="#i-mic"/></svg></button></div>
+  <div id="rd-res" style="flex:1;overflow:auto"></div>
+</div></div>
+<div class="mp-act" id="mp-act"><div>
+  <button type="button" onclick="window._ayahAct('play')">▶ تشغيل الآية</button><button type="button" onclick="window._ayahAct('playFrom')">▶▶ من هنا</button><button type="button" onclick="window._ayahAct('tafsir')">تفسير</button><button type="button" onclick="window._ayahAct('fav')">★ مفضلة</button><button type="button" onclick="window._ayahAct('note')">ملاحظة</button><button type="button" onclick="window._ayahAct('copy')">نسخ</button>
+</div></div>
+<div id="mp-idx" onclick="if(event.target===this)HudaMushaf.closeIndex()"><div class="sh" role="dialog" aria-label="الفهرس">
+  <div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0;color:var(--tl)">الفهرس</h2><button class="ib" onclick="HudaMushaf.closeIndex()" aria-label="إغلاق">✕</button></div>
+  <div class="mi-seg" id="mi-seg"><button class="on" data-t="s">السور</button><button data-t="j">الأجزاء</button><button data-t="p">الصفحات</button><button data-t="b">العلامات</button></div>
+  <input id="mi-q" placeholder="ابحث باسم السورة أو رقم الصفحة" aria-label="بحث">
+  <div id="mi-list"></div>
+</div></div>
+<div id="bnav" role="navigation" aria-label="التنقل الرئيسي" style="display:none!important;visibility:hidden!important;height:0!important;overflow:hidden!important;">
+  <button data-p="home" onclick="SP('home')" aria-current="true"><svg class="ic" aria-hidden="true"><use href="#i-home"/></svg>الرئيسية</button>
+  <button data-p="mushaf" onclick="SP('mushaf')"><svg class="ic" aria-hidden="true"><use href="#i-book"/></svg>المصحف</button>
+  <button data-p="prayer" onclick="SP('prayer')"><svg class="ic" aria-hidden="true"><use href="#i-moon"/></svg>الصلاة</button>
+  <button data-p="wird" onclick="SP('wird')"><svg class="ic" aria-hidden="true"><use href="#i-beads"/></svg>ورد اليوم</button>
+  <button data-p="more" onclick="openMenu()"><svg class="ic" aria-hidden="true"><use href="#i-more"/></svg>المزيد</button>
+</div>
+
+<!-- PRAYER TIMES PAGE -->
+<div class="pg" id="page-prayer">
+  <div class="prayer-page pr-v50">
+    <header class="pr-hero">
+      <div class="pr-hero-badge">🕌</div>
+      <h1 class="pr-hero-title">الصلاة والأذان</h1>
+      <p class="pr-hero-sub">مواقيت دقيقة · أذان بصوت واضح · تنبيهات ذكية</p>
+    </header>
+
+    <div class="unified-tabs pr-tabs" id="prayer-tabs">
+      <button class="utab on" id="utab-prayer" onclick="switchPrayerTab('prayer')">🕌 مواقيت الصلاة</button>
+      <button class="utab" id="utab-adhan" onclick="switchPrayerTab('adhan')">🔊 الأذان</button>
+    </div>
+
+    <!-- TAB: مواقيت الصلاة -->
+    <div id="prayer-tab-prayer">
+      <section class="pr-panel pr-loc-panel" id="pt-location">
+        <div class="pr-panel-hd">
+          <span class="pr-panel-ico">📍</span>
+          <div>
+            <div class="pr-panel-title">الموقع وطريقة الحساب</div>
+            <div class="pt-loc-txt pr-loc-line">الموقع: <span class="pt-loc-name" id="loc-name">جارٍ تحديد الموقع...</span></div>
+          </div>
+        </div>
+        <div class="loc-select-wrap pr-loc-controls">
+          <select class="loc-sel" id="loc-select" onchange="setLocFromSelect(this.value)">
+            <option value="">— اختر موقع أو محافظة —</option>
+          </select>
+          <select class="pt-method-sel" id="calc-method" onchange="localStorage.setItem('nq_calc_method',this.value);recalcPrayers()">
+            <option value="MWL">رابطة العالم الإسلامي</option>
+            <option value="ISNA">أمريكا الشمالية ISNA</option>
+            <option value="Egypt" selected>الهيئة المصرية</option>
+            <option value="Makkah">أم القرى مكة</option>
+            <option value="Karachi">كراتشي</option>
+            <option value="Tehran">طهران</option>
+          </select>
+          <button class="btn-g pr-loc-btn" type="button" onclick="getLocation(true)">📍 موقعي تلقائياً</button>
+        </div>
+      </section>
+
+      <div class="pt-date-box pr-date-row">
+        <div class="date-card pr-date-card"><div class="date-lbl">التاريخ الميلادي</div><div class="date-val" id="greg-date">—</div><div class="date-sub" id="greg-day">—</div></div>
+        <div class="date-card pr-date-card"><div class="date-lbl">التاريخ الهجري</div><div class="date-val" id="hijri-date">—</div><div class="date-sub" id="hijri-month-ar">—</div></div>
+        <div class="date-card pr-date-card pr-date-now"><div class="date-lbl">الوقت الحالي</div><div class="date-val" id="current-time" style="direction:ltr">—</div><div class="date-sub" id="current-ampm">—</div></div>
+      </div>
+
+      <div class="next-prayer-bar pr-next" id="next-bar">
+        <div class="pr-next-main">
+          <div class="np-label">الصلاة القادمة</div>
+          <div id="ad-banner-prayer" style="min-height:0;margin:.25rem 0;"></div>
+          <div class="np-name" id="np-name">—</div>
+        </div>
+        <div class="pr-next-cd">
+          <div class="np-in">تبدأ بعد</div>
+          <div class="np-countdown" id="np-cdown">—</div>
+        </div>
+        <div class="pr-next-time">
+          <div class="np-in">وقت الصلاة</div>
+          <div class="np-name pr-next-time-val" id="np-time">—</div>
+        </div>
+      </div>
+
+      <div class="prayers-grid pr-grid" id="prayers-grid">
+        <div class="ldbox"><div class="spinner"></div>جارٍ حساب مواقيت الصلاة...</div>
+      </div>
+      <div id="extra-times" class="pr-extra"></div>
+      <p class="pr-footnote">⚠ مواقيت الصلاة تُحسب بناءً على موقعك الجغرافي وطريقة الحساب المختارة. للدقة التامة راجع المرجع الديني المحلي.</p>
+    </div>
+
+    <!-- TAB: الأذان -->
+    <div id="prayer-tab-adhan" style="display:none">
+      <div class="adhan-pg pr-adhan">
+        <div class="adhan-next-bar2 pr-adhan-hero">
+          <div>
+            <div style="font-size:.7rem;color:var(--tm)">الصلاة القادمة</div>
+            <div class="adhan-next-name2" id="adhan2-np-name">جارٍ التحديث...</div>
+            <div style="font-size:.68rem;color:var(--tm)">تبدأ بعد</div>
+          </div>
+          <div style="text-align:left">
+            <div class="adhan-next-cdown2" id="adhan2-cdown">--:--:--</div>
+            <div style="font-size:.7rem;color:var(--tm)" id="adhan2-time">—</div>
+          </div>
+        </div>
+        <div class="adhan-now2" id="adhan2-now">
+          <div class="adhan-eq2"><span></span><span></span><span></span><span></span></div>
+          <div class="adhan-now-txt2" id="adhan2-now-txt">يتم تشغيل الأذان...</div>
+          <button onclick="stopAdhan()" style="background:none;border:none;color:var(--tm);cursor:pointer;font-size:1rem;padding:.2rem .4rem;flex-shrink:0;">⏹</button>
+        </div>
+        <div style="font-family:'Scheherazade New',serif;font-size:1.1rem;color:var(--gold);margin-bottom:.9rem;text-align:center;">🎙️ اختر المؤذن</div>
+        <div class="adhan-muadhins-grid2" id="adhan2-grid">
+          <div class="adhan-mc on" data-idx="0" onclick="event.stopPropagation();window.selectAdhanSheikh(0);return false;">
+            <div class="adhan-mc-check">✓</div>
+            <div class="adhan-mc-icon">🕋</div>
+            <div class="adhan-mc-name">مكة المكرمة</div>
+            <div class="adhan-mc-sub">المسجد الحرام</div>
+          </div>
+          <div class="adhan-mc" data-idx="1" onclick="event.stopPropagation();window.selectAdhanSheikh(1);return false;">
+            <div class="adhan-mc-check">✓</div>
+            <div class="adhan-mc-icon">🕌</div>
+            <div class="adhan-mc-name">المدينة المنورة</div>
+            <div class="adhan-mc-sub">المسجد النبوي</div>
+          </div>
+          <div class="adhan-mc" data-idx="2" onclick="event.stopPropagation();window.selectAdhanSheikh(2);return false;">
+            <div class="adhan-mc-check">✓</div>
+            <div class="adhan-mc-icon">🇪🇬</div>
+            <div class="adhan-mc-name">أذان مصري</div>
+            <div class="adhan-mc-sub">الطريقة المصرية</div>
+          </div>
+          <div class="adhan-mc" data-idx="3" onclick="event.stopPropagation();window.selectAdhanSheikh(3);return false;">
+            <div class="adhan-mc-check">✓</div>
+            <div class="adhan-mc-icon">🌙</div>
+            <div class="adhan-mc-name">أذان تركي</div>
+            <div class="adhan-mc-sub">الطريقة التركية</div>
+          </div>
+        </div>
+        <div class="adhan-ctrls">
+          <button class="adhan-play2" onclick="adhan2PlayToggle()">
+            <span id="adhan2-play-icon">🔊</span>
+            <span id="adhan2-play-txt">تشغيل الأذان الآن</span>
+          </button>
+          <button class="adhan-notif2" id="adhan2-notif-btn" onclick="adhan2Notif()">
+            <span id="adhan2-notif-icon">🔔</span>
+            <span id="adhan2-notif-txt">تفعيل التنبيهات</span>
+          </button>
+        </div>
+        <div class="adhan-scard">
+          <div class="adhan-scard-title">⚙️ الإعدادات</div>
+          <div class="adhan-srow">
+            <div><div class="adhan-slbl">🔔 أذان تلقائي عند الصلاة</div><span class="adhan-sdesc">يؤذن تلقائياً عند دخول وقت كل صلاة</span></div>
+            <div class="atoggle on" id="at-auto" onclick="toggleAT('auto')"></div>
+          </div>
+          <div class="adhan-srow">
+            <div><div class="adhan-slbl">🌅 أذان الفجر</div><span class="adhan-sdesc">تنبيه خاص لصلاة الفجر</span></div>
+            <div class="atoggle on" id="at-fajr" onclick="toggleAT('fajr')"></div>
+          </div>
+          <div class="adhan-srow">
+            <div><div class="adhan-slbl">📳 اهتزاز مع الأذان</div><span class="adhan-sdesc">اهتزاز الجهاز عند وقت الصلاة</span></div>
+            <div class="atoggle on" id="at-vib" onclick="toggleAT('vib')"></div>
+          </div>
+          <div class="adhan-srow">
+            <div><div class="adhan-slbl">🔊 مستوى الصوت</div></div>
+            <div style="display:flex;align-items:center;gap:.5rem;width:55%">
+              <span style="font-size:.7rem;color:var(--tm)">🔈</span>
+              <input type="range" class="adhan-vol2" id="adhan2-vol" min="0" max="100" value="100" oninput="adhan2SetVol(this.value)">
+              <span style="font-size:.7rem;color:var(--tm)">🔊</span>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center;padding:.8rem;color:var(--tm);font-size:.7rem;line-height:1.8">
+          📍 الأوقات محسوبة بناءً على موقعك الجغرافي<br>🌐 يحتاج الأذان اتصال بالإنترنت
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QURAN PAGE (unified: مصحف + قراء) -->
+<div class="pg" id="page-quran">
+  <!-- TABS -->
+  <div class="unified-tabs quran-tabs" id="quran-tabs">
+    <button class="utab on" id="utab-mushaf" onclick="switchQuranTab('mushaf')">📖 المصحف</button>
+    <button class="utab" id="utab-reciters" onclick="switchQuranTab('reciters')">🎧 القراء</button>
+  </div>
+
+  <!-- TAB: المصحف -->
+  <div id="quran-tab-mushaf">
+    <div class="ms-reader" id="ms-reader">
+      <div class="ms-hdr">
+        <button class="ms-hbtn" onclick="msPanelOpen()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
+        </button>
+        <div class="ms-hdr-center">
+          <button class="ms-hbtn ms-nav-arrow" onclick="msChangeSurah(-1)">&#10095;</button>
+          <span class="ms-hdr-sname" id="ms-hdr-sname">المصحف الشريف</span>
+          <button class="ms-hbtn ms-nav-arrow" onclick="msChangeSurah(1)">&#10094;</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:.18rem;">
+          <span class="ms-hdr-pg" id="ms-hdr-pg"></span>
+          <button class="ms-hbtn ms-btn-pill" id="ms-play-btn" onclick="msTogglePlay()">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+          </button>
+          <button class="ms-hbtn ms-btn-pill" onclick="msOpenRec()">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 18c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            <span id="ms-rec-lbl">العفاسي</span>
+          </button>
+          <button class="ms-hbtn ms-btn-pill" onclick="msOpenQiraat()">ق١٠</button>
+        </div>
+      </div>
+      <div class="ms-frame-wrap">
+        <div class="ms-paper" id="ms-paper">
+          <div class="ms-paper-border"></div>
+          <div class="ms-stripe"></div>
+          <div class="ms-content" id="ms-content">
+            <div class="ms-loading"><div class="ms-spin"></div>جارٍ التحميل...</div>
+          </div>
+          <div class="ms-footer" id="ms-footer"></div>
+          <div class="ms-stripe"></div>
+        </div>
+      </div>
+    </div>
+    <div class="ms-panel-bg" id="ms-p-surahs" onclick="msClosePanel('ms-p-surahs')" style="display:none;">
+      <div class="ms-panel" onclick="event.stopPropagation()">
+        <div class="ms-panel-hdr"><span class="ms-panel-ttl">فهرس السور</span><button class="ms-panel-x" onclick="msClosePanel('ms-p-surahs')">✕</button></div>
+        <div class="ms-panel-search"><input class="ms-sinp" id="ms-sinp" placeholder="ابحث عن سورة..." oninput="msFilterSurahs(this.value)"/></div>
+        <div class="ms-panel-list" id="ms-slist"></div>
+      </div>
+    </div>
+    <div class="ms-panel-bg" id="ms-p-reciters" onclick="msClosePanel('ms-p-reciters')" style="display:none;">
+      <div class="ms-panel" onclick="event.stopPropagation()">
+        <div class="ms-panel-hdr"><span class="ms-panel-ttl">القراء والقراءات</span><button class="ms-panel-x" onclick="msClosePanel('ms-p-reciters')">✕</button></div>
+        <div class="ms-panel-list" id="ms-rlist"></div>
+      </div>
+    </div>
+    <div class="ms-panel-bg" id="ms-p-qiraat" onclick="msClosePanel('ms-p-qiraat')" style="display:none;">
+      <div class="ms-panel" style="max-height:88vh;" onclick="event.stopPropagation()">
+        <div class="ms-panel-hdr"><span class="ms-panel-ttl">العشر القراءات</span><button class="ms-panel-x" onclick="msClosePanel('ms-p-qiraat')">✕</button></div>
+        <div class="ms-panel-list" id="ms-qlist"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: القراء -->
+  <div id="quran-tab-reciters" style="display:none">
+    <div class="reciters-hero">
+      <h2>أشهر القراء المبدعين</h2>
+      <p>١٦ قارئاً متميزاً — شيوخ مصريون وسعوديون وكويتيون • اضغط لاستماع السيرة الكاملة</p>
+    </div>
+    <div class="rec-page-header">
+      <div class="sec-ttl" style="margin-bottom:.5rem">🎙 القراء المتميزون<span>اختر قارئاً واستمع لأجمل التلاوات</span></div>
+      <div class="rec-search-bar">
+        <span style="color:var(--tm);font-size:1rem">🔍</span>
+        <input class="rec-search-input" id="rec-search" placeholder="ابحث عن قارئ..." oninput="filterReciters(this.value)">
+      </div>
+    </div>
+    <div class="rec-grid" id="rec-grid"></div>
+    <div style="height:calc(var(--ph) + 1rem)"></div>
+  </div>
+</div>
+<!-- Reciter Modal -->
+<div class="mbg" id="rmod"><div class="mbox"><button class="mx" onclick="closeRM()">✕</button><div id="rmod-body"></div></div></div>
+<!-- page-reciters redirect shim -->
+<div class="pg" id="page-reciters" data-redirect="quran" data-redirect-tab="reciters"></div>
+
+<!-- PROPHETS PAGE -->
+<div class="pg" id="page-prophets">
+  <div class="ppage">
+    <div style="text-align:center;padding:2rem 0 .5rem"><h2 style="font-family:'Scheherazade New',serif;font-size:clamp(2rem,5vw,3.2rem);color:var(--gold);text-shadow:0 0 40px rgba(201,168,76,.3);">قصص الأنبياء والمرسلين</h2><div style="font-size:.8rem;color:var(--tm);margin-top:.3rem">٢٥ نبياً مذكوراً في القرآن الكريم</div></div>
+    <div class="pgrid" id="pgrid"></div>
+  </div>
+</div>
+<div class="mbg" id="pmod"><div class="mbox"><button class="mx" onclick="closePM()">✕</button><div id="pmod-body"></div></div></div>
+
+<div class="pg" id="page-adhan" data-redirect="prayer"></div>
+
+<div class="pg" id="page-wird">
+  <div class="wird-pg">
+    <div class="wird-banner">
+      <h2>🌅 وِرد اليوم</h2>
+      <p>يتجدد يومياً — آية قرآنية + حديث نبوي + أذكار الصباح والمساء</p>
+    </div>
+    <div class="wird-nav">
+      <button class="wird-ntab on" onclick="switchWird('ayah',this)">📖 آية اليوم</button>
+      <button class="wird-ntab" onclick="switchWird('hadith',this)">📜 حديث اليوم</button>
+      <button class="wird-ntab" onclick="switchWird('dua',this)">🤲 دعاء اليوم</button>
+    </div>
+    <div class="wird-body">
+      <div class="wird-section on" id="ws-ayah">
+        <div class="wird-ayah-card" id="wc-ayah">
+          <div class="wird-ayah-lbl">آية اليوم</div>
+          <div class="wird-ayah-ar" id="w-ayah-txt">جارٍ التحميل...</div>
+          <div class="wird-ayah-ref" id="w-ayah-ref">—</div>
+        </div>
+      </div>
+      <div class="wird-section" id="ws-hadith">
+        <div class="hadith-card">
+          <div class="hadith-badge">📜 حديث اليوم الشريف</div>
+          <div class="hadith-ar" id="w-hadith-txt"></div>
+          <div class="hadith-src" id="w-hadith-src"></div>
+        </div>
+      </div>
+      <div class="wird-section" id="ws-dua">
+        <div style="display:flex;flex-direction:column;gap:.8rem;padding:.5rem 0">
+          <div class="hadith-card">
+            <div class="hadith-badge">🌅 دعاء الصباح</div>
+            <div class="hadith-ar" id="dua-morning-text" style="font-size:1rem;line-height:1.9;direction:rtl;text-align:right"></div>
+            <div class="hadith-src" id="dua-morning-ref"></div>
+            <button onclick="nextDua('صباح')" style="margin-top:.5rem;background:rgba(201,168,76,.12);border:1px solid var(--gold);color:var(--gold);border-radius:8px;padding:.3rem .8rem;font-size:.72rem;cursor:pointer">🔄 دعاء آخر</button>
+          </div>
+          <div class="hadith-card">
+            <div class="hadith-badge">🌙 دعاء المساء</div>
+            <div class="hadith-ar" id="dua-evening-text" style="font-size:1rem;line-height:1.9;direction:rtl;text-align:right"></div>
+            <div class="hadith-src" id="dua-evening-ref"></div>
+            <button onclick="nextDua('مساء')" style="margin-top:.5rem;background:rgba(201,168,76,.12);border:1px solid var(--gold);color:var(--gold);border-radius:8px;padding:.3rem .8rem;font-size:.72rem;cursor:pointer">🔄 دعاء آخر</button>
+          </div>
+          <div class="hadith-card">
+            <div class="hadith-badge">🤲 دعاء عام</div>
+            <div class="hadith-ar" id="dua-general-text" style="font-size:1rem;line-height:1.9;direction:rtl;text-align:right"></div>
+            <div class="hadith-src" id="dua-general-ref"></div>
+            <button onclick="nextDua('دعاء عام')" style="margin-top:.5rem;background:rgba(201,168,76,.12);border:1px solid var(--gold);color:var(--gold);border-radius:8px;padding:.3rem .8rem;font-size:.72rem;cursor:pointer">🔄 دعاء آخر</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="pg" id="page-tasbeeh"></div>
+<div class="pg" id="page-hisn">
+  <div class="hisn-pg">
+    <div class="hisn-header"><h2>🛡 حصن المسلم</h2><p>الأذكار والأدعية المأثورة من الكتاب والسنة</p></div>
+    <div class="hisn-grid" id="hisn-cats"></div>
+    <div class="hisn-detail" id="hisn-view">
+      <button class="hisn-back" onclick="hisnBack()">◀ رجوع</button>
+      <div class="hisn-cat-hdr" id="hisn-cat-title"></div>
+      <div id="hisn-adhkar"></div>
+    </div>
+  </div>
+</div>
+<!-- ════ صفحة الختمة ════ -->
+<div class="pg" id="page-khatma">
+  <div class="khatma-pg">
+    <div class="khatma-header">
+      <div class="khatma-icon">📖</div>
+      <div class="khatma-title">خطة الختمة</div>
+      <div class="khatma-sub">نظّم ختم القرآن الكريم بجدول يومي مخصص</div>
+    </div>
+
+    <!-- Smart Bookmark -->
+    <div class="khatma-bookmark-bar" id="khatma-bm-bar">
+      <div style="font-size:1.5rem;">🔖</div>
+      <div class="khatma-bm-info">
+        <div class="khatma-bm-title" id="khatma-bm-title">الإشارة المرجعية</div>
+        <div class="khatma-bm-sub" id="khatma-bm-sub">لم تُحدَّد موضع القراءة بعد</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.4rem;">
+        <button class="khatma-bm-btn" onclick="goToKhatmaBookmark()">▶ انتقل</button>
+        <button class="khatma-bm-reset" onclick="resetKhatmaBookmark()">↺ إعادة</button>
+      </div>
+    </div>
+
+    <div class="khatma-card">
+      <div class="khatma-card-title">⚙️ إعدادات الختمة</div>
+      <div class="khatma-form-row">
+        <div class="khatma-lbl">📅 عدد الأيام للختم</div>
+        <input class="khatma-inp" id="k-days" type="number" min="1" max="365" value="30" placeholder="30">
+      </div>
+      <div class="khatma-form-row">
+        <div class="khatma-lbl">🔁 عدد مرات الختم</div>
+        <input class="khatma-inp" id="k-times" type="number" min="1" max="12" value="1" placeholder="1">
+      </div>
+      <div class="khatma-form-row">
+        <div class="khatma-lbl">📖 تقسيم حسب</div>
+        <select class="khatma-sel" id="k-unit">
+          <option value="page">صفحات</option>
+          <option value="juz">أجزاء</option>
+          <option value="surah">سور</option>
+          <option value="hizb">أحزاب</option>
+        </select>
+      </div>
+      <div class="khatma-form-row">
+        <div class="khatma-lbl">📆 تاريخ البداية</div>
+        <input class="khatma-inp" id="k-start" type="date" style="width:140px;">
+      </div>
+      <button class="khatma-btn" onclick="calcKhatma()">📊 احسب الخطة</button>
+    </div>
+
+    <div id="khatma-result" style="display:none;"></div>
+  </div>
+</div>
+
+<div class="pg" id="page-qibla">
+  <div class="qibla-pg">
+    <h2 class="sec-ttl">🧭 اتجاه القبلة<span>بوصلة حية تتحرك مع هاتفك</span></h2>
+
+    <div class="qibla-wrap">
+      <div class="qibla-ring-bg"></div>
+      <div class="qibla-compass" id="qibla-compass">
+        <span class="qd qd-n">N</span>
+        <span class="qd qd-s">S</span>
+        <span class="qd qd-e">E</span>
+        <span class="qd qd-w">W</span>
+        <div class="qibla-dial" id="qibla-dial">
+          <div class="qibla-kaaba" id="qibla-needle">🕋</div>
+          <div class="qibla-center-dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="qibla-cards">
+      <div class="qibla-card">
+        <div class="qc-lbl">الاتجاه</div>
+        <div class="qc-val" id="qibla-degree">—°</div>
+      </div>
+      <div class="qibla-card">
+        <div class="qc-lbl">المسافة لمكة</div>
+        <div class="qc-val" id="qibla-dist">— كم</div>
+      </div>
+    </div>
+
+    <div class="qibla-status-bar">
+      <div class="qibla-status" id="qibla-status">اضغط الزر لتفعيل البوصلة</div>
+    </div>
+
+    <div class="qibla-btns">
+      <button class="qibla-btn-live" id="qibla-live-btn" onclick="startLiveQibla()">
+        🧭 تفعيل البوصلة الحية
+      </button>
+      <button class="qibla-btn-gps" onclick="calcQibla()">
+        📍 GPS فقط
+      </button>
+    </div>
+
+    <div class="qibla-tip" id="qibla-tip">
+      💡 أمسك الهاتف أفقياً — ابتعد عن المعادن والأجهزة الكهربائية
+    </div>
+    <div style="height:4rem"></div>
+  </div>
+</div>
+<!-- TAFSIR PAGE -->
+<div class="pg" id="page-tafsir" data-redirect="ai"></div>
+<!-- ══ أسماء الله الحسنى ══ -->
+<div class="pg" id="page-asma">
+<div style="padding:1rem;max-width:700px;margin:0 auto;direction:rtl;">
+  <div style="text-align:center;padding:1.5rem 0 1rem;">
+    <div style="font-size:2.5rem">✨</div>
+    <h2 style="font-family:'Scheherazade New',serif;font-size:1.8rem;color:var(--gold);margin:.3rem 0">أسماء الله الحسنى</h2>
+    <p style="color:var(--tm);font-size:.82rem">قال ﷺ: «إن لله تسعةً وتسعين اسماً من أحصاها دخل الجنة»</p>
+  </div>
+  <div id="asma-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;"></div>
+</div>
+</div>
+
+<!-- ══ بحث في القرآن ══ -->
+
+<div class="pg" id="page-tracker">
+<div style="padding:1rem;max-width:500px;margin:0 auto;direction:rtl;">
+  <div style="text-align:center;padding:1.5rem 0 1rem;">
+    <div style="font-size:2.5rem">☑️</div>
+    <h2 style="font-family:'Scheherazade New',serif;font-size:1.8rem;color:var(--gold);margin:.3rem 0">متابعة الصلوات</h2>
+    <p id="tracker-date" style="color:var(--tm);font-size:.82rem;"></p>
+  </div>
+  <div id="tracker-prayers" style="display:flex;flex-direction:column;gap:.8rem;margin-bottom:1.5rem;"></div>
+  <div id="tracker-streak" style="text-align:center;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:16px;padding:1rem;margin-bottom:1rem;"></div>
+  <button onclick="trackerReset()" style="width:100%;background:rgba(255,100,100,.08);border:1px solid rgba(255,100,100,.2);color:#e87a7a;padding:.6rem;border-radius:10px;font-family:'Tajawal',sans-serif;font-size:.85rem;cursor:pointer;">🔄 إعادة اليوم</button>
+</div>
+</div>
+
+<!-- ══ التقويم الهجري ══ -->
+<div class="pg" id="page-hijri">
+<div style="padding:1rem;max-width:600px;margin:0 auto;direction:rtl;">
+  <div style="text-align:center;padding:1.5rem 0 1rem;">
+    <div style="font-size:2.5rem">📅</div>
+    <h2 style="font-family:'Scheherazade New',serif;font-size:1.8rem;color:var(--gold);margin:.3rem 0">التقويم الهجري</h2>
+  </div>
+  <div id="hijri-main" style=""></div>
+  <div id="hijri-occasions" style="margin-top:1.2rem;"></div>
+</div>
+</div>
+
+<!-- ══ حاسبة الزكاة ══ -->
+<div class="pg" id="page-zakat">
+<div style="max-width:640px;margin:0 auto;padding:1rem;">
+  <div style="text-align:center;margin-bottom:1rem;">
+    <div style="font-size:2.2rem;">💰</div>
+    <h2 style="color:var(--gold);margin:.3rem 0;">حاسبة زكاة المال</h2>
+    <p style="color:var(--tm);font-size:.82rem;">أدخل المبالغ بعملتك، وسعر جرام الذهب (أو الفضة) اليوم من مصدر موثوق</p>
+  </div>
+  <div id="zk-form" style="background:rgba(13,59,46,.35);border:1px solid rgba(201,168,76,.18);border-radius:16px;padding:1rem;display:grid;gap:.7rem;">
+    <label class="zk-l">النقد الذي بيدك أو في حسابك<input class="zk-i" id="zk-cash" type="number" inputmode="decimal" min="0" placeholder="0"></label>
+    <label class="zk-l">المدخرات والودائع<input class="zk-i" id="zk-savings" type="number" inputmode="decimal" min="0" placeholder="0"></label>
+    <label class="zk-l">قيمة الذهب المدّخر (للادخار لا للزينة المعتادة)<input class="zk-i" id="zk-gold" type="number" inputmode="decimal" min="0" placeholder="0"></label>
+    <label class="zk-l">قيمة الفضة المدّخرة<input class="zk-i" id="zk-silver" type="number" inputmode="decimal" min="0" placeholder="0"></label>
+    <label class="zk-l">قيمة عروض التجارة (البضاعة المعدّة للبيع)<input class="zk-i" id="zk-trade" type="number" inputmode="decimal" min="0" placeholder="0"></label>
+    <label class="zk-l">ديون لك على الآخرين مرجوّة السداد<input class="zk-i" id="zk-recv" type="number" inputmode="decimal" min="0" placeholder="0"></label>
+    <label class="zk-l">ديون عليك حالّة السداد<input class="zk-i" id="zk-debts" type="number" inputmode="decimal" min="0" placeholder="0"></label>
+    <div style="height:1px;background:rgba(201,168,76,.15);"></div>
+    <label class="zk-l">حساب النصاب على أساس
+      <select class="zk-i" id="zk-basis" onchange="zakatBasisChange()">
+        <option value="gold">الذهب (٨٥ جم) — الأشهر عند المعاصرين</option>
+        <option value="silver">الفضة (٥٩٥ جم) — أحوط للفقراء</option>
+      </select></label>
+    <label class="zk-l" id="zk-price-l">سعر جرام الذهب (عيار ٢٤) بعملتك<input class="zk-i" id="zk-price" type="number" inputmode="decimal" min="0" placeholder="مثال: 3500"></label>
+    <label style="display:flex;gap:.6rem;align-items:center;color:var(--cr);font-size:.88rem;"><input type="checkbox" id="zk-hawl" style="width:20px;height:20px;"> مرّ على هذا المال سنة هجرية كاملة وهو بالغ النصاب</label>
+    <button class="btn-g" onclick="zakatCalc()" style="justify-self:stretch;">احسب الزكاة</button>
+  </div>
+  <div id="zk-result" style="margin-top:1rem;" aria-live="polite"></div>
+  <p style="color:var(--tm);font-size:.74rem;line-height:1.8;margin-top:1rem;">⚠ هذه الحاسبة تقريبية لزكاة <b>المال</b> فقط (النقد والذهب والفضة وعروض التجارة)، ولا تشمل زكاة الأنعام والزروع والمعادن. الأحكام تختلف بحسب الحال (كالذهب المستعمل، والديون المؤجّلة، والأسهم)، فاستفتِ أهل العلم الموثوقين في بلدك عند الحاجة. لا تُحفظ بياناتك على أي خادم.</p>
+</div>
+</div>
+
+<!-- ══ السيرة النبوية ══ -->
+<div class="pg" id="page-seerah">
+<div style="padding:1rem;max-width:700px;margin:0 auto;direction:rtl;">
+  <div style="text-align:center;padding:1.5rem 0 1rem;">
+    <div style="font-size:2.5rem">🌙</div>
+    <h2 style="font-family:'Scheherazade New',serif;font-size:1.8rem;color:var(--gold);margin:.3rem 0">السيرة النبوية الشريفة</h2>
+    <p style="color:var(--tm);font-size:.82rem">حياة خاتم الأنبياء والمرسلين ﷺ</p>
+  </div>
+  <div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.2rem;" id="seerah-cats"></div>
+  <div id="seerah-timeline"></div>
+</div>
+</div>
+
+<!-- ══ وضع الحفظ ══ -->
+<div class="pg" id="page-hifz">
+<div class="hifz-page">
+  <header class="hifz-hero">
+    <div class="hifz-hero-icon">🧠</div>
+    <h2>وضع الحفظ</h2>
+    <p>استمع للشيخ أو الرواية — كرّر الآية حتى تتقنها</p>
+  </header>
+
+  <section class="hifz-card-panel">
+    <label class="hifz-label">📖 اختر السورة</label>
+    <div class="hifz-surah-box">
+      <span class="hifz-surah-ico">📜</span>
+      <select id="hifz-surah" onchange="hifzLoadSurah()" class="hifz-select hifz-surah-select" aria-label="السورة"></select>
+    </div>
+
+    <div id="hifz-after-surah" class="hifz-after-surah" hidden>
+    <label class="hifz-label">🔢 الآية</label>
+    <div class="hifz-ayah-pick">
+      <div class="hifz-surah-box hifz-ayah-box">
+        <span class="hifz-surah-ico">✦</span>
+        <select id="hifz-ayah" onchange="hifzGoAyah()" class="hifz-select hifz-surah-select" aria-label="الآية"></select>
+      </div>
+      <div class="hifz-ayah-search-wrap">
+        <input type="search" id="hifz-ayah-search" class="hifz-ayah-search" placeholder="بحث برقم الآية أو جزء من النص…" aria-label="بحث عن آية" autocomplete="off">
+        <div id="hifz-ayah-results" class="hifz-ayah-results" hidden></div>
+      </div>
+    </div>
+
+    <div class="hifz-tabs" id="hifz-tabs">
+      <button type="button" class="hifz-tab on" data-tab="sheikh" onclick="hifzSwitchTab('sheikh')">🎙 الشيوخ</button>
+      <button type="button" class="hifz-tab" data-tab="qiraat" onclick="hifzSwitchTab('qiraat')">📖 القراءات العشر</button>
+    </div>
+    <div id="hifz-sheikh-grid" class="hifz-list" role="listbox" aria-label="الشيوخ"></div>
+    <div id="hifz-qiraat-grid" class="hifz-list" style="display:none" role="listbox" aria-label="القراءات"></div>
+
+    <div class="hifz-opts">
+      <div class="hifz-opt">
+        <span>🔁 التكرار</span>
+        <select id="hifz-repeat" class="hifz-select sm">
+          <option value="1">مرة</option>
+          <option value="2">مرتان</option>
+          <option value="3" selected>٣ مرات</option>
+          <option value="5">٥ مرات</option>
+          <option value="7">٧ مرات</option>
+          <option value="10">١٠ مرات</option>
+        </select>
+      </div>
+    </div>
+    </div><!-- /hifz-after-surah -->
+  </section>
+
+  <div id="hifz-empty" class="hifz-empty">اختر سورة للبدء في الحفظ</div>
+  <div id="hifz-card" class="hifz-ayah-wrap" hidden></div>
+  <div id="hifz-nav" class="hifz-nav" hidden></div>
+</div>
+</div>
+
+<!-- ══ تلوين التجويد ══ -->
+<div class="pg" id="page-tajweed">
+<div style="padding:1rem;max-width:700px;margin:0 auto;direction:rtl;">
+  <div style="text-align:center;padding:1.5rem 0 1rem;">
+    <div style="font-size:2.5rem">🌈</div>
+    <h2 style="font-family:'Scheherazade New',serif;font-size:1.8rem;color:var(--gold);margin:.3rem 0">تلوين التجويد</h2>
+    <p style="color:var(--tm);font-size:.82rem">الأحكام مميّزة بالألوان لتسهيل القراءة</p>
+  </div>
+  <div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.15);border-radius:14px;padding:1rem;margin-bottom:1rem;">
+    <div style="color:var(--gold);font-size:.85rem;font-weight:700;margin-bottom:.7rem;">🎨 مفتاح الألوان</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:.4rem;" id="tajweed-legend"></div>
+  </div>
+  <div style="margin-bottom:.8rem;">
+    <select id="tajweed-surah-sel" onchange="loadTajweedSurah()" style="width:100%;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.3);color:var(--gold);padding:.7rem 1rem;border-radius:12px;font-family:'Scheherazade New',serif;font-size:1rem;direction:rtl;outline:none;"></select>
+  </div>
+  <div id="tajweed-content" style="font-family:'Scheherazade New',serif;font-size:1.5rem;line-height:3;text-align:center;direction:rtl;"></div>
+</div>
+</div>
+
+<!-- ══ المساجد القريبة ══ -->
+<div class="pg" id="page-mosques">
+<div style="padding:1rem;max-width:700px;margin:0 auto;direction:rtl;">
+  <div style="text-align:center;padding:1.5rem 0 .8rem;">
+    <div style="font-size:2.5rem">🗺️</div>
+    <h2 style="font-family:'Scheherazade New',serif;font-size:1.8rem;color:var(--gold);margin:.3rem 0">المساجد القريبة</h2>
+    <p style="color:var(--tm);font-size:.82rem">اعثر على أقرب مسجد إليك</p>
+  </div>
+  <button id="mosques-locate-btn" onclick="locateMosques()" style="width:100%;background:linear-gradient(135deg,rgba(201,168,76,.25),rgba(201,168,76,.1));border:1px solid rgba(201,168,76,.4);color:var(--gold);padding:.85rem;border-radius:14px;font-family:'Scheherazade New',serif;font-size:1.05rem;cursor:pointer;margin-bottom:1rem;">📍 تحديد موقعي وعرض المساجد</button>
+  <div id="mosques-status" style="text-align:center;color:var(--tm);font-size:.82rem;margin-bottom:.8rem;"></div>
+  <div id="mosques-list"></div>
+  <div id="mosques-map-link" style="text-align:center;margin-top:1rem;"></div>
+</div>
+</div>
+
+<!-- ══ وضع رمضان ══ -->
+<div class="pg" id="page-ramadan">
+<div style="padding:1rem;max-width:600px;margin:0 auto;direction:rtl;">
+  <div style="text-align:center;padding:1.5rem 0 .8rem;">
+    <div style="font-size:2.5rem">🌙</div>
+    <h2 style="font-family:'Scheherazade New',serif;font-size:1.8rem;color:var(--gold);margin:.3rem 0">وضع رمضان</h2>
+  </div>
+  <div id="ramadan-main"></div>
+</div>
+</div>
+
+<!-- ══ قصص الأنبياء الكاملة ══ -->
+<div class="pg" id="page-prophets2">
+<div style="padding:1rem;max-width:700px;margin:0 auto;direction:rtl;">
+  <div style="text-align:center;padding:1.5rem 0 .8rem;">
+    <div style="font-size:2.5rem">👳</div>
+    <h2 style="font-family:'Scheherazade New',serif;font-size:1.8rem;color:var(--gold);margin:.3rem 0">قصص الأنبياء الكرام</h2>
+    <p style="color:var(--tm);font-size:.82rem">٢٥ نبيًا ذُكروا في القرآن الكريم</p>
+  </div>
+  <div id="prophets2-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;margin-bottom:1rem;"></div>
+  <div id="prophets2-detail" style="display:none;"></div>
+</div>
+</div>
+
+<!-- ══ الفقه الميسّر ══ -->
+<div class="pg" id="page-fiqh">
+<div style="padding:1rem;max-width:700px;margin:0 auto;direction:rtl;">
+  <div style="text-align:center;padding:1.5rem 0 .8rem;">
+    <div style="font-size:2.5rem">📋</div>
+    <h2 style="font-family:'Scheherazade New',serif;font-size:1.8rem;color:var(--gold);margin:.3rem 0">الفقه الميسّر</h2>
+    <p style="color:var(--tm);font-size:.82rem">أحكام ضرورية لكل مسلم</p>
+  </div>
+  <div id="fiqh-cats" style="display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:1rem;"></div>
+  <div id="fiqh-content"></div>
+</div>
+</div>
+
+<!-- ══ إحصائياتي ══ -->
+<div class="pg" id="page-stats">
+<div style="padding:1rem;max-width:600px;margin:0 auto;direction:rtl;">
+  <div style="text-align:center;padding:1.5rem 0 .8rem;">
+    <div style="font-size:2.5rem">📊</div>
+    <h2 style="font-family:'Scheherazade New',serif;font-size:1.8rem;color:var(--gold);margin:.3rem 0">إحصائياتي</h2>
+    <p style="color:var(--tm);font-size:.82rem">تتبع تقدّمك في التلاوة والصلاة</p>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1.2rem;" id="stats-grid"></div>
+  <div style="background:rgba(13,59,46,.4);border:1px solid rgba(201,168,76,.15);border-radius:16px;padding:1rem;margin-bottom:1rem;">
+    <div style="color:var(--gold);font-size:.88rem;font-weight:700;margin-bottom:.8rem;">📅 الأسبوع الحالي</div>
+    <div id="stats-week"></div>
+  </div>
+  <div style="background:rgba(13,59,46,.4);border:1px solid rgba(201,168,76,.15);border-radius:16px;padding:1rem;margin-bottom:1rem;">
+    <div style="color:var(--gold);font-size:.88rem;font-weight:700;margin-bottom:.8rem;">🏆 الإنجازات</div>
+    <div id="stats-achievements"></div>
+  </div>
+  <button onclick="resetStats()" style="width:100%;background:rgba(255,100,100,.08);border:1px solid rgba(255,100,100,.2);color:#e87a7a;padding:.6rem;border-radius:12px;font-family:Tajawal,sans-serif;font-size:.82rem;cursor:pointer;margin-top:.3rem;">🗑️ إعادة ضبط الإحصائيات</button>
+</div>
+</div>
+
+<!-- ══ الثيمات ══ -->
+<div class="pg" id="page-notifs">
+<div style="padding:1rem;max-width:600px;margin:0 auto;direction:rtl;text-align:center;padding-top:3rem;">
+  <div style="font-size:3rem;margin-bottom:1rem;">⚙️</div>
+  <h2 style="font-family:'Scheherazade New',serif;font-size:1.6rem;color:var(--gold);" data-i18n="settings_moved">تم نقل الإعدادات</h2>
+  <p style="color:var(--tm);font-size:.9rem;margin:1rem 0;" data-i18n="settings_moved_desc">تم دمج إعدادات الإشعارات مع إعدادات الموقع الشاملة</p>
+  <button onclick="SP('site-settings')" class="btn-g" style="margin-top:1rem;">⚙️ <span data-i18n="go_to_settings">فتح إعدادات الموقع</span></button>
+</div>
+</div>
+
+<!-- ══ إعدادات الموقع الشاملة ══ -->
+<div class="pg" id="page-site-settings">
+<div class="ss-page" id="site-settings-wrap">
+  <header class="ss-hero">
+    <div class="ss-hero-badge">⚙️</div>
+    <h2 data-i18n="site_settings">إعدادات الموقع</h2>
+    <p data-i18n="site_settings_desc">تحكم كامل في خيارات التطبيق — تُحفظ على جهازك فقط</p>
+  </header>
+
+  <!-- Themes / الثيمات -->
+  <div class="ss-section">
+    <div class="ss-section-title">🎨 <span data-i18n="themes">المظهر</span></div>
+    <div class="ss-row"><div><div class="ss-lbl">وضع العرض</div><div class="ss-desc">ورقي (افتراضي) أو زمردي ليلي</div></div><button class="mb" data-mode-btn onclick="toggleMode()" aria-pressed="false"><span data-mode-lbl>الوضع الزمردي</span></button></div>
+    <!-- Font Size -->
+    <div class="ss-row" style="margin-top:.8rem;">
+      <div>
+        <div class="ss-lbl" data-i18n="font_size">حجم الخط</div>
+        <div class="ss-desc" id="ss-font-preview-lbl">٪100</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.6rem;">
+        <button onclick="changeFontSize(-1)" class="ss-icon-btn">−</button>
+        <div style="width:80px;background:rgba(0,0,0,.4);border-radius:8px;height:6px;"><div id="ss-font-bar" style="background:var(--gold);height:100%;width:50%;border-radius:6px;transition:width .3s;"></div></div>
+        <button onclick="changeFontSize(1)" class="ss-icon-btn">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notifications / الإشعارات -->
+  <div class="ss-section">
+    <div class="ss-section-title">🔔 <span data-i18n="notifications">الإشعارات</span></div>
+    <div id="ss-notif-perm-box" style="display:none;background:rgba(232,122,122,.08);border:1px solid rgba(232,122,122,.3);border-radius:12px;padding:.8rem;margin-bottom:.8rem;text-align:center;">
+      <div style="font-size:.85rem;color:#e87a7a;margin-bottom:.5rem;" data-i18n="notif_disabled">⚠️ الإشعارات غير مفعّلة</div>
+      <button onclick="requestNotifPerm()" class="ss-btn-gold" data-i18n="enable_notifs">تفعيل الإشعارات</button>
+    </div>
+    <div id="ss-notif-granted-box" style="display:none;background:rgba(122,232,122,.06);border:1px solid rgba(122,232,122,.2);border-radius:12px;padding:.6rem 1rem;margin-bottom:.8rem;text-align:center;font-size:.82rem;color:#7ae87a;" data-i18n="notif_enabled">✅ الإشعارات مفعّلة</div>
+    <div id="ss-notif-list"></div>
+  </div>
+
+  <!-- Adhan / الأذان -->
+  <div class="ss-section">
+    <div class="ss-section-title">🕌 <span data-i18n="adhan_settings">إعدادات الأذان</span></div>
+    <div class="ss-row">
+      <div>
+        <div class="ss-lbl" data-i18n="auto_adhan">أذان تلقائي عند الصلاة</div>
+        <div class="ss-desc" data-i18n="auto_adhan_desc">يؤذن تلقائياً عند دخول وقت كل صلاة</div>
+      </div>
+      <div class="atoggle on" id="ss-at-auto" onclick="toggleAT('auto');this.classList.toggle('on');"></div>
+    </div>
+    <div class="ss-row">
+      <div>
+        <div class="ss-lbl" data-i18n="pre_prayer_reminder">تذكير قبل الصلاة</div>
+        <div class="ss-desc" data-i18n="pre_prayer_reminder_desc">تنبيه 15 دقيقة قبل كل صلاة</div>
+      </div>
+      <div class="atoggle on" id="ss-at-pre15" onclick="togglePreReminderSetting();this.classList.toggle('on');"></div>
+    </div>
+    <div class="ss-row">
+      <div>
+        <div class="ss-lbl" data-i18n="muezzin_select">اختيار المؤذن</div>
+      </div>
+      <select id="ss-adhan-sel" onchange="selectAdhanSheikh(parseInt(this.value))" class="ss-select">
+        <option value="0">🕋 مكة المكرمة</option>
+        <option value="1">🕌 المدينة المنورة</option>
+        <option value="2">🇪🇬 أذان مصري</option>
+        <option value="3">🌙 أذان تركي</option>
+      </select>
+    </div>
+    <div class="ss-row">
+      <div>
+        <div class="ss-lbl" data-i18n="fajr_adhan">تنبيه خاص للفجر</div>
+      </div>
+      <div class="atoggle on" id="ss-at-fajr" onclick="toggleAT('fajr');this.classList.toggle('on');"></div>
+    </div>
+    <div class="ss-row">
+      <div>
+        <div class="ss-lbl" data-i18n="vibrate_adhan">اهتزاز مع الأذان</div>
+      </div>
+      <div class="atoggle on" id="ss-at-vib" onclick="toggleAT('vib');this.classList.toggle('on');"></div>
+    </div>
+    <div class="ss-row">
+      <div class="ss-lbl" data-i18n="adhan_volume">🔊 مستوى الصوت</div>
+      <div style="display:flex;align-items:center;gap:.5rem;width:55%">
+        <span style="font-size:.7rem;color:var(--tm)">🔈</span>
+        <input type="range" class="adhan-vol2" id="ss-adhan-vol" min="0" max="100" value="100" oninput="adhan2SetVol(this.value)" style="flex:1;">
+        <span style="font-size:.7rem;color:var(--tm)">🔊</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calculation Method -->
+  <div class="ss-section">
+    <div class="ss-section-title">📐 <span data-i18n="prayer_calc">طريقة حساب الصلاة</span></div>
+    <div class="ss-row">
+      <div class="ss-lbl" data-i18n="calc_method">طريقة الحساب</div>
+      <select class="ss-select" id="ss-calc-method" onchange="localStorage.setItem('nq_calc_method',this.value);recalcPrayers()">
+        <option value="2">رابطة العالم الإسلامي</option>
+        <option value="1">جامعة أم القرى</option>
+        <option value="3">مصر / إيسنا</option>
+        <option value="4">المجلس الإسلامي لأمريكا الشمالية</option>
+        <option value="5">كراتشي — باكستان</option>
+        <option value="7">مكة المكرمة</option>
+        <option value="99">مخصص</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Hijri Correction -->
+  <div class="ss-section">
+    <div class="ss-section-title">📅 <span data-i18n="hijri_correction">ضبط التقويم الهجري</span></div>
+    <div class="ss-row">
+      <div>
+        <div class="ss-lbl" data-i18n="hijri_offset">تصحيح اليوم الهجري</div>
+        <div class="ss-desc" data-i18n="hijri_offset_desc">اضبط فارق الأيام (+1 أو -1) لتتطابق مع رؤية الهلال في بلدك</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem;">
+        <button onclick="changeHijriOffset(-1)" class="ss-icon-btn">−</button>
+        <span id="ss-hijri-offset-lbl" style="color:var(--gold);font-weight:700;min-width:30px;text-align:center;">0</span>
+        <button onclick="changeHijriOffset(1)" class="ss-icon-btn">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- About -->
+  <div class="ss-section">
+    <div class="ss-section-title">ℹ️ <span data-i18n="about_app">عن التطبيق</span></div>
+    <div style="font-size:.8rem;color:var(--tm);line-height:1.8;padding:.5rem 0;">
+      <b style="color:var(--gold)">هُدى القرآن</b> — المصحف الشريف الكامل<br>
+      <span data-i18n="version">الإصدار</span>: 3.0 | <span data-i18n="all_offline">يعمل بلا إنترنت بعد التحميل</span>
+    </div>
+    <button onclick="clearAllData()" class="ss-btn-red" data-i18n="reset_all">🗑️ مسح جميع البيانات المحفوظة</button>
+  </div>
+</div>
+</div>
+
+<!-- ══ NOTES PAGE ══ -->
+<div class="pg" id="page-notes">
+  <div class="fav-page">
+    <div style="text-align:center;padding:1.5rem 0 1rem;">
+      <div style="font-size:2.2rem;">📝</div>
+      <h2 style="font-family:'Scheherazade New',serif;font-size:1.7rem;color:var(--gold);margin:.3rem 0;">ملاحظاتي</h2>
+      <p style="color:var(--tm);font-size:.82rem;">ملاحظاتك على الآيات — انقر للانتقال</p>
+    </div>
+    <div id="notes-list-wrap">
+      <div class="fav-empty">
+        <div style="font-size:3rem;opacity:.3;">📝</div>
+        <p style="margin-top:.8rem;font-size:.9rem;">لا توجد ملاحظات بعد<br><small>اضغط 📝 بجانب أي آية لإضافة ملاحظة</small></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MINI PLAYER PANEL (like Ayah app full player) ══ -->
+<div id="mini-player-panel" style="position:fixed;inset:0;z-index:1200;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);display:none;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:2rem;">
+  <div style="width:100%;max-width:500px;padding:2rem 1.5rem;background:linear-gradient(160deg,rgba(15,46,36,.7),rgba(3,10,6,.95));border-radius:28px 28px 0 0;border:1px solid rgba(201,168,76,.2);border-bottom:none;">
+    <!-- Handle -->
+    <div style="width:44px;height:4px;background:rgba(201,168,76,.3);border-radius:2px;margin:0 auto 1.5rem;cursor:pointer;" onclick="closeMiniPanel()"></div>
+    <!-- Reciter avatar -->
+    <div style="text-align:center;margin-bottom:1.5rem;">
+      <div id="mpp-av" style="width:100px;height:100px;border-radius:50%;background:rgba(201,168,76,.1);border:2px solid rgba(201,168,76,.3);margin:0 auto .9rem;display:flex;align-items:center;justify-content:center;font-family:'Scheherazade New',serif;font-size:2.2rem;overflow:hidden;position:relative;">
+        <div class="rav-ring" style="position:absolute;inset:-3px;border:2px solid transparent;border-top-color:var(--gold);border-radius:50%;animation:rot 3s linear infinite;"></div>
+      </div>
+      <div id="mpp-reciter" style="font-size:.85rem;color:var(--gold);margin-bottom:.2rem;">—</div>
+      <div id="mpp-surah" style="font-family:'Scheherazade New',serif;font-size:1.6rem;color:var(--tl);"></div>
+      <div id="mpp-ayah" style="font-size:.78rem;color:var(--tm);margin-top:.2rem;"></div>
+    </div>
+    <!-- Progress -->
+    <div style="margin-bottom:1.2rem;">
+      <div id="mpp-bar" onclick="seekMPP(event)" style="height:5px;background:rgba(201,168,76,.15);border-radius:3px;cursor:pointer;position:relative;margin-bottom:.4rem;">
+        <div id="mpp-fill" style="height:100%;background:linear-gradient(90deg,var(--gold3),var(--gold));border-radius:3px;width:0%;position:relative;">
+          <div style="position:absolute;right:-6px;top:50%;transform:translateY(-50%);width:13px;height:13px;background:var(--gold);border-radius:50%;box-shadow:0 0 8px rgba(201,168,76,.5);"></div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:.68rem;color:var(--tm);">
+        <span id="mpp-cur">0:00</span><span id="mpp-dur">0:00</span>
+      </div>
+    </div>
+    <!-- Main controls -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:1.2rem;margin-bottom:1.2rem;">
+      <button onclick="_gaplessMode?prevGaplessAyah():prevA()" class="mpb" style="width:46px;height:46px;font-size:1rem;">⏮</button>
+      <button onclick="togPlay()" id="mpp-play" class="mpb main" style="width:62px;height:62px;font-size:1.4rem;">▶</button>
+      <button onclick="_gaplessMode?nextGaplessAyah():nextA()" class="mpb" style="width:46px;height:46px;font-size:1rem;">⏭</button>
+    </div>
+    <!-- Extra controls -->
+    <div style="display:flex;align-items:center;justify-content:space-around;flex-wrap:wrap;gap:.5rem;">
+      <button class="gpxb" onclick="togRepeat()" id="mpp-rep" title="تكرار السورة">🔁</button>
+      <button class="gpxb" onclick="togAutoNext()" id="mpp-auto" title="تلقائي">⏭️</button>
+      <button class="gpxb" onclick="toggleGaplessMode()" id="mpp-gapless" title="وضع آية بآية" style="font-size:.65rem;font-weight:700;">آية</button>
+      <div style="display:flex;align-items:center;gap:.4rem;">
+        <span style="color:var(--tm);font-size:.8rem;">🔈</span>
+        <input type="range" min="0" max="1" step=".05" value="1" oninput="setVol(this.value);syncVolSliders(this.value)" style="width:80px;accent-color:var(--gold);height:3px;">
+        <span style="color:var(--tm);font-size:.8rem;">🔊</span>
+      </div>
+      <button class="gpxb" onclick="openSleepFromPanel()" title="Sleep Timer">😴</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLEEP TIMER QUICK MODAL ══ -->
+<div id="sleep-quick-modal" style="position:fixed;bottom:0;left:0;right:0;z-index:1600;background:rgba(3,10,6,.97);border-top:1px solid rgba(201,168,76,.2);border-radius:22px 22px 0 0;padding:1.5rem;display:none;backdrop-filter:blur(20px);">
+  <div style="text-align:center;margin-bottom:1rem;font-size:.9rem;color:var(--gold);">😴 Sleep Timer</div>
+  <div style="display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center;">
+    <button onclick="setSleepTimer(10);closeSleepModal()" class="qep-btn" style="min-width:60px;">10 د</button>
+    <button onclick="setSleepTimer(15);closeSleepModal()" class="qep-btn" style="min-width:60px;">15 د</button>
+    <button onclick="setSleepTimer(20);closeSleepModal()" class="qep-btn" style="min-width:60px;">20 د</button>
+    <button onclick="setSleepTimer(30);closeSleepModal()" class="qep-btn" style="min-width:60px;">30 د</button>
+    <button onclick="setSleepTimer(45);closeSleepModal()" class="qep-btn" style="min-width:60px;">45 د</button>
+    <button onclick="setSleepTimer(60);closeSleepModal()" class="qep-btn" style="min-width:60px;">60 د</button>
+    <button onclick="cancelSleepTimer();closeSleepModal()" class="qep-btn" style="min-width:60px;color:#ef6b6b;">إلغاء</button>
+  </div>
+  <button onclick="closeSleepModal()" style="width:100%;margin-top:1rem;background:none;border:none;color:var(--tm);cursor:pointer;font-size:.85rem;">✕ إغلاق</button>
+</div>
+
+<div class="pg" id="page-favorites">
+  <div class="fav-page">
+    <div style="text-align:center;padding:1.5rem 0 1rem;">
+      <div style="font-size:2.2rem;">⭐</div>
+      <h2 style="font-family:'Scheherazade New',serif;font-size:1.7rem;color:var(--gold);margin:.3rem 0;">المفضلة</h2>
+      <p style="color:var(--tm);font-size:.82rem;">الآيات المحفوظة — انقر للانتقال</p>
+    </div>
+    <div id="fav-list-wrap">
+      <div class="fav-empty">
+        <div style="font-size:3rem;opacity:.3;">★</div>
+        <p style="margin-top:.8rem;font-size:.9rem;">لا توجد آيات في المفضلة بعد<br><small>اضغط ★ بجانب أي آية لإضافتها</small></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ NOTE MODAL ══ -->
+<div class="note-modal" id="note-modal">
+  <div class="note-box">
+    <div class="note-ref" id="note-ref-lbl">ملاحظة على الآية</div>
+    <textarea class="note-ta" id="note-ta" placeholder="اكتب ملاحظتك هنا..." rows="4"></textarea>
+    <div class="note-actions">
+      <button class="note-save-btn" onclick="saveNote()">💾 حفظ</button>
+      <button class="note-del-btn" onclick="deleteNote()">🗑️ حذف</button>
+      <button class="note-cancel-btn" onclick="closeNote()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SHARE VERSE MODAL ══ -->
+<div class="share-verse-modal" id="share-modal">
+  <div class="share-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+      <h3 style="color:var(--gold);font-family:'Scheherazade New',serif;font-size:1.2rem;">📤 مشاركة الآية</h3>
+      <button onclick="closeShareVerse()" style="background:none;border:none;color:var(--tm);cursor:pointer;font-size:1.1rem;">✕</button>
+    </div>
+    <div class="share-canvas-wrap" id="share-preview">
+      <div class="share-ayah-text" id="share-ayah-txt" style="font-family:'Scheherazade New',serif;"></div>
+      <div class="share-ref-text" id="share-ref-txt"></div>
+      <div style="font-size:.65rem;color:rgba(201,168,76,.4);margin-top:.5rem;">هُدى القرآن</div>
+    </div>
+    <div class="share-btns">
+      <button class="share-btn primary" onclick="shareAsImage()">🖼️ صورة</button>
+      <button class="share-btn" onclick="shareAsText()">📋 نسخ</button>
+      <button class="share-btn" onclick="shareNative()">↗️ مشاركة</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ READER SETTINGS MODAL ══ -->
+<div class="note-modal" id="reader-settings-modal">
+  <div class="note-box" style="max-width:420px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+      <h3 style="color:var(--gold);font-family:'Scheherazade New',serif;font-size:1.1rem;">🎨 مظهر القراءة</h3>
+      <button onclick="closeReaderSettings()" style="background:none;border:none;color:var(--tm);cursor:pointer;">✕</button>
+    </div>
+    <div style="margin-bottom:.9rem;">
+      <div style="font-size:.8rem;color:var(--tm);margin-bottom:.5rem;">وضع الألوان</div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+        <button onclick="setReaderMode('default')" class="qep-btn" id="rm-default">🌙 افتراضي</button>
+        <button onclick="setReaderMode('sepia')" class="qep-btn" id="rm-sepia">📜 بني</button>
+        <button onclick="setReaderMode('night')" class="qep-btn" id="rm-night">⚫ ليلي</button>
+      </div>
+    </div>
+    <div style="margin-bottom:.9rem;">
+      <div style="font-size:.8rem;color:var(--tm);margin-bottom:.5rem;">الخط</div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+        <button onclick="setQFont('qfont-s')" class="qep-btn" style="font-size:.75rem;">صغير</button>
+        <button onclick="setQFont('qfont-m')" class="qep-btn">متوسط</button>
+        <button onclick="setQFont('qfont-l')" class="qep-btn" style="font-size:1rem;">كبير</button>
+        <button onclick="setQFont('qfont-xl')" class="qep-btn" style="font-size:1.1rem;">أكبر</button>
+        <button onclick="setQFont('qfont-xxl')" class="qep-btn" style="font-size:1.2rem;">ضخم</button>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:.8rem;color:var(--tm);margin-bottom:.5rem;">نوع الخط</div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+        <button onclick="setFontType('default')" class="qep-btn" id="ft-default">افتراضي</button>
+        <button onclick="setFontType('uthmani')" class="qep-btn" id="ft-uthmani" style="font-family:'Amiri Quran',serif;">عثماني</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLEEP TIMER BADGE ══ -->
+<div class="sleep-badge" id="sleep-badge">
+  <span>😴</span>
+  <span id="sleep-countdown">30:00</span>
+  <button onclick="cancelSleepTimer()" style="background:none;border:none;color:var(--tm);cursor:pointer;font-size:.85rem;">✕</button>
+</div>
+
+<!-- GLOBAL PLAYER -->
+<div id="gplayer">
+  <div class="gpav" id="gpav"></div>
+  <div class="gpinfo" style="cursor:pointer;" onclick="openMiniPanel()">
+    <div class="gpname" id="gpname">—</div>
+    <div class="gpsurah" id="gpsurah">—</div>
+    <div class="gpayah" id="gpayah"></div>
+  </div>
+  <div class="gpeq" id="gpeq" style="display:none"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+  <div class="gpctrl">
+    <button class="gpb" onclick="_gaplessMode?prevGaplessAyah():prevA()" title="السابقة">⏮</button>
+    <button class="gpb main" id="gpplay" onclick="togPlay()">▶</button>
+    <button class="gpb" onclick="_gaplessMode?nextGaplessAyah():nextA()" title="التالية">⏭</button>
+  </div>
+  <div class="gprog">
+    <div class="gpbar" id="gpbar" onclick="seekGP(event)"><div class="gpfill" id="gpfill" style="width:0%"><div class="pthumb"></div></div></div>
+    <div class="gptimes"><span id="gcur">0:00</span><span id="gdur">0:00</span></div>
+  </div>
+  <div class="gpxtras">
+    <button class="gpxb" id="repbtn" onclick="togRepeat()" title="تكرار">🔁</button>
+    <button class="gpxb on" id="anxtbtn" onclick="togAutoNext()" title="تلقائي">⏭️</button>
+    <button class="gpxb" id="gp-gapless-btn" onclick="toggleGaplessMode()" title="آية بآية" style="font-size:.65rem;font-weight:700;display:none;">آية</button>
+  </div>
+  <div class="gpvol"><span style="color:var(--tm);font-size:.85rem">🔊</span><input class="gpvslider" type="range" min="0" max="1" step=".05" value="1" oninput="setVol(this.value)"></div>
+  <button class="gpclose" onclick="stopPlay()" title="إغلاق">✕</button>
+</div>
+</div>
+<audio id="aud" preload="none"></audio>
+</div>
+
+<!-- DUA NOTIF BANNER PLACEHOLDER -->
+
+    <div>
+      <div id="adhan-name" style="font-family:'Scheherazade New',serif;font-size:1rem;color:var(--gold);font-weight:700;"></div>
+      <div id="adhan-sub" style="font-size:.7rem;color:var(--tm);margin-top:.15rem;"></div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<!-- ══ صفحة الأسئلة الإسلامية ══ -->
+<div class="pg" id="page-quiz">
+  <div class="quiz-wrap">
+    <div class="quiz-header">
+      <div style="font-size:2rem;margin-bottom:.3rem;">❓</div>
+      <h2 style="font-family:'Scheherazade New',serif;font-size:1.6rem;color:var(--gold);margin:0;">الأسئلة الإسلامية</h2>
+      <p style="font-size:.75rem;color:var(--tm);margin:.3rem 0 0;">اختبر معلوماتك — مستويات متعددة • ٢٠ سؤال لكل مستوى</p>
+    </div>
+    <!-- مستويات الصعوبة -->
+    <div style="display:flex;justify-content:center;gap:.5rem;margin-bottom:.8rem;flex-wrap:wrap;">
+      <button onclick="setQuizLevel('easy')" id="ql-easy" style="background:rgba(34,197,94,.1);border:1.5px solid rgba(34,197,94,.3);color:#86efac;font-family:Tajawal,sans-serif;font-size:.8rem;padding:.4rem 1rem;border-radius:50px;cursor:pointer;transition:all .3s;" onmouseover="this.style.background='rgba(34,197,94,.2)'" onmouseout="this.style.background='rgba(34,197,94,.1)'">🟢 سهل</button>
+      <button onclick="setQuizLevel('medium')" id="ql-medium" style="background:rgba(234,179,8,.1);border:1.5px solid rgba(234,179,8,.3);color:#fde047;font-family:Tajawal,sans-serif;font-size:.8rem;padding:.4rem 1rem;border-radius:50px;cursor:pointer;transition:all .3s;" onmouseover="this.style.background='rgba(234,179,8,.2)'" onmouseout="this.style.background='rgba(234,179,8,.1)'">🟡 متوسط</button>
+      <button onclick="setQuizLevel('hard')" id="ql-hard" style="background:rgba(239,68,68,.1);border:1.5px solid rgba(239,68,68,.3);color:#fca5a5;font-family:Tajawal,sans-serif;font-size:.8rem;padding:.4rem 1rem;border-radius:50px;cursor:pointer;transition:all .3s;" onmouseover="this.style.background='rgba(239,68,68,.2)'" onmouseout="this.style.background='rgba(239,68,68,.1)'">🔴 صعب</button>
+      <button onclick="setQuizLevel('all')" id="ql-all" style="background:rgba(201,168,76,.1);border:1.5px solid rgba(201,168,76,.3);color:var(--gold);font-family:Tajawal,sans-serif;font-size:.8rem;padding:.4rem 1rem;border-radius:50px;cursor:pointer;transition:all .3s;" onmouseover="this.style.background='rgba(201,168,76,.2)'" onmouseout="this.style.background='rgba(201,168,76,.1)'">🌟 الكل</button>
+    </div>
+    <div id="quiz-cats-wrap" class="quiz-cats"></div>
+    <div id="quiz-score-wrap" style="display:none;">
+      <div class="quiz-stats">
+        <div><span class="quiz-stat-v" id="qz-correct">٠</span>إجابات صحيحة</div>
+        <div><span class="quiz-stat-v" id="qz-total">٠</span>إجمالي</div>
+        <div><span class="quiz-stat-v" id="qz-pct">٠٪</span>نسبة</div>
+      </div>
+      <div class="quiz-score-bar"><div class="quiz-score-fill" id="quiz-fill" style="width:0%"></div></div>
+    </div>
+    <div id="quiz-card" class="quiz-card" style="display:none;">
+      <div class="quiz-qnum" id="qz-num"></div>
+      <div class="quiz-q" id="qz-q"></div>
+      <div class="quiz-opts" id="qz-opts"></div>
+      <div class="quiz-explain" id="qz-explain"></div>
+      <button class="quiz-next" id="qz-next" onclick="quizNext()">التالي ←</button>
+    </div>
+    <div id="quiz-result" class="quiz-result">
+      <div class="quiz-result-score" id="qz-final-score"></div>
+      <div style="font-size:1rem;color:var(--tm);margin:.5rem 0 1.5rem;" id="qz-final-msg"></div>
+      <div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;">
+        <button onclick="startQuiz(_quizCat,_quizLevel)" style="background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold);font-family:Tajawal,sans-serif;font-size:.95rem;padding:.7rem 2rem;border-radius:12px;cursor:pointer;">🔄 إعادة</button>
+        <button onclick="resetAllQuiz()" style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);color:#fca5a5;font-family:Tajawal,sans-serif;font-size:.95rem;padding:.7rem 2rem;border-radius:12px;cursor:pointer;">🗑 إعادة الكل من البداية</button>
+      </div>
+    </div>
+    <div id="quiz-start" style="text-align:center;padding:1.5rem 0;">
+      <p style="color:var(--tm);font-size:.85rem;margin-bottom:.6rem;">اختر تصنيفاً أو العب الكل</p>
+      <p id="qz-level-label" style="color:var(--gold);font-size:.8rem;margin-bottom:1.2rem;">المستوى: الكل</p>
+      <div style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;">
+        <button onclick="startQuiz('الكل',_quizLevel)" style="background:linear-gradient(135deg,rgba(201,168,76,.25),rgba(201,168,76,.1));border:1px solid rgba(201,168,76,.4);color:var(--gold);font-family:Tajawal,sans-serif;font-size:1rem;padding:.85rem 2.5rem;border-radius:14px;cursor:pointer;font-weight:700;">▶ ابدأ</button>
+        <button onclick="resetAllQuiz()" style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);color:#fca5a5;font-family:Tajawal,sans-serif;font-size:.85rem;padding:.85rem 1.5rem;border-radius:14px;cursor:pointer;">🔄 إعادة تعيين الكل</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ صفحة الأحاديث النبوية ══ -->
+<div class="pg" id="page-hadiths">
+  <div style="max-width:700px;margin:0 auto;padding:1.5rem 1rem 4rem;">
+    <div style="text-align:center;margin-bottom:1.5rem;">
+      <div style="font-size:2rem;margin-bottom:.4rem;">📜</div>
+      <h2 style="font-family:'Scheherazade New',serif;font-size:1.6rem;color:var(--gold);margin:0;">الأحاديث النبوية الشريفة</h2>
+      <p style="font-size:.75rem;color:var(--tm);margin:.3rem 0 0;">٩١+ حديث مصنّف — انقر للنسخ</p>
+    </div>
+    <input class="hadith-search" id="hadith-search" placeholder="🔍 ابحث في الأحاديث..." oninput="filterHadiths()"/>
+    <div class="hadith-cats" id="hadith-cats"></div>
+    <div class="hadith-counter" id="hadith-counter"></div>
+    <div id="hadith-list"></div>
+  </div>
+</div
+
+<!-- ══ صفحة الذكاء الاصطناعي ══ -->
+<div class="pg" id="page-ai" class="ai-page">
+  <div class="qa-wrap">
+    <div class="qa-header">
+      <div class="qa-header-stars">✨</div>
+      <div class="qa-header-title"><span>هُدى القرآن</span> — مساعد ذكي</div>
+      <div class="qa-header-sub">اسألني أي سؤال · القرآن · الحديث · الفقه · السيرة · قصص الأنبياء</div>
+    </div>
+    <div class="qa-messages" id="qa-messages">
+      <div class="qa-msg qa-msg-bot">
+        <div class="qa-avatar">🌙</div>
+        <div class="qa-bubble">
+          السلام عليكم ورحمة الله 🌙<br><br>
+          أنا <strong>هُدى القرآن</strong> — مساعدك الإسلامي الذكي. يمكنني الإجابة على أي سؤال عن:<br>
+          📖 القرآن وتفسيره &nbsp;•&nbsp; 📚 الحديث النبوي<br>
+          🏛️ الفقه والأحكام &nbsp;•&nbsp; ⭐ السيرة وقصص الأنبياء<br><br>
+          ✨ اكتب سؤالك وسأجيبك بإذن الله
+        </div>
+      </div>
+    </div>
+    <div class="qa-suggestions" id="qa-suggestions">
+      <button class="qa-sug" onclick="qaAsk('📖 ما فضل القرآن الكريم؟')">📖 فضل القرآن</button>
+      <button class="qa-sug" onclick="qaAsk('✨ ما أسماء الله الحسنى وفضلها؟')">✨ أسماء الله</button>
+      <button class="qa-sug" onclick="qaAsk('📜 اقصص علي قصة يوسف عليه السلام')">📜 قصة يوسف</button>
+      <button class="qa-sug" onclick="qaAsk('⚖️ ما حكم تارك الصلاة؟')">⚖️ حكم تارك الصلاة</button>
+      <button class="qa-sug" onclick="qaAsk('🌙 ما فضل الصيام في الإسلام؟')">🌙 فضل الصيام</button>
+      <button class="qa-sug" onclick="qaAsk('🏛️ ما أركان الإسلام الخمسة؟')">🏛️ أركان الإسلام</button>
+      <button class="qa-sug" onclick="qaAsk('📖 اشرح لي آية الكرسي')">⭐ آية الكرسي</button>
+    </div>
+    <div class="qa-input-area">
+      <div class="qa-input-row">
+        <button class="qa-send" id="qa-send" onclick="qaSendMsg()" title="إرسال">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+        <textarea class="qa-inp" id="qa-inp" placeholder="اكتب سؤالك هنا... مثال: ما تفسير سورة الفاتحة؟" rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();qaSendMsg();}"
+          oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,110)+'px'">
+        </textarea>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ══════════════════════════════════════════
+     COMMUNITY PAGE
+══════════════════════════════════════════ -->
+<div class="pg" id="page-community">
+<div class="comm-wrap">
+  <!-- Hero -->
+  <div class="comm-hero">
+    <div class="comm-hero-icon">👥</div>
+    <h2 class="comm-hero-title">المجتمع الإسلامي</h2>
+    <p class="comm-hero-sub">اطرح سؤالك · شارك علمك · انفع غيرك</p>
+    <div class="comm-stats" id="comm-stats">
+      <div class="comm-stat"><b id="comm-stat-q">0</b><span>سؤال</span></div>
+      <div class="comm-stat"><b id="comm-stat-a">0</b><span>إجابة</span></div>
+      <div class="comm-stat"><b id="comm-stat-u">0</b><span>مشارك</span></div>
+    </div>
+  </div>
+
+  <!-- New Question Card -->
+  <div class="comm-card comm-compose">
+    <div class="comm-card-head">
+      <span class="comm-card-icon">✍️</span>
+      <span>اطرح سؤالاً جديداً</span>
+    </div>
+    <textarea id="comm-q-inp" class="comm-textarea" placeholder="مثال: ما حكم صيام الست من شوال؟" rows="3"></textarea>
+    <div class="comm-compose-actions">
+      <label class="comm-anon">
+        <input type="checkbox" id="comm-anon-cb">
+        <span>نشر كمجهول</span>
+      </label>
+      <button class="comm-btn-post" onclick="commPostQ()">نشر السؤال</button>
+    </div>
+    <p class="comm-disclaimer">للمناقشة العلمية فقط · ليست فتوى رسمية</p>
+  </div>
+
+  <!-- Filters -->
+  <div class="comm-filters">
+    <button class="comm-filter on" onclick="commFilter('all',this)">الكل</button>
+    <button class="comm-filter" onclick="commFilter('top',this)">الأعلى تقييماً</button>
+    <button class="comm-filter" onclick="commFilter('new',this)">الأحدث</button>
+    <button class="comm-filter" onclick="commFilter('unanswered',this)">بدون إجابة</button>
+  </div>
+
+  <!-- Questions List -->
+  <div id="comm-list" class="comm-list"></div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PROFILE PAGE (محسّن)
+══════════════════════════════════════════ -->
+<div class="pg" id="page-profile">
+<div style="padding:1rem;max-width:600px;margin:0 auto;direction:rtl;">
+  <div style="text-align:center;padding:1.5rem 0 .8rem;">
+    <div id="prof-avatar" style="width:72px;height:72px;background:linear-gradient(135deg,rgba(201,168,76,.3),rgba(13,59,46,.8));border:2px solid rgba(201,168,76,.4);border-radius:50%;margin:0 auto .8rem;display:flex;align-items:center;justify-content:center;font-size:2rem;">👤</div>
+    <h2 id="prof-name" style="font-family:'Scheherazade New',serif;font-size:1.6rem;color:var(--gold);margin:.2rem 0">ضيف</h2>
+    <p id="prof-joined" style="color:var(--tm);font-size:.75rem;"></p>
+  </div>
+  <!-- نقاط ومستوى -->
+  <div style="background:linear-gradient(135deg,rgba(201,168,76,.15),rgba(13,59,46,.5));border:1px solid rgba(201,168,76,.3);border-radius:18px;padding:1.1rem;margin-bottom:1rem;text-align:center;">
+    <div style="color:var(--gold);font-size:.8rem;margin-bottom:.4rem;">⭐ النقاط والمستوى</div>
+    <div id="prof-points" style="font-size:2.2rem;font-weight:700;color:#f0d080;font-family:'Scheherazade New',serif;">0</div>
+    <div id="prof-level" style="color:var(--tm);font-size:.78rem;margin-top:.2rem;">مبتدئ</div>
+    <div style="background:rgba(0,0,0,.4);border-radius:30px;height:8px;margin-top:.8rem;overflow:hidden;">
+      <div id="prof-xp-bar" style="background:linear-gradient(90deg,var(--gold3),var(--gold));height:100%;width:0%;border-radius:30px;transition:width .6s;"></div>
+    </div>
+    <div id="prof-xp-label" style="color:var(--tm);font-size:.7rem;margin-top:.3rem;"></div>
+  </div>
+  <!-- إحصائيات النشاط -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1rem;" id="prof-activity-grid"></div>
+  <!-- تقدم القرآن -->
+  <div style="background:rgba(13,59,46,.4);border:1px solid rgba(201,168,76,.15);border-radius:16px;padding:1rem;margin-bottom:1rem;">
+    <div style="color:var(--gold);font-size:.88rem;font-weight:700;margin-bottom:.8rem;">📖 تقدّم التلاوة</div>
+    <div id="prof-quran-progress"></div>
+  </div>
+  <!-- الأوسمة -->
+  <div style="background:rgba(13,59,46,.4);border:1px solid rgba(201,168,76,.15);border-radius:16px;padding:1rem;margin-bottom:1rem;">
+    <div style="color:var(--gold);font-size:.88rem;font-weight:700;margin-bottom:.8rem;">🏅 الأوسمة المكتسبة</div>
+    <div id="prof-badges" style="display:flex;flex-wrap:wrap;gap:.5rem;"></div>
+  </div>
+  <!-- مشاركات المجتمع -->
+  <div style="background:rgba(13,59,46,.4);border:1px solid rgba(201,168,76,.15);border-radius:16px;padding:1rem;margin-bottom:1rem;">
+    <div style="color:var(--gold);font-size:.88rem;font-weight:700;margin-bottom:.6rem;">💬 مشاركاتي في المجتمع</div>
+    <div id="prof-comm-summary" style="color:var(--tm);font-size:.82rem;"></div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SEARCH PAGE — بحث في القرآن
+══════════════════════════════════════════ -->
+<div class="pg" id="page-search">
+<div style="padding:1rem;max-width:650px;margin:0 auto;direction:rtl;">
+  <div style="text-align:center;padding:1.2rem 0 .8rem;">
+    <div style="font-size:2.2rem;">🔍</div>
+    <h2 style="font-family:'Scheherazade New',serif;font-size:1.7rem;color:var(--gold);margin:.3rem 0;">بحث في القرآن الكريم</h2>
+  </div>
+  <!-- Search input -->
+  <div style="position:relative;margin-bottom:1rem;">
+    <input id="qs-inp" type="text" placeholder="ابحث عن كلمة أو آية... مثال: الرحمن الرحيم"
+      style="width:100%;background:rgba(13,59,46,.4);border:1.5px solid rgba(201,168,76,.3);border-radius:14px;color:#e8dfc0;font-family:'Scheherazade New',serif;font-size:1rem;padding:.8rem 3rem .8rem 1rem;outline:none;box-sizing:border-box;direction:rtl;"
+      oninput="qsSearch(this.value)" onkeydown="if(event.key==='Enter') qsSearch(this.value)"/>
+    <span style="position:absolute;right:1rem;top:50%;transform:translateY(-50%);color:var(--gold);font-size:1.1rem;pointer-events:none;">🔍</span>
+  </div>
+  <!-- Filter tabs -->
+  <div style="display:flex;gap:.5rem;margin-bottom:.9rem;overflow-x:auto;padding-bottom:.3rem;">
+    <button class="comm-filter on" id="qsf-quran"   onclick="qsSetFilter('quran',this)">📖 القرآن</button>
+    <button class="comm-filter"    id="qsf-tafsir"  onclick="qsSetFilter('tafsir',this)">📚 التفسير</button>
+    <button class="comm-filter"    id="qsf-hadith"  onclick="qsSetFilter('hadith',this)">📜 الأحاديث</button>
+    <button class="comm-filter"    id="qsf-all"     onclick="qsSetFilter('all',this)">🔎 الكل</button>
+  </div>
+  <!-- Stats -->
+  <div id="qs-stats" style="color:var(--tm);font-size:.78rem;margin-bottom:.7rem;text-align:center;"></div>
+  <!-- Results -->
+  <div id="qs-results"></div>
+</div>
+</div>
+
+<!-- Tafsir Popup -->
+<div class="tafsir-overlay" id="tafsir-overlay" onclick="closeTafsir()"></div>
+<div class="tafsir-popup" id="tafsir-popup">
+  <div class="tafsir-popup-hdr">
+    <span class="tafsir-popup-title" id="tafsir-title">تفسير الآية</span>
+    <button class="tafsir-popup-x" onclick="closeTafsir()">✕</button>
+  </div>
+  <div class="tafsir-popup-ayah" id="tafsir-ayah-text"></div>
+  <div class="tafsir-popup-body" id="tafsir-body"><div class="tafsir-popup-loading">جارٍ التحميل...</div></div>
+  <div class="tafsir-popup-actions">
+    <button class="tafsir-action-btn" id="tafsir-play-btn" onclick="event.preventDefault();tafsirPlay();return false;">▶ استمع للآية</button>
+    <button class="tafsir-action-btn" onclick="tafsirCopy()">📋 نسخ التفسير</button>
+    <button class="tafsir-action-btn" onclick="_shareCurrentAyah()">📸 مشاركة كصورة</button>
+  </div>
+</div>
+<script src="js/config.js"></script>
+<script src="js/quran-data.js"></script>
+<script src="js/app.01.js"></script>
+<script src="js/app.02.js"></script>
+<script src="js/app.03.js"></script>
+<script src="js/app.04.js"></script>
+<script src="js/app.05.js"></script>
+<script src="js/ui-handlers.js"></script>
+<script src="js/features-core.js"></script>
+<script src="js/features-ui.js"></script>
+<script src="js/native.js"></script>
+<script src="js/v3.js"></script>
+<script src="js/reader.js"></script>
+<script src="js/tasbeeh.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/dock.js"></script>
+<script src="js/upgrade.js"></script>
+<script src="js/notifications.js"></script>
+<script src="js/adhan-live.js"></script>
+<script src="js/pwa.js"></script>
+
+
+<!-- ══════ لوحة القراءات العشر ══════ -->
+<div id="qiraat-panel" onclick="if(event.target===this)closeQiraatPanel()">
+  <div class="qp-sheet">
+    <div class="qp-title">القراءات العشر ورواتها</div>
+    <div id="qiraat-list"></div>
+    <button onclick="closeQiraatPanel()" style="width:100%;margin-top:0.8rem;padding:0.75rem;border-radius:14px;border:1px solid rgba(201,168,76,0.3);background:rgba(201,168,76,0.1);color:#C9A84C;font-family:Tajawal,sans-serif;font-weight:700;cursor:pointer;">إغلاق</button>
+  </div>
+</div>
+<script>
+window.QIRAAT = [
+  // 1. نافع
+  {id:'qalun', name:'قالون عن نافع', reader:'نافع المدني', desc:'المدينة · ليبيا وتونس',
+   play:function(s){ playQiraatSurah('https://server12.mp3quran.net/qal/', s); }},
+  {id:'warsh', name:'ورش عن نافع', reader:'نافع المدني', desc:'المدينة · المغرب العربي',
+   play:function(s){ playQiraatSurah('https://server10.mp3quran.net/wsh/', s); }},
+  // 2. ابن كثير
+  {id:'bazzi', name:'البزي عن ابن كثير', reader:'ابن كثير المكي', desc:'مكة المكرمة',
+   play:function(s){ playQiraatSurah('https://server8.mp3quran.net/baz/', s); }},
+  {id:'qunbul', name:'قنبل عن ابن كثير', reader:'ابن كثير المكي', desc:'مكة المكرمة',
+   play:function(s){ playQiraatSurah('https://server11.mp3quran.net/qun/', s); }},
+  // 3. أبو عمرو
+  {id:'duri', name:'الدوري عن أبي عمرو', reader:'أبو عمرو البصري', desc:'البصرة · السودان',
+   play:function(s){ playQiraatSurah('https://server6.mp3quran.net/dor/', s); }},
+  {id:'susi', name:'السوسي عن أبي عمرو', reader:'أبو عمرو البصري', desc:'البصرة',
+   play:function(s){ playQiraatSurah('https://server11.mp3quran.net/sos/', s); }},
+  // 4. ابن عامر
+  {id:'hisham', name:'هشام عن ابن عامر', reader:'ابن عامر الشامي', desc:'الشام',
+   play:function(s){ playQiraatSurah('https://server11.mp3quran.net/hisham/', s); }},
+  {id:'ibndhakwan', name:'ابن ذكوان عن ابن عامر', reader:'ابن عامر الشامي', desc:'الشام',
+   play:function(s){ playQiraatSurah('https://server11.mp3quran.net/dkwn/', s); }},
+  // 5. عاصم
+  {id:'shubah', name:'شعبة عن عاصم', reader:'عاصم الكوفي', desc:'الكوفة',
+   play:function(s){ playQiraatSurah('https://server11.mp3quran.net/shubah/', s); }},
+  {id:'hafs', name:'حفص عن عاصم', reader:'عاصم الكوفي', desc:'الكوفة · الأشهر عالمياً',
+   play:function(s){ if(typeof startPB==='function') startPB('alafasy', s, false); else playQiraatSurah('https://server8.mp3quran.net/afs/', s); }},
+  // 6. حمزة
+  {id:'khalaf', name:'خلف عن حمزة', reader:'حمزة الزيات', desc:'الكوفة',
+   play:function(s){ playQiraatSurah('https://server12.mp3quran.net/khalaf/', s); }},
+  {id:'khallad', name:'خلاد عن حمزة', reader:'حمزة الزيات', desc:'الكوفة',
+   play:function(s){ playQiraatSurah('https://server12.mp3quran.net/khal/', s); }},
+  // 7. الكسائي
+  {id:'abualharith', name:'أبو الحارث عن الكسائي', reader:'الكسائي', desc:'الكوفة',
+   play:function(s){ playQiraatSurah('https://server12.mp3quran.net/harith/', s); }},
+  {id:'duri_kisai', name:'الدوري عن الكسائي', reader:'الكسائي', desc:'الكوفة',
+   play:function(s){ playQiraatSurah('https://server12.mp3quran.net/duri_kisai/', s); }},
+  // 8. أبو جعفر
+  {id:'ibnwardan', name:'ابن وردان عن أبي جعفر', reader:'أبو جعفر المدني', desc:'المدينة',
+   play:function(s){ playQiraatSurah('https://server11.mp3quran.net/wardan/', s); }},
+  {id:'ibnjammaz', name:'ابن جماز عن أبي جعفر', reader:'أبو جعفر المدني', desc:'المدينة',
+   play:function(s){ playQiraatSurah('https://server11.mp3quran.net/jammaz/', s); }},
+  // 9. يعقوب
+  {id:'ruways', name:'رويس عن يعقوب', reader:'يعقوب الحضرمي', desc:'البصرة',
+   play:function(s){ playQiraatSurah('https://server11.mp3quran.net/ruways/', s); }},
+  {id:'rawh', name:'روح عن يعقوب', reader:'يعقوب الحضرمي', desc:'البصرة',
+   play:function(s){ playQiraatSurah('https://server11.mp3quran.net/rawh/', s); }},
+  // 10. خلف
+  {id:'ishaq', name:'إسحاق عن خلف', reader:'خلف البزار', desc:'بغداد',
+   play:function(s){ playQiraatSurah('https://server12.mp3quran.net/ishaq/', s); }},
+  {id:'idris', name:'إدريس عن خلف', reader:'خلف البزار', desc:'بغداد',
+   play:function(s){ playQiraatSurah('https://server12.mp3quran.net/idris/', s); }}
+];
+
+function qiraatAudioCandidates(base, surah) {
+  var pad = String(surah).padStart(3, '0');
+  var list = [];
+  // islamic.network editions (أكثر ثباتًا)
+  var edMap = {
+    'wsh': 'ar.muhammadanwarshahat',
+    'wrs': 'ar.muhammadanwarshahat',
+    'warsh': 'ar.muhammadanwarshahat',
+    'qal': 'ar.aliabdurrahmanalhuthaifyqaloon',
+    'qaloon': 'ar.aliabdurrahmanalhuthaifyqaloon',
+    'shubah': 'ar.abdurrasheedsufishubahanasim',
+    'shu': 'ar.abdurrasheedsufishubahanasim',
+    'afs': 'ar.alafasy',
+    'hafs': 'ar.alafasy'
+  };
+  var key = '';
+  try {
+    var m = String(base || '').match(/mp3quran\.net\/([^\/]+)\//i);
+    if (m) key = m[1].toLowerCase();
+  } catch(e){}
+  var ed = edMap[key];
+  if (ed) {
+    list.push('https://cdn.islamic.network/quran/audio-surah/128/' + ed + '/' + surah + '.mp3');
+    list.push('https://cdn.islamic.network/quran/audio-surah/64/' + ed + '/' + surah + '.mp3');
+  }
+  if (base) {
+    list.push(base + pad + '.mp3');
+    list.push(base + surah + '.mp3');
+  }
+  // fallbacks حفص
+  list.push('https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/' + surah + '.mp3');
+  list.push('https://server8.mp3quran.net/afs/' + pad + '.mp3');
+  return list;
+}
+
+function playQiraatSurah(base, surah) {
+  surah = parseInt(surah, 10) || (typeof curSurahN !== 'undefined' && curSurahN) || 1;
+  var candidates = qiraatAudioCandidates(base, surah);
+  var aud = document.getElementById('aud');
+  if (!aud) { aud = new Audio(); aud.id = 'aud'; document.body.appendChild(aud); }
+  try { if (window.G_STOP) G_STOP(); else if (typeof stopPlay === 'function') stopPlay(); } catch(e){}
+
+  var i = 0;
+  function tryPlay() {
+    if (i >= candidates.length) {
+      if (typeof showToast === 'function') showToast('تعذّر تشغيل هذه الرواية');
+      return;
+    }
+    var url = candidates[i++];
+    aud.onerror = function(){ tryPlay(); };
+    aud.onended = function(){
+      if (surah < 114) playQiraatSurah(base, surah + 1);
+    };
+    aud.src = url;
+    aud.preload = 'auto';
+    var p = aud.play();
+    if (p && p.catch) p.catch(function(){ tryPlay(); });
+  }
+  tryPlay();
+  if (typeof curSurahN !== 'undefined') curSurahN = surah;
+  if (typeof isPlay !== 'undefined') isPlay = true;
+  try { if (typeof updUI === 'function') updUI(); } catch(e){}
+  try {
+    if (typeof HudaMushaf !== 'undefined' && HudaMushaf.goSurah) HudaMushaf.goSurah(surah);
+  } catch(e){}
+  if (typeof showToast === 'function') showToast('▶ تشغيل القراءة — سورة ' + surah);
+}
+
+function openQiraatPanel() {
+  var list = document.getElementById('qiraat-list');
+  if (!list) return;
+  var cur = localStorage.getItem('nq_qiraat') || 'hafs';
+  list.innerHTML = '';
+  var lastReader = '';
+  QIRAAT.forEach(function(q) {
+    if (q.reader !== lastReader) {
+      var hdr = document.createElement('div');
+      hdr.style.cssText = 'color:#C9A84C;font-size:0.78rem;font-weight:700;padding:0.6rem 0.3rem 0.3rem;margin-top:0.4rem;border-top:1px solid rgba(201,168,76,0.12);';
+      hdr.textContent = q.reader;
+      list.appendChild(hdr);
+      lastReader = q.reader;
+    }
+    var d = document.createElement('div');
+    d.className = 'qp-item' + (q.id === cur ? ' on' : '');
+    d.innerHTML = '<div><div class="qp-name">' + q.name + '</div><div class="qp-desc">' + q.desc + '</div></div>';
+    d.onclick = function() { selectQiraat(q); };
+    list.appendChild(d);
+  });
+  document.getElementById('qiraat-panel').classList.add('on');
+}
+function closeQiraatPanel() {
+  var p = document.getElementById('qiraat-panel');
+  if (p) p.classList.remove('on');
+}
+function selectQiraat(q) {
+  if (typeof q === 'string') {
+    q = QIRAAT.find(function(x){ return x.id === q; }) || QIRAAT[9];
+  }
+  try { localStorage.setItem('nq_qiraat', q.id); } catch(e){}
+  var surah = (typeof curSurahN !== 'undefined' && curSurahN) ? curSurahN : 1;
+  if (q.play) q.play(surah);
+  if (typeof showToast === 'function') showToast('رواية: ' + q.name);
+  closeQiraatPanel();
+}
+
+// Ayah highlighting helper used by audio
+window.highlightPlayingAyah = function(surah, ayah) {
+  document.querySelectorAll('.ay.playing, .ayah.playing, .ay.pa, .ayah.pa').forEach(function(el) {
+    el.classList.remove('playing', 'pa');
+  });
+  var sel = document.querySelector('[data-s="' + surah + '"][data-a="' + ayah + '"], #ay-' + ayah + ', .ay[data-ayah="' + ayah + '"]');
+  if (sel) {
+    sel.classList.add('playing', 'pa');
+    try { sel.scrollIntoView({behavior:'smooth', block:'center'}); } catch(e){}
+  }
+};
+</script>
+
+
+<script>
+/* ── Hifz Typewriter: reveal ayah letter-by-letter while playing ── */
+window.hifzTypewriter = function(surah, ayah) {
+  var el = document.querySelector('.ay[data-s="'+surah+'"][data-a="'+ayah+'"], #ay-'+ayah+', .ay[data-a="'+ayah+'"]');
+  if (!el) return;
+  // Store full text once
+  if (!el.getAttribute('data-full')) {
+    var clone = el.cloneNode(true);
+    var mk = clone.querySelector('.mk');
+    if (mk) mk.remove();
+    el.setAttribute('data-full', (clone.textContent || '').trim());
+  }
+  var full = el.getAttribute('data-full') || '';
+  var marker = el.querySelector('.mk');
+  var markerHTML = marker ? marker.outerHTML : '';
+  // Reveal
+  el.classList.add('rev', 'hifz-typing');
+  el.style.opacity = '1';
+  el.style.color = '';
+  if (window._hifzTimer) clearInterval(window._hifzTimer);
+  var i = 0;
+  // Keep marker, type the text
+  el.innerHTML = '';
+  window._hifzTimer = setInterval(function() {
+    if (i >= full.length) {
+      clearInterval(window._hifzTimer);
+      el.textContent = full + ' ';
+      if (markerHTML) el.insertAdjacentHTML('beforeend', markerHTML);
+      el.classList.remove('hifz-typing');
+      return;
+    }
+    var step = 2;
+    el.textContent = full.slice(0, i + step) + ' ';
+    if (markerHTML) el.insertAdjacentHTML('beforeend', markerHTML);
+    i += step;
+  }, 40);
+};
+
+/* ── Improve search: always try API + local ── */
+(function() {
+  var orig = window.qsSearch;
+  if (typeof orig !== 'function') return;
+  window.qsSearch = function(query) {
+    var q = (query || '').trim();
+    var resultsEl = document.getElementById('qs-results');
+    var statsEl = document.getElementById('qs-stats');
+    if (!resultsEl) return orig(query);
+    if (!q) {
+      resultsEl.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tm);">اكتب كلمة للبحث</div>';
+      if (statsEl) statsEl.textContent = '';
+      return;
+    }
+    if (statsEl) statsEl.textContent = '⏳ جارٍ البحث...';
+    // Always use API for reliability
+    var url = 'https://api.alquran.cloud/v1/search/' + encodeURIComponent(q) + '/all/ar';
+    fetch(url).then(function(r) { return r.json(); }).then(function(data) {
+      var matches = (data.data && data.data.matches) || [];
+      if (statsEl) statsEl.textContent = 'وُجد ' + matches.length + ' نتيجة لـ "' + q + '"';
+      if (!matches.length) {
+        resultsEl.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tm);">لا توجد نتائج</div>';
+        return;
+      }
+      resultsEl.innerHTML = matches.slice(0, 40).map(function(m) {
+        var txt = (m.text || '').replace(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
+          '<mark style="background:rgba(201,168,76,.3);color:#f0d080;border-radius:3px;padding:0 2px;">' + q + '</mark>');
+        var sNum = m.surah ? m.surah.number : '';
+        var aNum = m.numberInSurah || '';
+        return '<div style="background:rgba(13,59,46,.35);border:1px solid rgba(201,168,76,.15);border-radius:14px;padding:.9rem;margin-bottom:.7rem;cursor:pointer;" onclick="if(typeof HudaMushaf!==\'undefined\'){SP(\'mushaf\');HudaMushaf.goAyah(' + sNum + ',' + aNum + ');}">' +
+          '<div style="color:var(--gold);font-size:.8rem;margin-bottom:.3rem;">📖 سورة ' + (m.surah && (m.surah.name || m.surah.englishName) || '') + ' — آية ' + aNum + '</div>' +
+          '<div style="color:#e8dfc0;font-family:\'Scheherazade New\',serif;font-size:1.05rem;line-height:1.9;">' + txt + '</div></div>';
+      }).join('');
+    }).catch(function() {
+      // fallback to original
+      if (typeof orig === 'function') orig(query);
+      else if (resultsEl) resultsEl.innerHTML = '<div style="text-align:center;color:var(--tm);padding:1rem;">⚠️ تعذّر البحث — تحقق من الاتصال</div>';
+    });
+  };
+})();
+</script>
+
+
+<script>
+window.mushafFs = function(d) {
+  try {
+    var cur = parseInt(localStorage.getItem('nq_rdfs') || '36', 10);
+    if (isNaN(cur)) cur = 36;
+    cur = Math.max(18, Math.min(56, cur + d));
+    localStorage.setItem('nq_rdfs', String(cur));
+    document.documentElement.style.setProperty('--rdfs', cur + 'px');
+    var inn = document.getElementById('mp-in');
+    if (inn) {
+      inn.style.fontSize = cur + 'px';
+      inn.style.overflowY = 'auto';
+    }
+    // sync reader state if available
+    if (window.HudaMushaf) {
+      try { window.HudaMushaf.fs = window.HudaMushaf.fs || function(){}; } catch(e){}
+    }
+    var v = document.getElementById('st-fsv');
+    if (v) {
+      v.textContent = String(cur).replace(/\d/g, function(x){ return '٠١٢٣٤٥٦٧٨٩'[x]; });
+    }
+    if (typeof showToast === 'function') showToast('حجم الخط: ' + String(cur).replace(/\d/g, function(x){ return '٠١٢٣٤٥٦٧٨٩'[x]; }));
+  } catch (err) { console.error(err); }
+};
+</script>
+
+
+<script>
+window._ayahAct = function(k) {
+  try {
+    if (window.HudaMushaf && typeof HudaMushaf.act === 'function') {
+      HudaMushaf.act(k);
+      return;
+    }
+  } catch(e) {}
+  var el = document.querySelector('.ay.sel') || document.querySelector('.mp-in .ay.playing') || document.querySelector('#rd-flow .ay.sel');
+  if (!el) { if (typeof showToast==='function') showToast('اضغط على آية أولاً'); return; }
+  var s = +el.getAttribute('data-s'), a = +el.getAttribute('data-a');
+  if (k === 'play' || k === 'playFrom') {
+    window._gaplessMode = true;
+    try { localStorage.setItem('nq_gapless','1'); localStorage.setItem('nq_last_ayah', JSON.stringify({s:s,a:a})); } catch(e){}
+    if (typeof playAyahGapless === 'function') playAyahGapless(a, s);
+    else if (typeof showToast==='function') showToast('المشغّل غير جاهز');
+  } else if (k === 'tafsir' && typeof openTafsirPopup === 'function') {
+    openTafsirPopup(s, a);
+  } else if (k === 'fav' && typeof toggleFav === 'function') {
+    toggleFav(s, a, el.textContent || '');
+  } else if (k === 'copy') {
+    var t = (el.textContent || '') + ' ﴿' + s + ':' + a + '﴾';
+    if (navigator.clipboard) navigator.clipboard.writeText(t).then(function(){ if(typeof showToast==='function') showToast('✅ تم النسخ'); });
+  }
+};
+</script>
+
+
+
+<script>
+/* RESUME_FIX_V36 */
+window.togPlay = function(){ if(window.__hudaTogPlay) return window.__hudaTogPlay(); };
+/* FORCE_FULL_SURAH_V34 — سورة كاملة فقط */
+(function(){
+  function go(s){
+    s = +s || 1;
+    if (typeof playSurahContinuous === 'function') return playSurahContinuous(s);
+    if (typeof playAyahGapless === 'function') return playAyahGapless(1, s);
+  }
+  window.startPB = function(recId, sNum){
+    if (recId) try { localStorage.setItem('nq_rec', recId); localStorage.removeItem('nq_qiraat'); } catch(e){}
+    window._qiraat = null; window._forceEdition = null; window._qiraatBase = null;
+    go(sNum || 1);
+  };
+  window.playAyahGapless = function(a, s){ go(s || 1); };
+  var _tp = window.togPlay;
+  // لا نستبدل togPlay إن وُجد من ui-handlers
+})();
+</script>
+
+<script>
+/* HUDA_ENGINE_V38 */
+(function(){
+  function wire(){
+    if (typeof window.__hudaTogPlay === 'function') {
+      window.togPlay = function(){ return window.__hudaTogPlay(); };
+    }
+    // stopPlay الكامل فقط عبر G_STOP
+    window.stopPlay = function(){
+      if (typeof window.G_STOP === 'function') return window.G_STOP();
+    };
+  }
+  wire();
+  document.addEventListener('DOMContentLoaded', wire);
+  setTimeout(wire, 0);
+  setTimeout(wire, 500);
+})();
+</script>
+
+
+<!-- ═══ شاشة الأذان الحية ═══ -->
+<div id="adhan-live" class="adhan-live" hidden aria-hidden="true">
+  <div class="al-sky">
+    <div class="al-stars" id="al-stars"></div>
+    <div class="al-moon"></div>
+    <div class="al-birds" aria-hidden="true">
+      <span class="al-bird b1">🕊️</span>
+      <span class="al-bird b2">🕊️</span>
+      <span class="al-bird b3">🕊️</span>
+      <span class="al-bird b4">🕊️</span>
+      <span class="al-bird b5">🕊️</span>
+    </div>
+    <div class="al-clouds">
+      <span class="al-cloud c1"></span>
+      <span class="al-cloud c2"></span>
+    </div>
+  </div>
+  <div class="al-content">
+    <div class="al-kaaba-wrap">
+      <div class="al-kaaba">
+        <div class="al-kaaba-body">
+          <div class="al-kiswa"></div>
+          <div class="al-belt"></div>
+          <div class="al-door"></div>
+        </div>
+        <div class="al-kaaba-base"></div>
+        <div class="al-glow"></div>
+      </div>
+      <div class="al-minarets">
+        <span class="al-min m1"></span>
+        <span class="al-min m2"></span>
+      </div>
+    </div>
+    <div class="al-badge">🕌 حان وقت الصلاة</div>
+    <h1 class="al-prayer" id="al-prayer-name">الأذان</h1>
+    <p class="al-sub" id="al-sub">الله أكبر · الله أكبر</p>
+    <div class="al-pulse" id="al-pulse">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="al-actions">
+      <button type="button" class="al-btn-stop" onclick="stopAdhanLive()">⏹ إيقاف الأذان</button>
+      <button type="button" class="al-btn-mute" onclick="muteAdhanLive()" id="al-mute-btn">🔇 كتم</button>
+    </div>
+    <p class="al-footer">هُدى القرآن</p>
+  </div>
+</div>
+
+</body>
+</html>

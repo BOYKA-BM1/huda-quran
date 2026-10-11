@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0D3B2E"/>
+      <stop offset="100%" stop-color="#071510"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8C97A"/>
+      <stop offset="50%" stop-color="#C9A84C"/>
+      <stop offset="100%" stop-color="#8B6914"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Rounded square background -->
+  <rect x="16" y="16" width="480" height="480" rx="96" ry="96" fill="url(#bg)" stroke="url(#gold)" stroke-width="12"/>
+  <!-- Inner decorative arch -->
+  <path d="M120 140 Q256 60 392 140 L392 380 Q256 460 120 380 Z" fill="none" stroke="url(#gold)" stroke-width="6" opacity="0.6"/>
+  <!-- Crescent -->
+  <path d="M300 110 A70 70 0 1 1 230 110 A50 50 0 1 0 300 110" fill="url(#gold)" filter="url(#glow)"/>
+  <!-- Rays -->
+  <g stroke="#E8C97A" stroke-width="2" opacity="0.5">
+    <line x1="256" y1="70" x2="256" y2="50"/>
+    <line x1="290" y1="85" x2="305" y2="70"/>
+    <line x1="222" y1="85" x2="207" y2="70"/>
+  </g>
+  <!-- Arabic text approximation - هدى القرآن -->
+  <text x="256" y="280" text-anchor="middle" font-family="Amiri, Scheherazade New, serif" font-size="72" font-weight="700" fill="url(#gold)" filter="url(#glow)">هدى</text>
+  <text x="256" y="360" text-anchor="middle" font-family="Amiri, Scheherazade New, serif" font-size="56" font-weight="700" fill="url(#gold)">القرآن</text>
+</svg>
