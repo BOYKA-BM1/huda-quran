@@ -1,18 +1,14 @@
-/*! Huda mobile performance + tafsir + install fixes */
+/*! Huda — tafsir + install helpers (no layout interference) */
 (function () {
   'use strict';
-
   function $(id) { return document.getElementById(id); }
   function toast(m) { if (typeof showToast === 'function') showToast(m); }
 
-  /* تفسير من الملفات المحلية — يعمل حتى لو فشل المسار القديم */
+  /* تفسير محلي أولاً */
   window.openTafsirPopup = function (s, a) {
     s = +s; a = +a;
     var pop = $('tafsir-popup'), ov = $('tafsir-overlay');
-    if (!pop) {
-      toast('نافذة التفسير غير متاحة');
-      return;
-    }
+    if (!pop) { toast('نافذة التفسير غير متاحة'); return; }
     var title = $('tafsir-title');
     var ayahEl = $('tafsir-ayah-text');
     var body = $('tafsir-body');
@@ -34,12 +30,10 @@
         body.appendChild(d);
       }
     }
-
     function fail(msg) {
       if (body) body.innerHTML = '<div class="tafsir-popup-loading">' + (msg || 'تعذّر التحميل') + '</div>';
     }
 
-    // 1) محلي
     Promise.all([
       fetch('data/quran/ar.muyassar/' + s + '.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
       fetch('data/quran/quran-uthmani/' + s + '.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
@@ -55,7 +49,6 @@
         done(uHit && uHit.text ? uHit.text : (tHit.text || ''), tHit.text || tHit.tafsir || '');
         return;
       }
-      // 2) شبكة
       return fetch('https://api.alquran.cloud/v1/ayah/' + s + ':' + a + '/editions/ar.muyassar,quran-uthmani')
         .then(function (r) { return r.json(); })
         .then(function (j) {
@@ -79,7 +72,7 @@
     if (o) { o.classList.remove('show'); o.style.display = 'none'; }
   };
 
-  /* تثبيت PWA — مع شرح بديل لو المتصفح ما يدعمش */
+  /* تثبيت PWA — بدون عناصر ثابتة على الشاشة */
   var _dp = null;
   window.addEventListener('beforeinstallprompt', function (e) {
     e.preventDefault();
@@ -99,37 +92,9 @@
       return;
     }
     var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-    var isAndroid = /android/i.test(navigator.userAgent);
-    var msg;
-    if (isIOS) {
-      msg = 'على آيفون: اضغط مشاركة □ ثم «إضافة إلى الشاشة الرئيسية»';
-    } else if (isAndroid) {
-      msg = 'من قائمة المتصفح ⋮ اختَر «تثبيت التطبيق» أو «إضافة إلى الشاشة الرئيسية»';
-    } else {
-      msg = 'من قائمة المتصفح اختَر تثبيت التطبيق / Install app';
-    }
+    var msg = isIOS
+      ? 'على آيفون: اضغط مشاركة ثم «إضافة إلى الشاشة الرئيسية»'
+      : 'من قائمة المتصفح ⋮ اختَر «تثبيت التطبيق» أو «إضافة إلى الشاشة الرئيسية»';
     toast(msg);
-    // نافذة مساعدة بسيطة
-    if ($('pwa-help-mod')) { $('pwa-help-mod').style.display = 'flex'; return; }
-    var d = document.createElement('div');
-    d.id = 'pwa-help-mod';
-    d.style.cssText = 'position:fixed;inset:0;z-index:20050;background:rgba(0,0,0,.65);display:flex;align-items:flex-end;justify-content:center;padding:1rem;direction:rtl;';
-    d.innerHTML = '<div style="background:#0d2b1e;border:1px solid rgba(201,168,76,.35);border-radius:18px 18px 12px 12px;padding:1.2rem;max-width:400px;width:100%;color:#f0e6c0;font-family:Tajawal,sans-serif;">' +
-      '<div style="font-weight:700;color:#c9a84c;margin-bottom:.6rem;font-size:1.05rem;">تثبيت هُدى القرآن</div>' +
-      '<p style="margin:0 0 1rem;line-height:1.7;font-size:.9rem;color:#c5d4cc;">' + msg + '</p>' +
-      '<button type="button" onclick="document.getElementById(\'pwa-help-mod\').style.display=\'none\'" style="width:100%;padding:.7rem;border-radius:12px;border:1px solid rgba(201,168,76,.4);background:rgba(201,168,76,.2);color:#f0d080;font-family:Tajawal,sans-serif;font-weight:700;cursor:pointer;">حسناً</button></div>';
-    d.onclick = function (ev) { if (ev.target === d) d.style.display = 'none'; };
-    document.body.appendChild(d);
   };
-
-  /* إخفاء شاشة البداية بسرعة أكبر */
-  window.addEventListener('load', function () {
-    var sp = document.querySelector('.splash, #splash, .app-splash');
-    if (sp) {
-      setTimeout(function () {
-        sp.style.opacity = '0';
-        setTimeout(function () { sp.style.display = 'none'; }, 280);
-      }, 400);
-    }
-  });
 })();
