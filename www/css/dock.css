@@ -1,0 +1,78 @@
+/* ═══ مشغّل التلاوة العائم + اختيار القارئ والتحميل ═══ */
+body.in-reader{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
+body.in-reader #gplayer{display:none!important}
+body.in-reader .mp-act{bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+
+/* الكبسولة: نصف دائرة على الطرفين (يمين وشمال) */
+#rd-dock{position:fixed;z-index:965;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));display:none;align-items:center;gap:.4rem;height:66px;padding:7px;border-radius:999px;background:var(--rd-bar);border:1px solid var(--brd);box-shadow:0 16px 36px -12px #000c,inset 0 1px 0 #ffffff14;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+body.in-reader #rd-dock{display:flex}
+#rd-dock.idle{width:min(94vw,380px)}
+#rd-dock.act{width:min(94vw,460px)}
+#rd-dock button{font:inherit;border:0;cursor:pointer;color:var(--rd-ink);background:none;-webkit-tap-highlight-color:transparent}
+#rd-dock .ic{width:22px;height:22px}
+
+/* الحالة الخاملة */
+#rd-dock .dk-go{flex:1;height:52px;border-radius:999px;background:var(--gold);color:var(--dark);font-weight:800;font-size:1.05rem;display:flex;align-items:center;justify-content:center;gap:.55rem;box-shadow:0 6px 16px -6px color-mix(in srgb,var(--gold) 70%,#000)}
+#rd-dock .dk-go .ic{width:26px;height:26px}
+#rd-dock .dk-rec{flex:none;max-width:44%;height:52px;border-radius:999px;background:var(--em2);display:flex;align-items:center;gap:.45rem;padding:0 .7rem 0 .5rem;border:1px solid var(--brd)}
+#rd-dock .dk-av{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.72rem;color:var(--gold);background:var(--em);border:1px solid var(--brd)}
+#rd-dock .dk-rn{font-size:.78rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+#rd-dock .dk-ch{color:var(--gold);font-size:.8rem}
+#rd-dock .dk-act{display:none;flex:1;align-items:center;gap:.25rem;min-width:0}
+#rd-dock.act .dk-go,#rd-dock.act .dk-rec,#rd-dock.act .dk-more0{display:none}
+#rd-dock.act .dk-act{display:flex}
+
+/* الحالة النشطة */
+#rd-dock .dk-info{flex:1;min-width:0;text-align:start;padding:0 .7rem 0 .2rem;display:flex;flex-direction:column;gap:.05rem}
+#rd-dock .dk-info b{font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#rd-dock .dk-info small{font-size:.7rem;color:var(--tm);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#rd-dock .dk-sm{flex:none;width:42px;height:46px;border-radius:50%;display:grid;place-items:center}
+#rd-dock .dk-sm:active{background:var(--em2)}
+#rd-dock .dk-pp{flex:none;width:54px;height:54px;border-radius:50%;background:var(--gold);color:var(--dark);display:grid;place-items:center;box-shadow:0 6px 16px -6px color-mix(in srgb,var(--gold) 70%,#000)}
+#rd-dock .dk-pp .ic{width:26px;height:26px}
+#rd-dock.playing .dk-pp{animation:dkpulse 2s ease-in-out infinite}
+@keyframes dkpulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--gold) 45%,transparent)}50%{box-shadow:0 0 0 8px color-mix(in srgb,var(--gold) 0%,transparent)}}
+@media(prefers-reduced-motion:reduce){#rd-dock.playing .dk-pp{animation:none}}
+
+/* قائمة الخيارات */
+#dk-menu{position:fixed;z-index:966;left:50%;transform:translateX(-50%);bottom:calc(92px + env(safe-area-inset-bottom,0px));width:min(92vw,300px);background:var(--em);border:1px solid var(--brd);border-radius:22px;padding:.35rem;box-shadow:0 18px 40px -14px #000c}
+#dk-menu[hidden]{display:none}
+#dk-menu button{display:flex;justify-content:space-between;align-items:center;width:100%;font:inherit;font-size:.9rem;color:var(--cr);background:none;border:0;padding:.75rem .9rem;border-radius:14px;cursor:pointer}
+#dk-menu button:active,#dk-menu button:hover{background:var(--em2)}
+#dk-menu b{color:var(--gold);font-weight:700}
+#dk-menu .dk-danger,#dk-menu .dk-danger b{color:#c0392b}
+
+/* ═══ اختيار القارئ والتحميل ═══ */
+#rd-rec .sh{min-height:70vh}
+.rcp-top{display:flex;justify-content:space-between;align-items:center}
+.rcp-top h2{margin:0;color:var(--tl);font-size:1.15rem}
+.rcp-q{width:100%;margin:.7rem 0 .2rem;padding:.65rem .9rem;border-radius:99px;border:1px solid var(--brd);font:inherit;font-size:.95rem;background:var(--em);color:var(--tl)}
+.rcp-sl{display:flex;justify-content:space-between;align-items:center;gap:.6rem;margin:.5rem 0;font-size:.8rem;color:var(--tm)}
+.rcp-sl select{flex:1;max-width:62%;padding:.45rem .6rem;border-radius:10px;border:1px solid var(--brd);font:inherit;background:var(--em);color:var(--tl)}
+.rcp-used{display:flex;justify-content:space-between;align-items:center;font-size:.74rem;color:var(--tm);margin-bottom:.4rem}
+.rcp-used button{background:none;border:0;color:#c0392b;font:inherit;font-size:.74rem;cursor:pointer;text-decoration:underline}
+.rcp-list{flex:1;overflow:auto;display:flex;flex-direction:column;gap:.45rem;padding:.2rem 0 .8rem}
+.rcp-row{position:relative;display:flex;align-items:stretch;gap:.4rem}
+.rcp-pick{flex:1;min-width:0;display:flex;align-items:center;gap:.7rem;text-align:start;font:inherit;color:var(--tl);background:var(--em);border:1px solid var(--brd);border-radius:18px;padding:.6rem .75rem;cursor:pointer}
+.rcp-row.on .rcp-pick{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset}
+.rcp-av{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.85rem;color:var(--gold);background:var(--em2);border:1px solid var(--brd);overflow:hidden}
+.rcp-av img{width:100%;height:100%;object-fit:cover;object-position:center top}
+.rcp-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:.1rem}
+.rcp-tx b{font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rcp-tx small{font-size:.72rem;color:var(--tm);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rcp-tx em{font-style:normal;font-size:.68rem;color:var(--gold)}
+.rcp-ck{color:var(--gold);font-weight:700;width:1.1rem;text-align:center}
+.rcp-dl{flex:none;position:relative;width:52px;border-radius:18px;border:1px solid var(--brd);background:var(--em);color:var(--gold);font-size:1.15rem;cursor:pointer;display:grid;place-items:center}
+.rcp-dl.done{background:color-mix(in srgb,#2E9E73 18%,var(--em));color:#2E9E73}
+.rcp-dl.busy{font-size:.72rem;font-weight:700}
+.rcp-dl svg{position:absolute;inset:3px;width:calc(100% - 6px);height:calc(100% - 6px);transform:rotate(-90deg);pointer-events:none}
+.rcp-menu{position:absolute;z-index:3;inset-inline:0;top:100%;margin-top:.25rem;background:var(--dark);border:1px solid var(--brd);border-radius:18px;padding:.3rem;box-shadow:0 14px 30px -12px #000c}
+.rcp-menu button{display:flex;gap:.6rem;align-items:center;width:100%;font:inherit;font-size:.86rem;color:var(--cr);background:none;border:0;padding:.7rem .8rem;border-radius:12px;cursor:pointer;text-align:start}
+.rcp-menu button:hover,.rcp-menu button:active{background:var(--em2)}
+.rcp-menu .rcp-bad{color:#c0392b}
+.rcp-batch{margin:.4rem 0;padding:.6rem .8rem;border-radius:14px;background:var(--em2);border:1px solid var(--brd);font-size:.8rem;color:var(--cr);display:flex;justify-content:space-between;align-items:center;gap:.6rem}
+.rcp-batch button{background:none;border:1px solid var(--brd);color:var(--gold);border-radius:99px;padding:.3rem .8rem;font:inherit;font-size:.76rem;cursor:pointer}
+
+/* الإشعارات تظهر فوق المشغّل */
+body.in-reader #nq-toast{bottom:calc(96px + env(safe-area-inset-bottom,0px))!important}
+#dk-menu{max-height:calc(100vh - 180px);overflow:auto}

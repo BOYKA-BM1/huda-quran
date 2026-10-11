@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+backend/node_modules/
+
+# Environment / secrets
+.env
+backend/.env
+*.pem
+*.p12
+*.keystore
+*.jks
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Build / native
+android/
+ios/
+dist/
+build/
+*.apk
+*.aab
+*.ipa
+
+# Logs / coverage
+npm-debug.log*
+yarn-error.log*
+coverage/
+.nyc_output/
+
+# Local data that should not be committed
+backend/data/users.json

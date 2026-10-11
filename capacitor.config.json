@@ -1,0 +1,11 @@
+{
+  "appId": "com.huda.quran",
+  "appName": "هُدى القرآن",
+  "webDir": "www",
+  "backgroundColor": "#030A06",
+  "server": { "androidScheme": "https" },
+  "android": { "allowMixedContent": false },
+  "plugins": {
+    "LocalNotifications": { "iconColor": "#C9A84C" }
+  }
+}

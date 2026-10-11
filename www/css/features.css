@@ -1,0 +1,26 @@
+/* أنماط الميزات الإضافية (الزكاة، الأوقات الإضافية، الجمعة، المناسبات) — تعتمد على متغيرات الثيم */
+.zk-l{display:grid;gap:.3rem;color:var(--cr);font-size:.85rem}
+.zk-i{width:100%;background:rgba(3,10,6,.6);border:1px solid rgba(201,168,76,.25);border-radius:10px;color:var(--tl);padding:.7rem .8rem;font:inherit;font-size:1rem}
+.zk-i:focus{outline:2px solid var(--gold);outline-offset:1px}
+.zk-res{border-radius:16px;padding:1.1rem;border:1px solid rgba(201,168,76,.3);background:linear-gradient(135deg,rgba(201,168,76,.14),rgba(201,168,76,.04));text-align:center}
+.zk-res.warn{border-color:rgba(232,122,122,.35);background:rgba(232,122,122,.07)}
+.zk-big{font-size:2rem;color:#f0d080;font-weight:700;margin:.3rem 0}
+.zk-row{display:flex;justify-content:space-between;color:var(--cr);font-size:.85rem;padding:.35rem 0;border-bottom:1px dashed rgba(201,168,76,.12)}
+.xt-box{background:rgba(13,59,46,.35);border:1px solid rgba(201,168,76,.18);border-radius:14px;padding:.8rem 1rem}
+.xt-title{color:var(--gold);font-size:.85rem;font-weight:700;margin-bottom:.5rem}
+.xt-row{display:flex;justify-content:space-between;align-items:baseline;padding:.4rem 0;border-bottom:1px dashed rgba(201,168,76,.1);color:var(--cr);font-size:.88rem}
+.xt-row:last-child{border-bottom:0}
+.xt-row small{color:var(--tm);font-size:.7rem;display:block}
+.xt-t{color:var(--tl);font-weight:700;font-variant-numeric:tabular-nums}
+.fri-card{margin:0 1rem 1rem;border-radius:16px;padding:1rem;border:1px solid rgba(201,168,76,.35);background:linear-gradient(135deg,rgba(201,168,76,.16),rgba(13,59,46,.7))}
+.fri-card h3{color:#f0d080;margin:0 0 .3rem;font-size:1.05rem}
+.fri-card ul{margin:.4rem 1rem 0;padding:0;color:var(--cr);font-size:.82rem;line-height:1.9}
+.fri-card button{margin-top:.6rem;background:none;border:1px solid rgba(201,168,76,.3);color:var(--gold);border-radius:10px;padding:.4rem .8rem;cursor:pointer;font:inherit;font-size:.78rem}
+.oc-item{display:flex;justify-content:space-between;align-items:center;gap:.6rem;border:1px solid rgba(201,168,76,.1);background:rgba(201,168,76,.04);border-radius:12px;padding:.7rem 1rem;margin-bottom:.5rem}
+.oc-item.today{border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.13)}
+.oc-item.eid{border-inline-start:3px solid #e8c97a}
+.oc-item.fast{border-inline-start:3px solid #6fbf9a}
+.oc-item.night{border-inline-start:3px solid #8c7be0}
+.oc-t{color:var(--cr);font-size:.88rem}
+.oc-d{color:var(--tm);font-size:.72rem;margin-top:.15rem}
+.oc-days{color:#f0d080;font-size:.78rem;font-weight:700;white-space:nowrap}

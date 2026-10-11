@@ -1,0 +1,30 @@
+/* Huda upgrade: تحسينات عامة + واجهة اختيار القارئ */
+html{-webkit-text-size-adjust:100%}   /* لا scroll-behavior:smooth — يعطّل عجلة الماوس */
+::selection{background:color-mix(in srgb,var(--gold) 35%,transparent)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:8px}
+button,a,.ib,[role=button]{-webkit-tap-highlight-color:transparent;transition:transform .15s ease,background-color .2s ease,opacity .2s ease,box-shadow .2s ease}
+button:active,.ib:active,[role=button]:active{transform:scale(.96)}
+@media(hover:hover){.ib:hover{box-shadow:0 0 0 3px color-mix(in srgb,var(--gold) 22%,transparent)}}
+body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+*{scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--gold) 45%,transparent) transparent}
+.rd-top{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.shbg{backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.shbg.on .sh{animation:upSheet .25s ease-out}
+@keyframes upSheet{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* اختيار القارئ */
+#rd-rec .sh{min-height:60vh}
+.rcp-sl{display:flex;justify-content:space-between;align-items:center;gap:.6rem;margin:.7rem 0 .4rem;font-size:.82rem;color:var(--tm)}
+.rcp-sl select{flex:1;max-width:60%;padding:.45rem .6rem;border-radius:10px;border:1px solid var(--brd);font:inherit;background:var(--em);color:var(--tl)}
+.rcp-list{flex:1;overflow:auto;display:flex;flex-direction:column;gap:.45rem;padding:.2rem 0 .6rem}
+.rcp-row{display:flex;align-items:stretch;gap:.4rem}
+.rcp-pick{flex:1;min-width:0;display:flex;align-items:center;gap:.7rem;text-align:start;font:inherit;color:var(--tl);background:var(--em);border:1px solid var(--brd);border-radius:16px;padding:.6rem .75rem;cursor:pointer}
+.rcp-row.on .rcp-pick{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset}
+.rcp-av{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.85rem;color:var(--gold);background:var(--em2);border:1px solid var(--brd)}
+.rcp-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:.1rem}
+.rcp-tx b{font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rcp-tx small{font-size:.72rem;color:var(--tm);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rcp-ck{color:var(--gold);font-weight:700;width:1.2rem;text-align:center}
+.rcp-dl{flex:none;width:48px;border-radius:16px;border:1px solid var(--brd);background:var(--em);color:var(--gold);font-size:1.1rem;cursor:pointer}
+.rcp-dl:disabled{opacity:.5}
