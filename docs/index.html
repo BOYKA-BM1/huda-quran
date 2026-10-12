@@ -68,7 +68,7 @@
 </defs></svg>
 <!-- SPLASH SCREEN -->
 <div id="splash">
-  <div class="splash-logo-wrap" style="background:transparent;border:none;box-shadow:none;width:140px;height:140px;padding:0;overflow:hidden;border-radius:32px;">
+  <div class="splash-logo-wrap" style="background:transparent;border:none;box-shadow:none;width:120px;height:120px;padding:0;"background:transparent;border:none;box-shadow:none;width:120px;height:120px;padding:0;overflow:visible;border-radius:0;">
     <img src="icons/logo.png" alt="Huda Al Quran — هُدى القرآن" style="width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 16px rgba(201,168,76,0.35));">
   </div>
   <div class="splash-title">هُدى القرآن</div>
@@ -146,7 +146,8 @@
       <button class="dnb" id="nav-favorites" onclick="closeMenu();SP('favorites')">⭐ المفضلة</button>
       <button class="dnb" id="nav-notes" onclick="closeMenu();SP('notes')">📝 ملاحظاتي</button>
       <button class="dnb" id="nav-tracker" onclick="closeMenu();SP('tracker')">☑️ متابعة الصلوات</button>
-      <button class="dnb" id="nav-competitions" onclick="closeMenu();SP('competitions')">🏆 المسابقات</button>
+<button class="dnb" id="nav-family" onclick="closeMenu();SP('family')">👨‍👩‍👧‍👦 لوحة العائلة</button>
+      <button class="dnb" id="nav-kids" onclick="closeMenu();toggleKidsMode()">👶 وضع الأطفال</button>
       <button class="dnb" id="nav-stats" onclick="closeMenu();SP('stats')">📊 إحصائياتي</button>
     </div>
 
@@ -234,7 +235,8 @@
       <button onclick="SP('zakat')" style="--c:#D08A1E"><i><svg class="ic" aria-hidden="true"><use href="#i-coin"/></svg></i><b>حاسبة الزكاة</b><small>احسب زكاة مالك</small></button>
       <button onclick="SP('hadiths')" style="--c:#C0504A"><i><svg class="ic" aria-hidden="true"><use href="#i-scroll"/></svg></i><b>الأحاديث</b><small>أحاديث نبوية مختارة</small></button>
       <button onclick="SP('nawawi')" style="--c:#8B6914"><i><svg class="ic" aria-hidden="true"><use href="#i-book"/></svg></i><b>الأربعون النووية</b><small>٤٢ حديثًا جامعة لأصول الدين</small></button>
-      <button onclick="SP('competitions')" style="--c:#C9A84C"><i>🏆</i><b>المسابقات</b><small>مستويات · أوسمة · جوائز</small></button>
+<button onclick="SP('family')" style="--c:#5B8DEE"><i>👨‍👩‍👧‍👦</i><b>لوحة العائلة</b><small>صدارة وتحديات أسبوعية</small></button>
+      <button onclick="toggleKidsMode()" style="--c:#E091B0"><i>👶</i><b>وضع الأطفال</b><small>واجهة أبسط وأكبر</small></button>
       <button onclick="SP('khatma')" style="--c:#2A9BAA"><i><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></i><b>خطة الختمة</b><small>ختم القرآن بانتظام</small></button>
       <button onclick="SP('hijri')" style="--c:#8C6F3A"><i><svg class="ic" aria-hidden="true"><use href="#i-home"/></svg></i><b>التقويم الهجري</b><small>المناسبات والأيام البيض</small></button>
       <button id="pwa-install-btn" onclick="installPWA()" style="--c:#5B6B63"><i><svg class="ic" aria-hidden="true"><use href="#i-down"/></svg></i><b>ثبّت التطبيق</b><small>للعمل بدون متصفح</small></button>
@@ -942,33 +944,42 @@
 
 <!-- ══ إحصائياتي ══ -->
 
-<!-- COMPETITIONS -->
-<div class="pg" id="page-competitions">
-  <div class="comp-hero">
-    <h2>🏆 مسار التقدم</h2>
-    <p>اجمع النقاط، ارتقِ بالمستويات، واحصل على الأوسمة بجهدك اليومي في كتاب الله.</p>
-    <div class="comp-stats">
-      <div class="comp-stat"><b id="comp-points">0</b><span>النقاط</span></div>
-      <div class="comp-stat"><b id="comp-level-name">🌱 مبتدئ</b><span>المستوى</span></div>
-      <div class="comp-stat"><b id="comp-streak">0</b><span>أيام متتالية</span></div>
+
+<!-- FAMILY / WEEKLY -->
+<div class="pg" id="page-family">
+  <div class="fam-hero">
+    <h2>👨‍👩‍👧‍👦 لوحة العائلة</h2>
+    <p>نفس الجهاز: أضف أفراد العائلة، تنافسوا في التحديات الأسبوعية، وصدّروا/استوردوا التقدم بكود.</p>
+  </div>
+
+  <div class="fam-card">
+    <h3>الأعضاء</h3>
+    <div class="fam-add">
+      <input id="fam-name" type="text" maxlength="24" placeholder="اسم العضو (مثال: أحمد)" />
+      <button type="button" onclick="HudaFamily.addMember()">إضافة</button>
     </div>
-    <div class="comp-level-track"><div id="comp-level-bar"></div></div>
-    <small id="comp-level-next" style="color:rgba(240,230,200,.7)">—</small>
+    <div id="fam-members" class="fam-members"></div>
   </div>
 
-  <h3 class="comp-sec-title">تحديات اليوم</h3>
-  <div id="comp-challenges"></div>
-
-  <h3 class="comp-sec-title">مسابقة سريعة</h3>
-  <div class="comp-quiz">
-    <h3>اختبر معلوماتك</h3>
-    <p id="comp-quiz-q">…</p>
-    <div id="comp-quiz-opts"></div>
-    <div id="comp-quiz-result"></div>
+  <div class="fam-card">
+    <h3>🏆 صدارة هذا الأسبوع</h3>
+    <div id="fam-leaderboard" class="fam-leaderboard"></div>
   </div>
 
-  <h3 class="comp-sec-title">الأوسمة والجوائز</h3>
-  <div class="comp-badges" id="comp-badges"></div>
+  <div class="fam-card">
+    <h3>📅 تحديات الأسبوع</h3>
+    <div id="fam-weekly" class="fam-weekly"></div>
+    <p class="fam-hint">اضغط «+» بجانب التحدي بعد إنجازه للعضو النشط.</p>
+  </div>
+
+  <div class="fam-card">
+    <h3>كود المشاركة</h3>
+    <div class="fam-share">
+      <button type="button" onclick="HudaFamily.exportCode()">تصدير كود</button>
+      <button type="button" onclick="HudaFamily.importCode()">استيراد كود</button>
+    </div>
+    <textarea id="fam-code" rows="3" placeholder="الصق الكود هنا للاستيراد…"></textarea>
+  </div>
 </div>
 
 <div class="pg" id="page-stats">
@@ -1624,9 +1635,7 @@
 <script src="js/pwa.js"></script>
 <script src="js/mobile-fix.js"></script>
 <script src="js/nawawi40.js"></script>
-<script defer src="js/competitions.js"></script>
-
-
+<script defer src="js/family.js"></script>
 <!-- ══════ لوحة القراءات العشر ══════ -->
 <div id="qiraat-panel" onclick="if(event.target===this)closeQiraatPanel()">
   <div class="qp-sheet">
@@ -2032,5 +2041,18 @@ window.togPlay = function(){ if(window.__hudaTogPlay) return window.__hudaTogPla
     <p class="al-footer">هُدى القرآن</p>
   </div>
 </div>
+
+<script>
+function toggleKidsMode(){
+  document.body.classList.toggle('kids-mode');
+  var on = document.body.classList.contains('kids-mode');
+  try{ localStorage.setItem('huda_kids_mode', on ? '1':'0'); }catch(e){}
+  if(typeof toast==='function') toast(on ? 'تم تفعيل وضع الأطفال' : 'تم إيقاف وضع الأطفال');
+}
+document.addEventListener('DOMContentLoaded', function(){
+  try{ if(localStorage.getItem('huda_kids_mode')==='1') document.body.classList.add('kids-mode'); }catch(e){}
+});
+</script>
+
 </body>
 </html>
