@@ -3602,3 +3602,140 @@ body.in-reader {
 .nawawi-text{font-family:'Scheherazade New','Amiri Quran',serif;font-size:1.12rem;line-height:2;color:var(--text,#efe6d5);text-align:justify;}
 .nawawi-copy{margin-top:.75rem;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.28);color:#c9a84c;border-radius:10px;padding:.4rem .85rem;font-family:Tajawal,sans-serif;font-size:.8rem;cursor:pointer;}
 .nawawi-copy:active{transform:scale(.97);}
+
+/* ─── مسابقات / مستويات / أوسمة ─── */
+#page-competitions { padding: 1rem 1rem 5rem; direction: rtl; }
+.comp-hero {
+  background: linear-gradient(135deg, rgba(13,59,46,.95), rgba(3,20,14,.98));
+  border: 1px solid rgba(201,168,76,.35);
+  border-radius: 20px;
+  padding: 1.25rem 1.1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 8px 28px rgba(0,0,0,.25);
+}
+.comp-hero h2 { margin: 0 0 .35rem; color: #f0e6c8; font-size: 1.25rem; }
+.comp-hero p { margin: 0; color: rgba(240,230,200,.75); font-size: .9rem; }
+.comp-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .6rem;
+  margin: 1rem 0;
+}
+.comp-stat {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(201,168,76,.2);
+  border-radius: 14px;
+  padding: .75rem .5rem;
+  text-align: center;
+}
+.comp-stat b { display: block; font-size: 1.25rem; color: #e8c96a; }
+.comp-stat span { font-size: .78rem; color: rgba(255,255,255,.65); }
+.comp-level-track {
+  height: 10px;
+  background: rgba(255,255,255,.08);
+  border-radius: 99px;
+  overflow: hidden;
+  margin: .5rem 0 .35rem;
+}
+#comp-level-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #c9a84c, #e8c96a);
+  border-radius: 99px;
+  transition: width .4s ease;
+}
+.comp-sec-title {
+  margin: 1.2rem 0 .6rem;
+  color: var(--tl, #f0e6c8);
+  font-size: 1.05rem;
+}
+.comp-badges {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: .65rem;
+}
+.comp-badge {
+  background: rgba(13,59,46,.35);
+  border: 1px solid rgba(201,168,76,.15);
+  border-radius: 14px;
+  padding: .75rem;
+  text-align: center;
+  opacity: .55;
+}
+.comp-badge.on {
+  opacity: 1;
+  border-color: rgba(201,168,76,.45);
+  box-shadow: 0 0 0 1px rgba(201,168,76,.12);
+}
+.comp-badge-icon { font-size: 1.6rem; margin-bottom: .25rem; }
+.comp-badge-name { font-weight: 700; color: var(--tl, #f0e6c8); font-size: .9rem; }
+.comp-badge-pts { color: #c9a84c; font-size: .75rem; }
+.comp-badge-got { color: #3dce8c; font-size: .72rem; margin-top: .2rem; }
+.comp-badge-lock { color: rgba(255,255,255,.4); font-size: .72rem; margin-top: .2rem; }
+.comp-chal {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(201,168,76,.12);
+  border-radius: 12px;
+  padding: .7rem .8rem;
+  margin-bottom: .45rem;
+}
+.comp-chal b {
+  background: rgba(201,168,76,.15);
+  color: #e8c96a;
+  padding: .2rem .45rem;
+  border-radius: 8px;
+  font-size: .72rem;
+  white-space: nowrap;
+}
+.comp-chal span { flex: 1; color: var(--tl, #eee); font-size: .9rem; }
+.comp-chal em { color: #c9a84c; font-style: normal; font-weight: 700; }
+.comp-quiz {
+  background: rgba(13,59,46,.4);
+  border: 1px solid rgba(201,168,76,.25);
+  border-radius: 16px;
+  padding: 1rem;
+  margin-top: .5rem;
+}
+.comp-quiz h3 { margin: 0 0 .75rem; color: #f0e6c8; }
+#comp-quiz-q { margin: 0 0 .75rem; color: var(--tl, #fff); line-height: 1.6; }
+.comp-opt {
+  display: block;
+  width: 100%;
+  text-align: right;
+  margin: .35rem 0;
+  padding: .7rem .9rem;
+  border-radius: 12px;
+  border: 1px solid rgba(201,168,76,.25);
+  background: rgba(0,0,0,.2);
+  color: var(--tl, #f5f0e6);
+  font: inherit;
+  cursor: pointer;
+}
+.comp-opt:hover, .comp-opt:focus {
+  border-color: #c9a84c;
+  background: rgba(201,168,76,.12);
+}
+#comp-quiz-result { min-height: 1.4rem; margin-top: .5rem; font-size: .9rem; }
+
+body.paper-mode #page-competitions .comp-hero,
+body.paper-mode .comp-stat,
+body.paper-mode .comp-badge,
+body.paper-mode .comp-chal,
+body.paper-mode .comp-quiz {
+  background: #f7f1e3;
+  border-color: rgba(139,105,20,.25);
+  color: #1a1a1a;
+}
+body.paper-mode .comp-hero h2,
+body.paper-mode .comp-badge-name,
+body.paper-mode .comp-sec-title,
+body.paper-mode #comp-quiz-q,
+body.paper-mode .comp-chal span { color: #1a1a1a; }
+body.paper-mode .comp-opt {
+  background: #fff;
+  color: #1a1a1a;
+  border-color: rgba(139,105,20,.3);
+}

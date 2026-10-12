@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>هُدى القرآن — المصحف الشريف الكامل</title>
+<title>Huda Al Quran — هُدى القرآن</title>
 <meta name="description" content="المصحف الشريف الكامل مع التلاوة وأوقات الصلاة والأذكار والقبلة">
-<meta name="theme-color" content="#E9E1CC">
+<meta name="theme-color" content="#032A1C">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="هُدى القرآن">
+<meta name="apple-mobile-web-app-title" content="Huda Al Quran">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="icon" type="image/png" href="icons/icon-96.png">
@@ -33,7 +33,7 @@
       <div style="font-family:Scheherazade New,serif;font-size:1.05rem;color:#C9A84C;font-weight:700;line-height:1.2;">هُدى القرآن</div>
       <div style="font-size:0.65rem;color:#8FA89E;">المصحف الشريف</div>
     </div>
-    <img src="icons/logo.svg" alt="هدى القرآن" style="width:36px;height:36px;border-radius:10px;object-fit:contain;">
+    <img src="icons/logo.png" alt="Huda Al Quran — هُدى القرآن" style="width:36px;height:36px;border-radius:10px;object-fit:contain;">
   </div>
 </div>
 <style>
@@ -69,7 +69,7 @@
 <!-- SPLASH SCREEN -->
 <div id="splash">
   <div class="splash-logo-wrap" style="background:transparent;border:none;box-shadow:none;width:140px;height:140px;padding:0;overflow:hidden;border-radius:32px;">
-    <img src="icons/logo.svg" alt="هدى القرآن" style="width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 16px rgba(201,168,76,0.35));">
+    <img src="icons/logo.png" alt="Huda Al Quran — هُدى القرآن" style="width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 16px rgba(201,168,76,0.35));">
   </div>
   <div class="splash-title">هُدى القرآن</div>
   <div class="splash-ayah">﴿ إِنَّ هَٰذَا الْقُرْآنَ يَهْدِي لِلَّتِي هِيَ أَقْوَمُ ﴾</div>
@@ -146,6 +146,7 @@
       <button class="dnb" id="nav-favorites" onclick="closeMenu();SP('favorites')">⭐ المفضلة</button>
       <button class="dnb" id="nav-notes" onclick="closeMenu();SP('notes')">📝 ملاحظاتي</button>
       <button class="dnb" id="nav-tracker" onclick="closeMenu();SP('tracker')">☑️ متابعة الصلوات</button>
+      <button class="dnb" id="nav-competitions" onclick="closeMenu();SP('competitions')">🏆 المسابقات</button>
       <button class="dnb" id="nav-stats" onclick="closeMenu();SP('stats')">📊 إحصائياتي</button>
     </div>
 
@@ -233,6 +234,7 @@
       <button onclick="SP('zakat')" style="--c:#D08A1E"><i><svg class="ic" aria-hidden="true"><use href="#i-coin"/></svg></i><b>حاسبة الزكاة</b><small>احسب زكاة مالك</small></button>
       <button onclick="SP('hadiths')" style="--c:#C0504A"><i><svg class="ic" aria-hidden="true"><use href="#i-scroll"/></svg></i><b>الأحاديث</b><small>أحاديث نبوية مختارة</small></button>
       <button onclick="SP('nawawi')" style="--c:#8B6914"><i><svg class="ic" aria-hidden="true"><use href="#i-book"/></svg></i><b>الأربعون النووية</b><small>٤٢ حديثًا جامعة لأصول الدين</small></button>
+      <button onclick="SP('competitions')" style="--c:#C9A84C"><i>🏆</i><b>المسابقات</b><small>مستويات · أوسمة · جوائز</small></button>
       <button onclick="SP('khatma')" style="--c:#2A9BAA"><i><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></i><b>خطة الختمة</b><small>ختم القرآن بانتظام</small></button>
       <button onclick="SP('hijri')" style="--c:#8C6F3A"><i><svg class="ic" aria-hidden="true"><use href="#i-home"/></svg></i><b>التقويم الهجري</b><small>المناسبات والأيام البيض</small></button>
       <button id="pwa-install-btn" onclick="installPWA()" style="--c:#5B6B63"><i><svg class="ic" aria-hidden="true"><use href="#i-down"/></svg></i><b>ثبّت التطبيق</b><small>للعمل بدون متصفح</small></button>
@@ -939,6 +941,36 @@
 </div>
 
 <!-- ══ إحصائياتي ══ -->
+
+<!-- COMPETITIONS -->
+<div class="pg" id="page-competitions">
+  <div class="comp-hero">
+    <h2>🏆 مسار التقدم</h2>
+    <p>اجمع النقاط، ارتقِ بالمستويات، واحصل على الأوسمة بجهدك اليومي في كتاب الله.</p>
+    <div class="comp-stats">
+      <div class="comp-stat"><b id="comp-points">0</b><span>النقاط</span></div>
+      <div class="comp-stat"><b id="comp-level-name">🌱 مبتدئ</b><span>المستوى</span></div>
+      <div class="comp-stat"><b id="comp-streak">0</b><span>أيام متتالية</span></div>
+    </div>
+    <div class="comp-level-track"><div id="comp-level-bar"></div></div>
+    <small id="comp-level-next" style="color:rgba(240,230,200,.7)">—</small>
+  </div>
+
+  <h3 class="comp-sec-title">تحديات اليوم</h3>
+  <div id="comp-challenges"></div>
+
+  <h3 class="comp-sec-title">مسابقة سريعة</h3>
+  <div class="comp-quiz">
+    <h3>اختبر معلوماتك</h3>
+    <p id="comp-quiz-q">…</p>
+    <div id="comp-quiz-opts"></div>
+    <div id="comp-quiz-result"></div>
+  </div>
+
+  <h3 class="comp-sec-title">الأوسمة والجوائز</h3>
+  <div class="comp-badges" id="comp-badges"></div>
+</div>
+
 <div class="pg" id="page-stats">
 <div style="padding:1rem;max-width:600px;margin:0 auto;direction:rtl;">
   <div style="text-align:center;padding:1.5rem 0 .8rem;">
@@ -1592,6 +1624,7 @@
 <script src="js/pwa.js"></script>
 <script src="js/mobile-fix.js"></script>
 <script src="js/nawawi40.js"></script>
+<script defer src="js/competitions.js"></script>
 
 
 <!-- ══════ لوحة القراءات العشر ══════ -->

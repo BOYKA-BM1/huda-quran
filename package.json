@@ -1,8 +1,8 @@
 {
-  "name": "huda-quran",
+  "name": "huda-al-quran",
   "version": "2.1.0",
   "private": true,
-  "description": "هُدى القرآن — تطبيق إسلامي (ويب + أندرويد/آيفون عبر Capacitor)",
+  "description": "Huda Al Quran — complete Quran app with recitation, prayer, adhkar, competitions",
   "scripts": {
     "serve": "node scripts/serve.js",
     "data": "node scripts/fetch-data.js",
