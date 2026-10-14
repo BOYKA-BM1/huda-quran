@@ -4501,3 +4501,13 @@ body.bk-immersive .topbar,body.bk-immersive header,body.bk-immersive .drawer,bod
 .bk-canvas-wrap.bk-continuous{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;overflow-y:auto!important;overflow-x:hidden!important;background:#fff!important}
 .bk-page-sheet{width:100%!important;margin:0!important;padding:0!important;background:#fff!important;display:block!important}
 .bk-page-sheet .bk-pdf-canvas{display:block!important;width:100%!important;max-width:100%!important;height:auto!important;margin:0 auto!important}
+/* zoom fix */
+.bk-zoom-bar{display:flex!important;position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);z-index:30050;align-items:center;gap:.5rem;background:rgba(10,18,14,.94);border:1px solid rgba(201,168,76,.45);border-radius:999px;padding:.3rem .55rem}
+.bk-zbtn{width:40px;height:40px;border-radius:50%;border:1px solid rgba(201,168,76,.4);background:rgba(201,168,76,.18);color:#e8c96a;font-size:1.35rem;font-weight:700;cursor:pointer}
+#bk-zoom-label{color:#f0e6c8;font-size:.85rem;min-width:3.2rem;text-align:center}
+#books-reader .bk-paper,#books-reader .bk-paper-scroll,.bk-reader-top,.bk-reader-top-min{display:none!important}
+#books-reader.bk-reader-full{position:fixed!important;inset:0!important;z-index:30000!important;width:100vw!important;height:100vh!important;background:#fff!important}
+.bk-canvas-wrap.bk-continuous{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;overflow:auto!important;background:#fff!important}
+.bk-page-sheet{width:max-content!important;min-width:100%!important;margin:0 auto!important;background:#fff!important;display:flex!important;justify-content:center!important;border:none!important;box-shadow:none!important}
+.bk-page-sheet .bk-pdf-canvas{display:block!important;background:#fff!important;box-shadow:none!important}
+body.bk-immersive .topbar,body.bk-immersive .drawer,body.bk-immersive .gplayer,body.bk-immersive #gplayer,body.bk-immersive .bottom-nav{display:none!important}

@@ -182,46 +182,61 @@
     current = null;
   }
 
+
   async function renderOnePage(n, container, width) {
     var page = await pdfDoc.getPage(n);
     var base = page.getViewport({ scale: 1 });
-    var cssScale = width / base.width;
-    var dpr = Math.min(window.devicePixelRatio || 1, 2.5);
-    var viewport = page.getViewport({ scale: cssScale * dpr });
-    var holder = document.createElement("div");
-    holder.className = "bk-page-sheet";
+    var z = zoomScale || 1;
+    var cssW = width * z;
+    var dpr = Math.min(window.devicePixelRatio || 1, 3);
+    var scale = (cssW / base.width) * dpr;
+    var viewport = page.getViewport({ scale: scale });
+    var holder = document.createElement('div');
+    holder.className = 'bk-page-sheet';
     holder.dataset.page = String(n);
-    var canvas = document.createElement("canvas");
-    canvas.className = "bk-pdf-canvas";
+    var canvas = document.createElement('canvas');
+    canvas.className = 'bk-pdf-canvas';
     canvas.width = Math.floor(viewport.width);
     canvas.height = Math.floor(viewport.height);
-    canvas.style.width = (viewport.width / dpr) + "px";
-    canvas.style.height = (viewport.height / dpr) + "px";
+    canvas.style.width = Math.floor(cssW) + 'px';
+    canvas.style.height = Math.floor(viewport.height / dpr) + 'px';
     holder.appendChild(canvas);
     container.appendChild(holder);
-    var ctx = canvas.getContext("2d", { alpha: false });
-    await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+    var ctx = canvas.getContext('2d', { alpha: false });
+    // white background under ink for clarity
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    await page.render({ canvasContext: ctx, viewport: viewport, background: 'rgba(255,255,255,1)' }).promise;
     return holder;
   }
 
-  async function renderContinuous() {
+  var _renderToken = 0;
+  async function renderContinuous(preserveScroll) {
     var wrap = document.getElementById('bk-canvas-wrap');
     if (!wrap || !pdfDoc) return;
+    var token = ++_renderToken;
+    var ratio = 0;
+    if (preserveScroll && wrap.scrollHeight > 50) {
+      ratio = wrap.scrollTop / wrap.scrollHeight;
+    }
     wrap.innerHTML = '';
-    var width = wrap.clientWidth || window.innerWidth;
-    // render all pages stacked (browser-like continuous scroll)
-    // for very large PDFs render in batches to stay responsive
+    var width = Math.max(280, Math.floor(wrap.clientWidth || window.innerWidth));
     var total = pdfDoc.numPages;
-    var batch = 5;
+    var batch = 4;
     async function nextBatch(start) {
-      if (!pdfDoc || !wrap) return;
+      if (token !== _renderToken || !pdfDoc || !wrap) return;
       var end = Math.min(start + batch - 1, total);
       for (var n = start; n <= end; n++) {
+        if (token !== _renderToken) return;
         await renderOnePage(n, wrap, width);
       }
       if (end < total) {
-        // yield to UI then continue
-        setTimeout(function () { nextBatch(end + 1); }, 30);
+        setTimeout(function () { nextBatch(end + 1); }, 20);
+      } else if (preserveScroll && ratio > 0) {
+        // restore after full render
+        requestAnimationFrame(function () {
+          if (wrap && wrap.scrollHeight) wrap.scrollTop = ratio * wrap.scrollHeight;
+        });
       }
     }
     await nextBatch(1);
@@ -237,7 +252,13 @@
     if (!body) return;
 
     if (b.pdfBlob || b.pdfDataUrl) {
-      body.innerHTML = '<div class="bk-canvas-wrap bk-continuous" id="bk-canvas-wrap"><div class="bk-loading">جاري تحميل الكتاب…</div></div>';
+      body.innerHTML =
+        '<div class="bk-canvas-wrap bk-continuous" id="bk-canvas-wrap"><div class="bk-loading">جاري تحميل الكتاب…</div></div>' +
+        '<div class="bk-zoom-bar" id="bk-zoom-bar">' +
+        '<button type="button" class="bk-zbtn" id="bk-zoom-out" aria-label="تصغير">−</button>' +
+        '<span id="bk-zoom-label">100%</span>' +
+        '<button type="button" class="bk-zbtn" id="bk-zoom-in" aria-label="تكبير">+</button>' +
+        '</div>';
       try {
         await loadPdfJs();
         var data;
@@ -248,9 +269,27 @@
         }
         pdfDoc = await pdfjsLib.getDocument({ data: data }).promise;
         pageNum = 1;
+        zoomScale = 1;
         var wrap = document.getElementById('bk-canvas-wrap');
         if (wrap) wrap.innerHTML = '';
-        await renderContinuous();
+        await renderContinuous(false);
+        var zin = document.getElementById('bk-zoom-in');
+        var zout = document.getElementById('bk-zoom-out');
+        var zlab = document.getElementById('bk-zoom-label');
+        function updateZoomLabel() {
+          if (zlab) zlab.textContent = Math.round((zoomScale || 1) * 100) + '%';
+        }
+        updateZoomLabel();
+        if (zin) zin.onclick = function () {
+          zoomScale = Math.min(2.5, Math.round(((zoomScale || 1) + 0.2) * 100) / 100);
+          updateZoomLabel();
+          renderContinuous(true);
+        };
+        if (zout) zout.onclick = function () {
+          zoomScale = Math.max(0.7, Math.round(((zoomScale || 1) - 0.2) * 100) / 100);
+          updateZoomLabel();
+          renderContinuous(true);
+        };
         window.addEventListener('resize', onResize);
       } catch (err) {
         body.innerHTML = '<div class="bk-paper"><p>تعذّر فتح ملف PDF.</p></div>';
@@ -270,7 +309,7 @@
   function onResize() {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(function () {
-      if (pdfDoc) renderContinuous();
+      if (pdfDoc) renderContinuous(true);
     }, 300);
   }
 
