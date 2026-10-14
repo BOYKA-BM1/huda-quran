@@ -5,7 +5,7 @@
    • api.alquran.cloud: stale-while-revalidate (يتراكم أوفلاين مع الاستخدام)
    • الصوت والخرائط والمواقع الأخرى: لا يتدخل فيها إطلاقاً (طلبات Range)
    ملاحظة: غيّر VERSION عند كل إصدار لتحديث الكاش. */
-const VERSION = 'huda-v45';
+const VERSION = 'huda-v50';
 const SHELL_CACHE = VERSION + '-shell';
 const DATA_CACHE  = VERSION + '-data';
 const API_CACHE   = 'huda-api-v1';
@@ -49,7 +49,6 @@ const SHELL = [
   "js/reader.js",
   "js/books.js",
   "data/books/catalog.json",
-  "js/admin.js",
   "js/audio.js",
   "js/dock.js",
   "js/upgrade.js",

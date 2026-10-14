@@ -1,3 +1,4 @@
+/* GIT-ONLY BOOKS: edit data/books/catalog.json to add/remove books */
 /**
  * مكتبة الكتب — قارئ PDF بملء الشاشة (تصميم خاص)
  */
@@ -95,21 +96,9 @@
   }
 
   async function fetchSharedCatalog() {
-    var base = apiBase();
-    // 1) Backend API (source of truth for all devices)
-    if (base) {
-      try {
-        var res = await fetch(base + '/books', { cache: 'no-store' });
-        if (res.ok) {
-          var data = await res.json();
-          var list = (data && data.books) ? data.books : (Array.isArray(data) ? data : []);
-          if (list.length || (data && data.success)) return list;
-        }
-      } catch (e) {}
-    }
-    // 2) Static fallback
+    // Source of truth = GitHub static file (edit catalog.json in repo)
     try {
-      var res2 = await fetch('data/books/catalog.json?v=45', { cache: 'no-store' });
+      var res2 = await fetch('data/books/catalog.json?v=50', { cache: 'no-store' });
       if (!res2.ok) return [];
       var list2 = await res2.json();
       return Array.isArray(list2) ? list2 : [];
@@ -482,6 +471,7 @@
   }
 
   async function adminAdd(meta, coverFile, pdfFile) {
+    throw new Error('الأدمن أُزيل — أضف الكتب عبر data/books/catalog.json على GitHub');
     // Always prefer server so all devices see the book
     if (apiBase()) {
       return await apiAddBook(meta, coverFile, pdfFile);
@@ -540,9 +530,9 @@
     open: openBook,
     back: backToList,
     render: render,
-    adminList: allBooks,
-    adminAdd: adminAdd,
-    adminRemove: adminRemove,
+    adminList: allBooks, // deprecated
+    
+    
     allBooks: allBooks,
     sync: syncSharedBooks
   };
