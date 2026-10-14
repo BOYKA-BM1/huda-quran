@@ -3871,3 +3871,101 @@ body.paper-mode .fam-row-name,
 body.paper-mode .fam-member-main b { color: #1a1a1a; }
 body.paper-mode .fam-add input,
 body.paper-mode #fam-code { background: #fff; color: #1a1a1a; }
+
+/* ─── مكتبة الكتب ─── */
+#page-books { padding: 1rem 1rem 5.5rem; direction: rtl; }
+.bk-hero {
+  background: linear-gradient(135deg, rgba(13,59,46,.95), rgba(3,18,12,.98));
+  border: 1px solid rgba(201,168,76,.3);
+  border-radius: 18px;
+  padding: 1.15rem;
+  margin-bottom: 1rem;
+}
+.bk-hero h2 { margin: 0 0 .4rem; color: #f0e6c8; font-size: 1.25rem; }
+.bk-hero p { margin: 0 0 .85rem; color: rgba(240,230,200,.75); font-size: .9rem; line-height: 1.55; }
+#books-search {
+  width: 100%; box-sizing: border-box; padding: .7rem .9rem; border-radius: 12px;
+  border: 1px solid rgba(201,168,76,.25); background: rgba(0,0,0,.25); color: #f5f0e6;
+  font: inherit; direction: rtl;
+}
+.bk-list { display: flex; flex-direction: column; gap: .75rem; }
+.bk-card {
+  display: flex; gap: .85rem; padding: .9rem;
+  background: rgba(255,255,255,.04); border: 1px solid rgba(201,168,76,.14);
+  border-radius: 16px;
+}
+.bk-cover {
+  width: 56px; height: 72px; border-radius: 10px; flex-shrink: 0;
+  display: grid; place-items: center; font-size: 1.8rem;
+  background: linear-gradient(160deg, rgba(201,168,76,.25), rgba(13,59,46,.6));
+  border: 1px solid rgba(201,168,76,.25);
+}
+.bk-meta { flex: 1; min-width: 0; }
+.bk-meta b { display: block; color: var(--tl, #f0e6c8); font-size: 1rem; margin-bottom: .15rem; }
+.bk-meta small { color: rgba(255,255,255,.5); font-size: .78rem; }
+.bk-meta p { margin: .35rem 0 .55rem; color: rgba(255,255,255,.65); font-size: .85rem; line-height: 1.45; }
+.bk-actions { display: flex; flex-wrap: wrap; gap: .4rem; }
+.bk-read, .bk-dl {
+  border-radius: 10px; padding: .4rem .75rem; font: inherit; font-size: .82rem;
+  font-weight: 700; cursor: pointer; border: 1px solid rgba(201,168,76,.3);
+}
+.bk-read { background: rgba(201,168,76,.18); color: #e8c96a; }
+.bk-dl { background: rgba(255,255,255,.05); color: rgba(255,255,255,.8); }
+.bk-dl.saved { border-color: rgba(61,206,140,.4); color: #3dce8c; }
+.bk-empty { text-align: center; color: rgba(255,255,255,.45); padding: 2rem; }
+
+.bk-reader-bar {
+  display: flex; align-items: center; gap: .65rem; margin-bottom: .75rem;
+  position: sticky; top: 0; z-index: 5;
+  background: rgba(3,10,6,.92); backdrop-filter: blur(10px); padding: .4rem 0;
+}
+.bk-back {
+  border: 1px solid rgba(201,168,76,.3); background: rgba(201,168,76,.1);
+  color: #e8c96a; border-radius: 10px; padding: .4rem .7rem; font: inherit; cursor: pointer;
+}
+.bk-reader-head b { display: block; color: #f0e6c8; }
+.bk-reader-head small { color: rgba(255,255,255,.55); font-size: .8rem; }
+.bk-toc {
+  display: flex; gap: .35rem; overflow-x: auto; padding-bottom: .5rem; margin-bottom: .5rem;
+  -webkit-overflow-scrolling: touch;
+}
+.bk-toc-item {
+  flex: 0 0 auto; border-radius: 999px; padding: .35rem .7rem; font: inherit; font-size: .78rem;
+  border: 1px solid rgba(201,168,76,.2); background: rgba(0,0,0,.2); color: rgba(255,255,255,.75); cursor: pointer;
+}
+.bk-toc-item.on { background: rgba(201,168,76,.2); color: #e8c96a; border-color: rgba(201,168,76,.45); }
+.bk-reader-body {
+  background: rgba(255,255,255,.03); border: 1px solid rgba(201,168,76,.12);
+  border-radius: 16px; padding: 1.1rem 1rem; line-height: 1.9;
+  color: var(--tl, #f2ebe0); font-size: 1.05rem;
+  max-height: calc(100vh - 280px); overflow-y: auto;
+}
+.bk-reader-body p { margin: 0 0 1rem; }
+.bk-nav {
+  display: flex; align-items: center; justify-content: space-between; gap: .5rem;
+  margin-top: .85rem; padding-bottom: .5rem;
+}
+.bk-nav button {
+  border-radius: 12px; padding: .55rem 1rem; font: inherit; font-weight: 700; cursor: pointer;
+  border: 1px solid rgba(201,168,76,.3); background: rgba(201,168,76,.12); color: #e8c96a;
+}
+.bk-nav button:disabled { opacity: .35; cursor: default; }
+#bk-reader-prog { color: rgba(255,255,255,.5); font-size: .85rem; }
+.bk-toast {
+  position: fixed; bottom: 5.5rem; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: rgba(13,59,46,.95); color: #f0e6c8; border: 1px solid rgba(201,168,76,.35);
+  padding: .65rem 1.1rem; border-radius: 999px; font-size: .88rem; opacity: 0;
+  pointer-events: none; transition: .25s; z-index: 900; white-space: nowrap;
+}
+.bk-toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+body.paper-mode .bk-hero,
+body.paper-mode .bk-card,
+body.paper-mode .bk-reader-body {
+  background: #f7f1e3; color: #1a1a1a; border-color: rgba(139,105,20,.25);
+}
+body.paper-mode .bk-hero h2,
+body.paper-mode .bk-meta b,
+body.paper-mode .bk-reader-head b { color: #1a1a1a; }
+body.paper-mode #books-search { background: #fff; color: #1a1a1a; }
+body.paper-mode .bk-reader-bar { background: rgba(247,241,227,.95); }
