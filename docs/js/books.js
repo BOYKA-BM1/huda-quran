@@ -282,61 +282,116 @@
     }).join('') || '<p class="bk-empty">لا نتائج</p>';
   }
 
+  var pages = [];
+
+  function buildPages(book) {
+    pages = [];
+    var maxLen = 850;
+    book.chapters.forEach(function (ch, ci) {
+      var paras = String(ch.b || '').replace(/\n\n+/g, '\n\n').trim().split(/\n\n+/);
+      var buf = '';
+      var part = 1;
+      function flush() {
+        if (!buf.trim()) return;
+        pages.push({
+          chapter: ci,
+          title: ch.t + (part > 1 ? ' — ' + part : ''),
+          body: buf.trim()
+        });
+        buf = '';
+        part++;
+      }
+      paras.forEach(function (p) {
+        if (buf && (buf.length + p.length + 2) > maxLen) flush();
+        buf = buf ? (buf + '\n\n' + p) : p;
+      });
+      flush();
+    });
+    if (!pages.length) pages.push({ chapter: 0, title: book.title, body: 'لا يوجد محتوى.' });
+  }
+
   async function openBook(id) {
     var book = findBook(id);
     var cached = await idbGet(id);
-    if (cached && cached.chapters) book = Object.assign({}, book, cached);
+    if (cached && cached.chapters) book = Object.assign({}, book || {}, cached);
     if (!book) return;
     currentBook = book;
     currentChapter = 0;
+    buildPages(book);
     var list = document.getElementById('books-library');
     var reader = document.getElementById('books-reader');
     if (list) list.style.display = 'none';
     if (reader) reader.style.display = 'block';
-    renderChapter();
+    try { sessionStorage.setItem('huda_books_reading', id); } catch (e) {}
+    try { history.pushState({ hudaBooks: 1, id: id }, '', location.href); } catch (e) {}
+    renderPage();
   }
 
-  function backToList() {
+  function backToList(ev) {
+    if (ev) {
+      try { ev.preventDefault(); ev.stopPropagation(); } catch (e) {}
+    }
     var list = document.getElementById('books-library');
     var reader = document.getElementById('books-reader');
     if (reader) reader.style.display = 'none';
     if (list) list.style.display = 'block';
     currentBook = null;
+    pages = [];
+    try { sessionStorage.removeItem('huda_books_reading'); } catch (e) {}
+    // تأكيد البقاء في صفحة الكتب وليس الرئيسية
+    var pageBooks = document.getElementById('page-books');
+    if (pageBooks) {
+      document.querySelectorAll('.pg').forEach(function (el) { el.classList.remove('on'); });
+      pageBooks.classList.add('on');
+    }
+    return false;
   }
 
-  function renderChapter() {
-    if (!currentBook) return;
-    var ch = currentBook.chapters[currentChapter];
+  function renderPage() {
+    if (!currentBook || !pages.length) return;
+    if (currentChapter < 0) currentChapter = 0;
+    if (currentChapter >= pages.length) currentChapter = pages.length - 1;
+    var pg = pages[currentChapter];
     var title = document.getElementById('bk-reader-title');
     var sub = document.getElementById('bk-reader-sub');
     var body = document.getElementById('bk-reader-body');
     var prog = document.getElementById('bk-reader-prog');
     if (title) title.textContent = currentBook.title;
-    if (sub) sub.textContent = ch.t;
+    if (sub) sub.textContent = pg.title;
     if (body) {
-      body.innerHTML = ch.b.split(/\n\n+/).map(function (p) {
-        return '<p>' + p.replace(/\n/g, '<br>') + '</p>';
-      }).join('');
+      body.innerHTML =
+        '<div class="bk-paper">' +
+        '<div class="bk-paper-head">' + pg.title + '</div>' +
+        pg.body.split(/\n\n+/).map(function (p) {
+          return '<p>' + p.replace(/\n/g, '<br>') + '</p>';
+        }).join('') +
+        '<div class="bk-paper-num">— ' + (currentChapter + 1) + ' —</div>' +
+        '</div>';
       body.scrollTop = 0;
     }
-    if (prog) prog.textContent = (currentChapter + 1) + ' / ' + currentBook.chapters.length;
+    if (prog) prog.textContent = 'صفحة ' + (currentChapter + 1) + ' من ' + pages.length;
     var prev = document.getElementById('bk-prev');
     var next = document.getElementById('bk-next');
     if (prev) prev.disabled = currentChapter <= 0;
-    if (next) next.disabled = currentChapter >= currentBook.chapters.length - 1;
+    if (next) next.disabled = currentChapter >= pages.length - 1;
     var toc = document.getElementById('bk-toc');
-    if (toc) {
-      toc.innerHTML = currentBook.chapters.map(function (c, i) {
-        return '<button type="button" class="bk-toc-item' + (i === currentChapter ? ' on' : '') +
-          '" onclick="HudaBooks.goto(' + i + ')">' + (i + 1) + '. ' + c.t + '</button>';
+    if (toc && currentBook.chapters) {
+      var seen = {};
+      toc.innerHTML = pages.map(function (p, i) {
+        if (seen[p.chapter]) return '';
+        seen[p.chapter] = true;
+        var ct = currentBook.chapters[p.chapter] ? currentBook.chapters[p.chapter].t : p.title;
+        return '<button type="button" class="bk-toc-item' +
+          (pages[currentChapter].chapter === p.chapter ? ' on' : '') +
+          '" onclick="HudaBooks.goto(' + i + ')">' + (p.chapter + 1) + '. ' + ct + '</button>';
       }).join('');
     }
   }
 
   function goto(i) {
-    if (!currentBook || i < 0 || i >= currentBook.chapters.length) return;
+    if (!pages.length || i < 0 || i >= pages.length) return;
     currentChapter = i;
-    renderChapter();
+    renderPage();
   }
 
   function render() {
@@ -344,9 +399,19 @@
     backToList();
   }
 
+  window.addEventListener('popstate', function () {
+    try {
+      if (sessionStorage.getItem('huda_books_reading')) backToList();
+    } catch (e) {}
+  });
+
   document.addEventListener('DOMContentLoaded', function () {
     var s = document.getElementById('books-search');
     if (s) s.addEventListener('input', function () { renderList(); });
+    var backBtn = document.querySelector('#books-reader .bk-back');
+    if (backBtn) {
+      backBtn.setAttribute('onclick', 'return HudaBooks.back(event)');
+    }
   });
 
   setTimeout(function () {

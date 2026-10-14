@@ -4081,3 +4081,11 @@ body.paper-mode .bk-reader-bar { background: rgba(247,241,227,.95); }
   color: #3dce8c;
   background: rgba(61,206,140,.08);
 }
+
+/* صفحة الكتاب */
+.bk-reader-body{background:transparent!important;border:none!important;padding:.25rem!important;max-height:calc(100vh - 260px);overflow-y:auto}
+.bk-paper{background:#f7f1e3;color:#1a1510;border-radius:4px;padding:1.4rem 1.15rem 2.2rem;min-height:58vh;box-shadow:0 8px 28px rgba(0,0,0,.35),inset 0 0 0 1px rgba(139,105,20,.15);position:relative;font-family:"Scheherazade New","Amiri",serif;font-size:1.15rem;line-height:2}
+.bk-paper-head{text-align:center;color:#6b5420;font-size:.95rem;font-weight:700;margin-bottom:1rem;padding-bottom:.55rem;border-bottom:1px solid rgba(139,105,20,.25)}
+.bk-paper p{margin:0 0 1rem;text-align:justify}
+.bk-paper-num{position:absolute;bottom:.65rem;left:0;right:0;text-align:center;font-size:.8rem;color:#8a7340}
+body:not(.paper-mode) .bk-paper{background:#f7f1e3;color:#1a1510}
