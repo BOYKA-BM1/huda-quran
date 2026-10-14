@@ -4,7 +4,9 @@ const path = require('path');
 const crypto = require('crypto');
 const router = express.Router();
 
-const DATA_DIR = path.join(__dirname, '..', 'data', 'books');
+const DATA_DIR = process.env.BOOKS_DATA_DIR
+  ? path.resolve(process.env.BOOKS_DATA_DIR)
+  : path.join(__dirname, '..', 'data', 'books');
 const FILES_DIR = path.join(DATA_DIR, 'files');
 const CATALOG = path.join(DATA_DIR, 'catalog.json');
 const ADMIN_KEY = process.env.ADMIN_KEY || 'huda-admin-13-4-2024';
