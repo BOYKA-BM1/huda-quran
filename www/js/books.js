@@ -182,31 +182,48 @@
     current = null;
   }
 
-  async function renderPdfPage(n) {
-    if (!pdfDoc || rendering) return;
-    rendering = true;
-    try {
-      var page = await pdfDoc.getPage(n);
-      var canvas = document.getElementById('bk-pdf-canvas');
-      var wrap = document.getElementById('bk-canvas-wrap');
-      if (!canvas || !wrap) return;
-      var base = page.getViewport({ scale: 1 });
-      var maxW = wrap.clientWidth || window.innerWidth;
-      var scale = maxW / base.width;
-      var viewport = page.getViewport({ scale: scale });
-      var ctx = canvas.getContext('2d');
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-      canvas.style.width = '100%';
-      canvas.style.height = 'auto';
-      await page.render({ canvasContext: ctx, viewport: viewport }).promise;
-      var prog = document.getElementById('bk-page-ind');
-      if (prog) prog.textContent = n + ' / ' + pdfDoc.numPages;
-      pageNum = n;
-      wrap.scrollTop = 0;
-    } finally {
-      rendering = false;
+  async function renderOnePage(n, container, width) {
+    var page = await pdfDoc.getPage(n);
+    var base = page.getViewport({ scale: 1 });
+    var scale = width / base.width;
+    var viewport = page.getViewport({ scale: scale });
+    var holder = document.createElement('div');
+    holder.className = 'bk-page-sheet';
+    holder.dataset.page = String(n);
+    var canvas = document.createElement('canvas');
+    canvas.className = 'bk-pdf-canvas';
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    canvas.style.width = '100%';
+    canvas.style.height = 'auto';
+    holder.appendChild(canvas);
+    container.appendChild(holder);
+    var ctx = canvas.getContext('2d');
+    await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+    return holder;
+  }
+
+  async function renderContinuous() {
+    var wrap = document.getElementById('bk-canvas-wrap');
+    if (!wrap || !pdfDoc) return;
+    wrap.innerHTML = '';
+    var width = wrap.clientWidth || window.innerWidth;
+    // render all pages stacked (browser-like continuous scroll)
+    // for very large PDFs render in batches to stay responsive
+    var total = pdfDoc.numPages;
+    var batch = 5;
+    async function nextBatch(start) {
+      if (!pdfDoc || !wrap) return;
+      var end = Math.min(start + batch - 1, total);
+      for (var n = start; n <= end; n++) {
+        await renderOnePage(n, wrap, width);
+      }
+      if (end < total) {
+        // yield to UI then continue
+        setTimeout(function () { nextBatch(end + 1); }, 30);
+      }
     }
+    await nextBatch(1);
   }
 
   async function openBook(id) {
@@ -218,13 +235,7 @@
     if (!body) return;
 
     if (b.pdfBlob || b.pdfDataUrl) {
-      body.innerHTML =
-        '<div class="bk-canvas-wrap" id="bk-canvas-wrap">' +
-        '<canvas id="bk-pdf-canvas" class="bk-pdf-canvas"></canvas></div>' +
-        '<div class="bk-page-bar">' +
-        '<button type="button" class="bk-pg-btn" id="bk-pg-prev">›</button>' +
-        '<span id="bk-page-ind">—</span>' +
-        '<button type="button" class="bk-pg-btn" id="bk-pg-next">‹</button></div>';
+      body.innerHTML = '<div class="bk-canvas-wrap bk-continuous" id="bk-canvas-wrap"><div class="bk-loading">جاري تحميل الكتاب…</div></div>';
       try {
         await loadPdfJs();
         var data;
@@ -235,28 +246,9 @@
         }
         pdfDoc = await pdfjsLib.getDocument({ data: data }).promise;
         pageNum = 1;
-        await renderPdfPage(1);
-        document.getElementById('bk-pg-prev').onclick = function () {
-          if (pageNum > 1) renderPdfPage(pageNum - 1);
-        };
-        document.getElementById('bk-pg-next').onclick = function () {
-          if (pdfDoc && pageNum < pdfDoc.numPages) renderPdfPage(pageNum + 1);
-        };
         var wrap = document.getElementById('bk-canvas-wrap');
-        var sx = 0;
-        wrap.addEventListener('touchstart', function (e) { sx = e.changedTouches[0].screenX; }, { passive: true });
-        wrap.addEventListener('touchend', function (e) {
-          var dx = e.changedTouches[0].screenX - sx;
-          if (Math.abs(dx) < 50) return;
-          if (dx > 0 && pageNum > 1) renderPdfPage(pageNum - 1);
-          else if (dx < 0 && pdfDoc && pageNum < pdfDoc.numPages) renderPdfPage(pageNum + 1);
-        }, { passive: true });
-        wrap.addEventListener('click', function (e) {
-          var r = wrap.getBoundingClientRect();
-          var x = e.clientX - r.left;
-          if (x < r.width * 0.3 && pageNum > 1) renderPdfPage(pageNum - 1);
-          else if (x > r.width * 0.7 && pdfDoc && pageNum < pdfDoc.numPages) renderPdfPage(pageNum + 1);
-        });
+        if (wrap) wrap.innerHTML = '';
+        await renderContinuous();
         window.addEventListener('resize', onResize);
       } catch (err) {
         body.innerHTML = '<div class="bk-paper"><p>تعذّر فتح ملف PDF.</p></div>';
@@ -276,8 +268,8 @@
   function onResize() {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(function () {
-      if (pdfDoc) renderPdfPage(pageNum);
-    }, 200);
+      if (pdfDoc) renderContinuous();
+    }, 300);
   }
 
   function backToList() {

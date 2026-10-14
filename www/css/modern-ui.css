@@ -4352,3 +4352,64 @@ body.bk-immersive .fab { display: none !important; visibility: hidden !important
 #bk-page-ind { color: rgba(255,255,255,.7); font-size: .9rem; min-width: 5rem; text-align: center; }
 .bk-actions { grid-template-columns: 1fr !important; }
 .bk-read-full { width: 100%; }
+
+/* Continuous full-width book (browser-like) */
+#books-reader.bk-reader-full {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 20000 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: none !important;
+  background: #fff !important;
+  display: none;
+  flex-direction: column;
+}
+body.bk-immersive .topbar,
+body.bk-immersive .drawer,
+body.bk-immersive .gplayer,
+body.bk-immersive #gplayer,
+body.bk-immersive .bottom-nav,
+body.bk-immersive .fab {
+  display: none !important;
+}
+.bk-reader-top-min { display: none !important; }
+.bk-reader-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  background: #fff;
+}
+.bk-canvas-wrap.bk-continuous {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  background: #fff;
+  display: block;
+  padding: 0;
+  margin: 0;
+}
+.bk-page-sheet {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: #fff;
+  box-shadow: none;
+  border-bottom: 1px solid #eee;
+}
+.bk-page-sheet .bk-pdf-canvas {
+  display: block;
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100%;
+  box-shadow: none;
+}
+.bk-loading {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #666;
+  font-size: 1rem;
+}
+.bk-page-bar { display: none !important; }
