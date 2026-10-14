@@ -146,8 +146,7 @@
       <button class="dnb" id="nav-favorites" onclick="closeMenu();SP('favorites')">⭐ المفضلة</button>
       <button class="dnb" id="nav-notes" onclick="closeMenu();SP('notes')">📝 ملاحظاتي</button>
       <button class="dnb" id="nav-tracker" onclick="closeMenu();SP('tracker')">☑️ متابعة الصلوات</button>
-<button class="dnb" id="nav-books" onclick="closeMenu();SP('books')">📚 الكتب الإسلامية</button>
-      <button class="dnb" id="nav-stats" onclick="closeMenu();SP('stats')">📊 إحصائياتي</button>
+<button class="dnb" id="nav-stats" onclick="closeMenu();SP('stats')">📊 إحصائياتي</button>
     </div>
 
     <div class="nav-sec">
@@ -234,8 +233,7 @@
       <button onclick="SP('zakat')" style="--c:#D08A1E"><i><svg class="ic" aria-hidden="true"><use href="#i-coin"/></svg></i><b>حاسبة الزكاة</b><small>احسب زكاة مالك</small></button>
       <button onclick="SP('hadiths')" style="--c:#C0504A"><i><svg class="ic" aria-hidden="true"><use href="#i-scroll"/></svg></i><b>الأحاديث</b><small>أحاديث نبوية مختارة</small></button>
       <button onclick="SP('nawawi')" style="--c:#8B6914"><i><svg class="ic" aria-hidden="true"><use href="#i-book"/></svg></i><b>الأربعون النووية</b><small>٤٢ حديثًا جامعة لأصول الدين</small></button>
-<button onclick="SP('books')" style="--c:#8B6914"><i>📚</i><b>الكتب الإسلامية</b><small>مكتبة للقراءة بدون نت</small></button>
-      <button onclick="SP('khatma')" style="--c:#2A9BAA"><i><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></i><b>خطة الختمة</b><small>ختم القرآن بانتظام</small></button>
+<button onclick="SP('khatma')" style="--c:#2A9BAA"><i><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></i><b>خطة الختمة</b><small>ختم القرآن بانتظام</small></button>
       <button onclick="SP('hijri')" style="--c:#8C6F3A"><i><svg class="ic" aria-hidden="true"><use href="#i-home"/></svg></i><b>التقويم الهجري</b><small>المناسبات والأيام البيض</small></button>
       <button id="pwa-install-btn" onclick="installPWA()" style="--c:#5B6B63"><i><svg class="ic" aria-hidden="true"><use href="#i-down"/></svg></i><b>ثبّت التطبيق</b><small>للعمل بدون متصفح</small></button>
     </div>
@@ -944,35 +942,6 @@
 
 
 
-<!-- BOOKS LIBRARY -->
-<div class="pg" id="page-books">
-  <div id="books-toast" class="bk-toast"></div>
-  <div id="books-library">
-    <div class="bk-hero">
-      <h2>📚 المكتبة الإسلامية</h2>
-      <p>اقرأ الكتب داخل التطبيق، واحفظ ما تشاء ليُفتح بدون إنترنت — الحفظ داخل التطبيق وليس كملف على الجهاز.</p>
-      <input id="books-search" type="search" placeholder="🔍 ابحث عن كتاب أو موضوع..." />
-    </div>
-    <div id="books-list" class="bk-list"></div>
-  </div>
-  <div id="books-reader" style="display:none">
-    <div class="bk-reader-bar">
-      <button type="button" class="bk-back" onclick="return HudaBooks.back(event)">› رجوع</button>
-      <div class="bk-reader-head">
-        <b id="bk-reader-title">—</b>
-        <small id="bk-reader-sub">—</small>
-      </div>
-    </div>
-    <div id="bk-toc" class="bk-toc"></div>
-    <div id="bk-reader-body" class="bk-reader-body"></div>
-    <div class="bk-nav">
-      <button type="button" id="bk-prev" onclick="HudaBooks.prev()">السابق</button>
-      <span id="bk-reader-prog">—</span>
-      <button type="button" id="bk-next" onclick="HudaBooks.next()">التالي</button>
-    </div>
-  </div>
-</div>
-
 <div class="pg" id="page-stats">
 <div style="padding:1rem;max-width:600px;margin:0 auto;direction:rtl;">
   <div style="text-align:center;padding:1.5rem 0 .8rem;">
@@ -1562,6 +1531,19 @@
 <!-- ══════════════════════════════════════════
      SEARCH PAGE — بحث في القرآن
 ══════════════════════════════════════════ -->
+
+<!-- ADMIN (hidden — unlock via Quran search code) -->
+<div class="pg" id="page-admin">
+  <div class="adm-wrap">
+    <div class="adm-hero">
+      <h2>🔐 لوحة التحكم</h2>
+      <p>إدارة إعدادات التطبيق والموقع — للمشرف فقط</p>
+      <button type="button" class="adm-logout" onclick="HudaAdmin.logout()">إغلاق اللوحة</button>
+    </div>
+    <div class="adm-grid" id="adm-panels"></div>
+  </div>
+</div>
+
 <div class="pg" id="page-search">
 <div style="padding:1rem;max-width:650px;margin:0 auto;direction:rtl;">
   <div style="text-align:center;padding:1.2rem 0 .8rem;">
@@ -1605,6 +1587,7 @@
   </div>
 </div>
 <script src="js/config.js"></script>
+<script defer src="js/admin.js"></script>
 <script src="js/quran-data.js"></script>
 <script src="js/app.01.js"></script>
 <script src="js/app.02.js"></script>
@@ -1626,7 +1609,6 @@
 <script src="js/pwa.js"></script>
 <script src="js/mobile-fix.js"></script>
 <script src="js/nawawi40.js"></script>
-<script defer src="js/books.js"></script>
 <!-- ══════ لوحة القراءات العشر ══════ -->
 <div id="qiraat-panel" onclick="if(event.target===this)closeQiraatPanel()">
   <div class="qp-sheet">

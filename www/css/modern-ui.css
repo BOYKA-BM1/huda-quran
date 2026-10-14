@@ -4089,3 +4089,50 @@ body.paper-mode .bk-reader-bar { background: rgba(247,241,227,.95); }
 .bk-paper p{margin:0 0 1rem;text-align:justify}
 .bk-paper-num{position:absolute;bottom:.65rem;left:0;right:0;text-align:center;font-size:.8rem;color:#8a7340}
 body:not(.paper-mode) .bk-paper{background:#f7f1e3;color:#1a1510}
+
+/* Admin panel */
+#page-admin { padding: 1rem 1rem 5rem; direction: rtl; }
+.adm-wrap { max-width: 720px; margin: 0 auto; }
+.adm-hero {
+  background: linear-gradient(135deg, rgba(20,20,30,.95), rgba(13,59,46,.9));
+  border: 1px solid rgba(201,168,76,.35);
+  border-radius: 18px; padding: 1.2rem; margin-bottom: 1rem; text-align: center;
+}
+.adm-hero h2 { margin: 0 0 .35rem; color: #f0e6c8; }
+.adm-hero p { margin: 0 0 .75rem; color: rgba(240,230,200,.7); font-size: .9rem; }
+.adm-logout {
+  border: 1px solid rgba(255,100,100,.35); background: rgba(255,80,80,.1);
+  color: #e88; border-radius: 10px; padding: .4rem .9rem; font: inherit; cursor: pointer;
+}
+.adm-grid { display: flex; flex-direction: column; gap: .85rem; }
+.adm-card {
+  background: rgba(255,255,255,.04); border: 1px solid rgba(201,168,76,.15);
+  border-radius: 16px; padding: 1rem;
+}
+.adm-card h3 { margin: 0 0 .75rem; color: #e8c96a; font-size: 1rem; }
+.adm-field { display: block; margin-bottom: .65rem; }
+.adm-field span { display: block; font-size: .8rem; color: rgba(255,255,255,.55); margin-bottom: .3rem; }
+.adm-field input, .adm-field select, .adm-field textarea {
+  width: 100%; box-sizing: border-box; border-radius: 10px; border: 1px solid rgba(201,168,76,.25);
+  background: rgba(0,0,0,.25); color: #f5f0e6; padding: .6rem .75rem; font: inherit;
+}
+.adm-toggle {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: .45rem 0; border-bottom: 1px solid rgba(255,255,255,.06); color: #eee;
+}
+.adm-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+.adm-save {
+  background: linear-gradient(135deg, rgba(201,168,76,.3), rgba(201,168,76,.15));
+  border: 1px solid rgba(201,168,76,.4); color: #e8c96a; border-radius: 12px;
+  padding: .65rem 1.1rem; font: inherit; font-weight: 700; cursor: pointer;
+}
+.adm-reset {
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.15);
+  color: #ccc; border-radius: 12px; padding: .65rem 1.1rem; font: inherit; cursor: pointer;
+}
+.adm-hint { font-size: .78rem; color: rgba(255,255,255,.45); margin: .65rem 0 0; line-height: 1.45; }
+.adm-maint-banner {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+  background: #8b1e1e; color: #fff; text-align: center; padding: .65rem 1rem;
+  font-size: .9rem; box-shadow: 0 4px 16px rgba(0,0,0,.3);
+}
