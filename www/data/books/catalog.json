@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "id": "mybook1",
+    "title": "بويكا",
+    "author": "اسم المؤلف",
+    "cat": "فقه",
+    "hasPdf": true,
+    "pdfUrl": "data/books/files/أنت تسأل والإسلام يجيب_32213_Foulabook.com_.pdf",
+    "coverUrl": "",
+    "chapters": []
+  }
+]
