@@ -1,3 +1,27 @@
+/*
+================================================================================
+قالب إضافة كتاب — انسخه داخل data/books/catalog.json (docs + www)
+ثم ضع ملف PDF في: data/books/files/mybook.pdf
+
+[
+  {
+    "id": "mybook1",
+    "title": "عنوان الكتاب",
+    "author": "اسم المؤلف",
+    "cat": "فقه",
+    "hasPdf": true,
+    "pdfUrl": "data/books/files/mybook.pdf",
+    "coverUrl": "",
+    "chapters": []
+  }
+]
+
+لحذف كل الكتب: اجعل الملف = []
+لحذف كتاب واحد: امسح العنصر من المصفوفة + ملف PDF إن وُجد
+ثم: git add + commit + push
+================================================================================
+*/
+
 /* GIT-ONLY BOOKS: edit data/books/catalog.json to add/remove books */
 /**
  * مكتبة الكتب — قارئ PDF بملء الشاشة (تصميم خاص)
@@ -131,11 +155,13 @@
       };
       await putBook(book);
     }
-    // drop local-only leftovers that were shared samples
+    // Remove ANY local book not in the Git catalog (catalog empty => wipe all)
     var all = await allBooks();
     for (var j = 0; j < all.length; j++) {
       var id = all[j].id;
-      if (String(id).indexOf('sample_') === 0) await deleteBook(id);
+      if (!seen[id]) {
+        try { await deleteBook(id); } catch (e) {}
+      }
     }
   }
 
