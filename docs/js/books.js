@@ -80,18 +80,53 @@
       '<div class="bk-cover-author">' + esc(b.author || '') + '</div><div class="bk-cover-line"></div></div>';
   }
 
+
+  async function fetchSharedCatalog() {
+    try {
+      var res = await fetch('data/books/catalog.json?v=44', { cache: 'no-store' });
+      if (!res.ok) return [];
+      var list = await res.json();
+      return Array.isArray(list) ? list : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  async function syncSharedBooks() {
+    var shared = await fetchSharedCatalog();
+    for (var i = 0; i < shared.length; i++) {
+      var s = shared[i];
+      if (!s || !s.id) continue;
+      var existing = await getBook(s.id);
+      // always refresh shared entries from server catalog so all devices match
+      var book = {
+        id: s.id,
+        title: s.title || 'كتاب',
+        author: s.author || '',
+        cat: s.cat || 'إسلامي',
+        createdAt: s.createdAt || Date.now(),
+        hasPdf: !!(s.hasPdf || s.pdfUrl),
+        coverDataUrl: s.coverUrl || s.coverDataUrl || '',
+        pdfUrl: s.pdfUrl || '',
+        pdfBlob: existing && existing.pdfBlob ? existing.pdfBlob : null,
+        pdfDataUrl: existing && existing.pdfDataUrl ? existing.pdfDataUrl : '',
+        chapters: s.chapters || [],
+        shared: true
+      };
+      // if pdfUrl and no blob yet, leave url for streaming
+      await putBook(book);
+    }
+    // remove old sample_* seeds so devices unify
+    var all = await allBooks();
+    for (var j = 0; j < all.length; j++) {
+      if (all[j].id && String(all[j].id).indexOf('sample_') === 0) {
+        await deleteBook(all[j].id);
+      }
+    }
+  }
+
   async function ensureSeed() {
-    var list = await allBooks();
-    if (list.length) return;
-    var samples = [
-      { id: 'sample_aqida', title: 'أصول الإيمان', author: 'مختصر تعليمي', cat: 'عقيدة', createdAt: Date.now() - 3, hasPdf: false, coverDataUrl: '', color: '#0d3b2e', accent: '#c9a84c',
-        chapters: [{ t: 'مقدمة', b: 'الإيمان بالله وملائكته وكتبه ورسله واليوم الآخر والقدر خيره وشره.' }] },
-      { id: 'sample_fiqh', title: 'فقه العبادات مبسّط', author: 'مختصر تعليمي', cat: 'فقه', createdAt: Date.now() - 2, hasPdf: false, coverDataUrl: '', color: '#1a2744', accent: '#6eb5ff',
-        chapters: [{ t: 'الطهارة', b: 'الطهارة شرط لصحة الصلاة.' }] },
-      { id: 'sample_akhlaq', title: 'أخلاق المسلم', author: 'مختصر تعليمي', cat: 'آداب', createdAt: Date.now() - 1, hasPdf: false, coverDataUrl: '', color: '#3b1f0f', accent: '#e8a87c',
-        chapters: [{ t: 'الصدق', b: 'الصدق يهدي إلى البر.' }] }
-    ];
-    for (var i = 0; i < samples.length; i++) await putBook(samples[i]);
+    await syncSharedBooks();
   }
 
   async function renderList() {
@@ -255,7 +290,7 @@
     var body = document.getElementById('bk-reader-body');
     if (!body) return;
 
-    if (b.pdfBlob || b.pdfDataUrl) {
+    if (b.pdfBlob || b.pdfDataUrl || b.pdfUrl) {
       body.innerHTML =
         '<div class="bk-canvas-wrap bk-continuous" id="bk-canvas-wrap"><div class="bk-loading">جاري تحميل الكتاب…</div></div>' +
         '<div class="bk-zoom-bar" id="bk-zoom-bar">' +
@@ -267,9 +302,14 @@
         await loadPdfJs();
         var data;
         if (b.pdfBlob) data = await b.pdfBlob.arrayBuffer();
-        else {
+        else if (b.pdfDataUrl) {
           var res = await fetch(b.pdfDataUrl);
           data = await res.arrayBuffer();
+        } else if (b.pdfUrl) {
+          var res2 = await fetch(b.pdfUrl);
+          data = await res2.arrayBuffer();
+        } else {
+          throw new Error('no pdf');
         }
         pdfDoc = await pdfjsLib.getDocument({ data: data }).promise;
         pageNum = 1;
