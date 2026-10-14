@@ -4326,3 +4326,29 @@ body.bk-noscroll { overflow: hidden !important; }
 .adm-bk-meta small { color: rgba(255,255,255,.5); font-size: .75rem; }
 .adm-bk-del { border: 1px solid rgba(255,100,100,.3); background: rgba(255,80,80,.1); color: #e88; border-radius: 8px; padding: .35rem .55rem; font: inherit; font-size: .75rem; cursor: pointer; }
 .adm-maint-banner { position: fixed; top: 0; left: 0; right: 0; z-index: 9999; background: #8b1e1e; color: #fff; text-align: center; padding: .65rem 1rem; font-size: .9rem; }
+
+/* Immersive full-page book reader */
+body.bk-immersive .topbar,
+body.bk-immersive .drawer,
+body.bk-immersive .gplayer,
+body.bk-immersive #gplayer,
+body.bk-immersive .bottom-nav,
+body.bk-immersive .fab { display: none !important; visibility: hidden !important; }
+#books-reader.bk-reader-full {
+  position: fixed !important; inset: 0 !important; z-index: 20000 !important;
+  width: 100vw !important; height: 100vh !important; max-width: none !important;
+  margin: 0 !important; padding: 0 !important; background: #111 !important;
+  display: none; flex-direction: column;
+}
+#page-books.bk-reading { padding: 0 !important; margin: 0 !important; max-width: none !important; }
+.bk-reader-top-min { flex: 0 0 auto; padding: .4rem .75rem; background: rgba(0,0,0,.85); border-bottom: 1px solid rgba(201,168,76,.15); text-align: center; }
+.bk-reader-top-min .bk-reader-head b { color: #e8d9a8; font-size: .9rem; }
+.bk-reader-top-min .bk-reader-head small { color: rgba(255,255,255,.45); font-size: .75rem; }
+.bk-reader-body { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+.bk-canvas-wrap { flex: 1 1 auto; overflow: auto; -webkit-overflow-scrolling: touch; background: #1a1a1a; display: flex; justify-content: center; align-items: flex-start; }
+.bk-pdf-canvas { display: block; max-width: 100%; height: auto; box-shadow: 0 0 40px rgba(0,0,0,.5); }
+.bk-page-bar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 1.25rem; padding: .55rem; background: rgba(0,0,0,.9); border-top: 1px solid rgba(201,168,76,.15); }
+.bk-pg-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(201,168,76,.35); background: rgba(201,168,76,.12); color: #e8c96a; font-size: 1.4rem; cursor: pointer; line-height: 1; }
+#bk-page-ind { color: rgba(255,255,255,.7); font-size: .9rem; min-width: 5rem; text-align: center; }
+.bk-actions { grid-template-columns: 1fr !important; }
+.bk-read-full { width: 100%; }
