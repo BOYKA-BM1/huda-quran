@@ -34,6 +34,45 @@
   var PDFJS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
   var PDFJS_WORKER = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
+  function resolveAssetUrl(path) {
+    if (!path) return path;
+    if (/^https?:\/\//i.test(path) || path.indexOf('data:') === 0 || path.indexOf('blob:') === 0) return path;
+    path = String(path).replace(/^\.\//, '').replace(/^\//, '');
+    // GitHub Pages project sites: /repo-name/...
+    var root = '';
+    try {
+      if (window.HUDA_BASE) root = String(window.HUDA_BASE).replace(/\/$/, '');
+      else if (/\.github\.io$/i.test(location.hostname)) {
+        var parts = location.pathname.split('/').filter(Boolean);
+        if (parts.length) root = '/' + parts[0];
+      }
+    } catch (e) {}
+    var url = (root ? root + '/' : '/') + path;
+    // also build absolute from origin
+    try { return new URL(url, location.origin).href; } catch (e2) { return url; }
+  }
+
+  async function fetchPdfBytes(b) {
+    if (b.pdfBlob) return await b.pdfBlob.arrayBuffer();
+    var candidates = [];
+    if (b.pdfDataUrl) candidates.push(b.pdfDataUrl);
+    if (b.pdfUrl) {
+      candidates.push(resolveAssetUrl(b.pdfUrl));
+      candidates.push(b.pdfUrl);
+      candidates.push('./' + String(b.pdfUrl).replace(/^\.\//, ''));
+    }
+    var lastErr = null;
+    for (var i = 0; i < candidates.length; i++) {
+      try {
+        var res = await fetch(candidates[i], { cache: 'force-cache' });
+        if (!res.ok) { lastErr = new Error('HTTP ' + res.status + ' ' + candidates[i]); continue; }
+        return await res.arrayBuffer();
+      } catch (e) { lastErr = e; }
+    }
+    throw lastErr || new Error('تعذّر تحميل ملف PDF');
+  }
+
+
   function openDb() {
     if (dbp) return dbp;
     dbp = new Promise(function (resolve, reject) {
@@ -96,8 +135,8 @@
     setTimeout(function () { el.classList.remove('on'); }, 2200);
   }
   function coverEl(b) {
-    if (b.coverDataUrl) {
-      return '<div class="bk-cover bk-cover-img"><img src="' + b.coverDataUrl + '" alt=""/></div>';
+    if ((b.coverDataUrl || (b.coverUrl ? resolveAssetUrl(b.coverUrl) : ""))) {
+      return '<div class="bk-cover bk-cover-img"><img src="' + (b.coverDataUrl || (b.coverUrl ? resolveAssetUrl(b.coverUrl) : "")) + '" alt=""/></div>';
     }
     var color = b.color || '#0d3b2e', ac = b.accent || '#c9a84c';
     return '<div class="bk-cover" style="--bk:' + color + ';--ac:' + ac + '">' +
@@ -122,7 +161,7 @@
   async function fetchSharedCatalog() {
     // Source of truth = GitHub static file (edit catalog.json in repo)
     try {
-      var res2 = await fetch('data/books/catalog.json?v=50', { cache: 'no-store' });
+      var res2 = await fetch(resolveAssetUrl('data/books/catalog.json') + '?v=51', { cache: 'no-store' });
       if (!res2.ok) return [];
       var list2 = await res2.json();
       return Array.isArray(list2) ? list2 : [];
@@ -387,17 +426,8 @@
         '</div>';
       try {
         await loadPdfJs();
-        var data;
-        if (b.pdfBlob) data = await b.pdfBlob.arrayBuffer();
-        else if (b.pdfDataUrl) {
-          var res = await fetch(b.pdfDataUrl);
-          data = await res.arrayBuffer();
-        } else if (b.pdfUrl) {
-          var res2 = await fetch(b.pdfUrl);
-          data = await res2.arrayBuffer();
-        } else {
-          throw new Error('no pdf');
-        }
+        var data = await fetchPdfBytes(b);
+        if (!data || !data.byteLength) throw new Error('ملف PDF فارغ');
         pdfDoc = await pdfjsLib.getDocument({ data: data }).promise;
         pageNum = 1;
         zoomScale = 1;
@@ -423,7 +453,8 @@
         };
         window.addEventListener('resize', onResize);
       } catch (err) {
-        body.innerHTML = '<div class="bk-paper"><p>تعذّر فتح ملف PDF.</p></div>';
+        var msg = (err && err.message) ? err.message : String(err);
+        body.innerHTML = '<div class="bk-paper" style="padding:1.5rem;color:#222"><p><b>تعذّر فتح الكتاب</b></p><p style="font-size:.9rem;opacity:.8">' + msg + '</p><p style="font-size:.85rem">تأكد أن ملف PDF موجود في المسار الصحيح على GitHub (docs/data/books/files و www/data/books/files) وأن pdfUrl في catalog.json صحيح.</p></div>';
         console.error(err);
       }
     } else if (b.chapters && b.chapters.length) {
