@@ -81,12 +81,38 @@
   }
 
 
-  async function fetchSharedCatalog() {
+  function apiBase() {
     try {
-      var res = await fetch('data/books/catalog.json?v=44', { cache: 'no-store' });
-      if (!res.ok) return [];
-      var list = await res.json();
-      return Array.isArray(list) ? list : [];
+      var c = window.HUDA_CONFIG || {};
+      return (c.backendUrl || '').replace(/\/$/, '');
+    } catch (e) { return ''; }
+  }
+  function adminKey() {
+    try {
+      var c = window.HUDA_CONFIG || {};
+      return c.adminKey || 'huda-admin-13-4-2024';
+    } catch (e) { return 'huda-admin-13-4-2024'; }
+  }
+
+  async function fetchSharedCatalog() {
+    var base = apiBase();
+    // 1) Backend API (source of truth for all devices)
+    if (base) {
+      try {
+        var res = await fetch(base + '/books', { cache: 'no-store' });
+        if (res.ok) {
+          var data = await res.json();
+          var list = (data && data.books) ? data.books : (Array.isArray(data) ? data : []);
+          if (list.length || (data && data.success)) return list;
+        }
+      } catch (e) {}
+    }
+    // 2) Static fallback
+    try {
+      var res2 = await fetch('data/books/catalog.json?v=45', { cache: 'no-store' });
+      if (!res2.ok) return [];
+      var list2 = await res2.json();
+      return Array.isArray(list2) ? list2 : [];
     } catch (e) {
       return [];
     }
@@ -94,11 +120,12 @@
 
   async function syncSharedBooks() {
     var shared = await fetchSharedCatalog();
+    var seen = {};
     for (var i = 0; i < shared.length; i++) {
       var s = shared[i];
       if (!s || !s.id) continue;
+      seen[s.id] = true;
       var existing = await getBook(s.id);
-      // always refresh shared entries from server catalog so all devices match
       var book = {
         id: s.id,
         title: s.title || 'كتاب',
@@ -108,22 +135,67 @@
         hasPdf: !!(s.hasPdf || s.pdfUrl),
         coverDataUrl: s.coverUrl || s.coverDataUrl || '',
         pdfUrl: s.pdfUrl || '',
-        pdfBlob: existing && existing.pdfBlob ? existing.pdfBlob : null,
-        pdfDataUrl: existing && existing.pdfDataUrl ? existing.pdfDataUrl : '',
+        pdfBlob: null,
+        pdfDataUrl: '',
         chapters: s.chapters || [],
         shared: true
       };
-      // if pdfUrl and no blob yet, leave url for streaming
       await putBook(book);
     }
-    // remove old sample_* seeds so devices unify
+    // drop local-only leftovers that were shared samples
     var all = await allBooks();
     for (var j = 0; j < all.length; j++) {
-      if (all[j].id && String(all[j].id).indexOf('sample_') === 0) {
-        await deleteBook(all[j].id);
-      }
+      var id = all[j].id;
+      if (String(id).indexOf('sample_') === 0) await deleteBook(id);
     }
   }
+
+  function fileToBase64(file) {
+    return new Promise(function (resolve, reject) {
+      var fr = new FileReader();
+      fr.onload = function () { resolve(fr.result); };
+      fr.onerror = reject;
+      fr.readAsDataURL(file);
+    });
+  }
+
+  async function apiAddBook(meta, coverFile, pdfFile) {
+    var base = apiBase();
+    if (!base) throw new Error('لا يوجد رابط سيرفر — اضبط backendUrl');
+    var body = {
+      title: (meta.title || '').trim(),
+      author: (meta.author || '').trim(),
+      cat: (meta.cat || '').trim() || 'إسلامي'
+    };
+    if (pdfFile) body.pdfBase64 = await fileToBase64(pdfFile);
+    if (coverFile) body.coverBase64 = await fileToBase64(coverFile);
+    var res = await fetch(base + '/books', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Key': adminKey()
+      },
+      body: JSON.stringify(body)
+    });
+    var data = await res.json().catch(function () { return {}; });
+    if (!res.ok || data.success === false) throw new Error((data && data.error) || 'فشل الرفع');
+    await syncSharedBooks();
+    return data.book;
+  }
+
+  async function apiRemoveBook(id) {
+    var base = apiBase();
+    if (!base) throw new Error('لا يوجد رابط سيرفر');
+    var res = await fetch(base + '/books/' + encodeURIComponent(id), {
+      method: 'DELETE',
+      headers: { 'X-Admin-Key': adminKey() }
+    });
+    var data = await res.json().catch(function () { return {}; });
+    if (!res.ok || data.success === false) throw new Error((data && data.error) || 'فشل الحذف');
+    try { await deleteBook(id); } catch (e) {}
+    await syncSharedBooks();
+  }
+
 
   async function ensureSeed() {
     await syncSharedBooks();
@@ -410,6 +482,11 @@
   }
 
   async function adminAdd(meta, coverFile, pdfFile) {
+    // Always prefer server so all devices see the book
+    if (apiBase()) {
+      return await apiAddBook(meta, coverFile, pdfFile);
+    }
+    // Offline local fallback
     var id = 'bk_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
     var book = {
       id: id,
@@ -430,6 +507,14 @@
     }
     await putBook(book);
     return book;
+  }
+
+  async function adminRemove(id) {
+    if (apiBase()) {
+      await apiRemoveBook(id);
+      return;
+    }
+    await deleteBook(id);
   }
 
   document.addEventListener('DOMContentLoaded', function () {
@@ -457,7 +542,8 @@
     render: render,
     adminList: allBooks,
     adminAdd: adminAdd,
-    adminRemove: deleteBook,
-    allBooks: allBooks
+    adminRemove: adminRemove,
+    allBooks: allBooks,
+    sync: syncSharedBooks
   };
 })();

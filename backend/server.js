@@ -23,7 +23,7 @@ app.use(cors({
   origin: allowed
     ? (origin, cb) => cb(null, !origin || allowed.includes(origin))
     : '*',
-  methods: ['GET', 'POST'],
+  methods: ['GET', 'POST', 'DELETE', 'PUT', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 

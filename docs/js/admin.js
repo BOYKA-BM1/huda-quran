@@ -124,7 +124,7 @@
       '<button type="button" class="adm-save adm-add-bk" onclick="HudaAdmin.addBook()">➕ إضافة الكتاب للمكتبة</button>' +
       '</div>' +
       '<div id="adm-books-list" class="adm-books-list"></div>' +
-      '<p class="adm-hint">الكتب تُحفظ على هذا الجهاز وتظهر في قسم الكتب. عند القراءة يفتح PDF بملء الشاشة.</p>' +
+      '<p class="adm-hint">الرفع يتم على السيرفر — يظهر الكتاب فورًا لكل الأجهزة والزوار. يمكنك الحذف من القائمة بالأسفل.</p>' +
       '</section>' +
       '<section class="adm-card"><h3>💾 حفظ</h3>' +
       '<div class="adm-actions">' +
@@ -186,6 +186,7 @@
         author: val('adm-bk-author'),
         cat: val('adm-bk-cat')
       }, coverFile || null, pdfFile || null);
+      alert('تم رفع الكتاب — سيظهر على كل الأجهزة');
       ['adm-bk-title', 'adm-bk-author', 'adm-bk-cat'].forEach(function (id) {
         var el = document.getElementById(id); if (el) el.value = '';
       });
@@ -202,11 +203,15 @@
   }
 
   async function removeBook(id) {
-    if (!confirm('حذف هذا الكتاب؟')) return;
-    if (window.HudaBooks) {
+    if (!confirm('حذف هذا الكتاب من كل الأجهزة؟')) return;
+    if (!window.HudaBooks) return;
+    try {
       await HudaBooks.adminRemove(id);
       refreshBooksList();
       if (HudaBooks.render) HudaBooks.render();
+      alert('تم حذف الكتاب');
+    } catch (e) {
+      alert((e && e.message) || 'فشل الحذف');
     }
   }
 

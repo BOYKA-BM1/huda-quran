@@ -7,5 +7,6 @@
   if (!url && /^https?:$/.test(location.protocol) && location.protocol === 'http:') {
     url = 'http://' + location.hostname + ':3000/api';
   }
-  window.HUDA_CONFIG = { backendUrl: url || 'http://localhost:3000/api' };
+  window.HUDA_CONFIG = {
+  adminKey: 'huda-admin-13-4-2024', backendUrl: url || 'http://localhost:3000/api' };
 })();
