@@ -159,11 +159,15 @@
         if (el.id !== 'page-books') el.classList.remove('on');
       });
     }
-    var t = document.getElementById('bk-reader-title');
+    var tEl = document.getElementById('bk-reader-title');
     var sub = document.getElementById('bk-reader-sub');
-    if (t) t.textContent = title || '';
+    if (tEl) tEl.textContent = title || '';
     if (sub) sub.textContent = author || '';
     document.body.classList.add('bk-noscroll', 'bk-immersive');
+    // history: reading state so browser back returns to books list
+    try {
+      history.pushState({ hudaBookReading: true, page: 'books' }, '', '#books/read');
+    } catch (e) {}
   }
 
   function hideReader() {
@@ -321,9 +325,35 @@
       document.querySelectorAll('.pg').forEach(function (el) { el.classList.remove('on'); });
       page.classList.add('on');
     }
+    // stay on books page (not home)
+    try {
+      history.replaceState({ page: 'books' }, '', '#books');
+    } catch (e) {}
+    if (typeof window.SP === 'function') {
+      try { window.SP('books', false); } catch (e) {}
+    }
     renderList();
     return false;
   }
+
+  // Browser / phone back button → books list while reading
+  window.addEventListener('popstate', function (ev) {
+    if (current || document.body.classList.contains('bk-immersive')) {
+      // closing reader, land on books
+      window.removeEventListener('resize', onResize);
+      hideReader();
+      var page = document.getElementById('page-books');
+      if (page) {
+        document.querySelectorAll('.pg').forEach(function (el) { el.classList.remove('on'); });
+        page.classList.add('on');
+      }
+      try { history.replaceState({ page: 'books' }, '', '#books'); } catch (e) {}
+      if (typeof window.SP === 'function') {
+        try { window.SP('books', false); } catch (e) {}
+      }
+      renderList();
+    }
+  });
 
   function render() {
     hideReader();
