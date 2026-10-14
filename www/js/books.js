@@ -113,7 +113,64 @@
     return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
   }
 
+  
+  async function ensureSeed() {
+    var list = await allBooks();
+    if (list.length) return;
+    var samples = [
+      {
+        id: 'sample_aqida',
+        title: 'أصول الإيمان',
+        author: 'مختصر تعليمي',
+        cat: 'عقيدة',
+        createdAt: Date.now() - 3,
+        hasPdf: false,
+        coverDataUrl: '',
+        color: '#0d3b2e',
+        accent: '#c9a84c',
+        chapters: [
+          { t: 'مقدمة', b: 'الإيمان بالله وملائكته وكتبه ورسله واليوم الآخر والقدر خيره وشره.\n\nهذا مختصر تعليمي للعرض داخل تطبيق هدى القرآن.' },
+          { t: 'أركان الإيمان', b: 'أركان الإيمان ستة، وهي أساس عقيدة المسلم. من فقد ركنًا منها لم يصح إيمانه.' }
+        ]
+      },
+      {
+        id: 'sample_fiqh',
+        title: 'فقه العبادات مبسّط',
+        author: 'مختصر تعليمي',
+        cat: 'فقه',
+        createdAt: Date.now() - 2,
+        hasPdf: false,
+        coverDataUrl: '',
+        color: '#1a2744',
+        accent: '#6eb5ff',
+        chapters: [
+          { t: 'الطهارة', b: 'الطهارة شرط لصحة الصلاة. تشمل الوضوء والغسل وإزالة النجاسة.' },
+          { t: 'الصلاة', b: 'الصلاة عمود الدين، فرضت خمس صلوات في اليوم والليلة.' }
+        ]
+      },
+      {
+        id: 'sample_akhlaq',
+        title: 'أخلاق المسلم',
+        author: 'مختصر تعليمي',
+        cat: 'آداب',
+        createdAt: Date.now() - 1,
+        hasPdf: false,
+        coverDataUrl: '',
+        color: '#3b1f0f',
+        accent: '#e8a87c',
+        chapters: [
+          { t: 'الصدق', b: 'الصدق يهدي إلى البر، والبر يهدي إلى الجنة.' },
+          { t: 'الأمانة', b: 'لا إيمان لمن لا أمانة له، ولا دين لمن لا عهد له.' }
+        ]
+      }
+    ];
+    for (var i = 0; i < samples.length; i++) {
+      await putBook(samples[i]);
+    }
+  }
+
   async function renderList() {
+    await ensureSeed();
     var el = document.getElementById('books-list');
     if (!el) return;
     var q = ((document.getElementById('books-search') || {}).value || '').trim();

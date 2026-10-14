@@ -898,6 +898,7 @@ function SP(id, pushHistory){
   if(id==='notifs')  setTimeout(buildNotifs, 50);
   if(id==='site-settings') setTimeout(buildSiteSettings, 80);
   if(id==='favorites') setTimeout(buildFavoritesPage, 50);
+  if(id==='books') setTimeout(function(){ if(window.HudaBooks&&HudaBooks.render) HudaBooks.render(); }, 40);
   if(id==='notes') setTimeout(buildNotesPage, 50);
   if(id==='community') setTimeout(buildCommunity, 60);
   if(id==='profile')   setTimeout(buildProfile, 60);
