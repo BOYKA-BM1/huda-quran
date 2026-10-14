@@ -1,11 +1,11 @@
-/* v16 */
+/* v43 — auto update books + admin */
 /* هُدى القرآن — Service Worker
    • الهيكل (HTML/CSS/JS) يُخزَّن مسبقاً ليعمل التطبيق أوفلاين
    • data/ (القرآن والتفسير والحديث): cache-first
    • api.alquran.cloud: stale-while-revalidate (يتراكم أوفلاين مع الاستخدام)
    • الصوت والخرائط والمواقع الأخرى: لا يتدخل فيها إطلاقاً (طلبات Range)
    ملاحظة: غيّر VERSION عند كل إصدار لتحديث الكاش. */
-const VERSION = 'huda-v59';
+const VERSION = 'huda-v43';
 const SHELL_CACHE = VERSION + '-shell';
 const DATA_CACHE  = VERSION + '-data';
 const API_CACHE   = 'huda-api-v1';
@@ -47,6 +47,8 @@ const SHELL = [
   "js/ui-handlers.js",
   "js/v3.js",
   "js/reader.js",
+  "js/books.js",
+  "js/admin.js",
   "js/audio.js",
   "js/dock.js",
   "js/upgrade.js",
@@ -154,4 +156,11 @@ self.addEventListener('notificationclick', (e) => {
       return self.clients.openWindow(target);
     })
   );
+});
+
+
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });

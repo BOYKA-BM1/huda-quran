@@ -400,9 +400,10 @@
   setTimeout(function () {
     if (typeof window.SP === 'function' && !window.SP.__books) {
       var orig = window.SP;
-      window.SP = function (id) {
+      window.SP = function (id, ph) {
         if (current && id !== 'books') hideReader();
-        var r = orig.apply(this, arguments);
+        // when returning to books, avoid pushing extra history that breaks Back
+        var r = orig.call(this, id, id === 'books' ? false : ph);
         if (id === 'books') setTimeout(render, 40);
         return r;
       };

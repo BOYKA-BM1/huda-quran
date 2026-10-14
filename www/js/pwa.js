@@ -56,3 +56,44 @@
     }).catch(function (err) { console.warn('SW registration failed:', err && err.message); });
   });
 })();
+
+/* HUDA_SW_AUTO_UPDATE */
+(function () {
+  if (!("serviceWorker" in navigator)) return;
+  function tryUpdate() {
+    navigator.serviceWorker.getRegistration().then(function (reg) {
+      if (!reg) return;
+      reg.update().catch(function () {});
+      if (reg.waiting) {
+        reg.waiting.postMessage({ type: "SKIP_WAITING" });
+      }
+      reg.addEventListener("updatefound", function () {
+        var nw = reg.installing;
+        if (!nw) return;
+        nw.addEventListener("statechange", function () {
+          if (nw.state === "installed" && navigator.serviceWorker.controller) {
+            // new version ready — activate immediately
+            if (reg.waiting) reg.waiting.postMessage({ type: "SKIP_WAITING" });
+            // soft reload once
+            if (!sessionStorage.getItem("huda_sw_reloaded")) {
+              sessionStorage.setItem("huda_sw_reloaded", "1");
+              location.reload();
+            }
+          }
+        });
+      });
+    });
+  }
+  navigator.serviceWorker.addEventListener("controllerchange", function () {
+    if (!sessionStorage.getItem("huda_sw_reloaded2")) {
+      sessionStorage.setItem("huda_sw_reloaded2", "1");
+      location.reload();
+    }
+  });
+  // check on load and every 2 minutes
+  tryUpdate();
+  setInterval(tryUpdate, 120000);
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible") tryUpdate();
+  });
+})();
