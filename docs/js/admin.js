@@ -155,16 +155,94 @@
       toggleRow('adm-showNawawi', 'الأربعون النووية', cfg.showNawawi) +
       toggleRow('adm-showHifz', 'وضع الحفظ', cfg.showHifz) +
       '</section>' +
+      '<section class="adm-card" id="adm-books-card"><h3>📚 إدارة الكتب</h3>' +
+      field('عنوان الكتاب', '<input id="adm-bk-title" type="text" placeholder="مثال: أنت تسأل والإسلام يجيب"/>') +
+      field('المؤلف', '<input id="adm-bk-author" type="text" placeholder="مثال: الشيخ الشعراوي"/>') +
+      field('التصنيف', '<input id="adm-bk-cat" type="text" placeholder="عقيدة / فقه / تفسير..."/>') +
+      field('صورة الغلاف', '<input id="adm-bk-cover" type="file" accept="image/*"/>') +
+      field('ملف PDF', '<input id="adm-bk-pdf" type="file" accept="application/pdf,.pdf"/>') +
+      '<div class="adm-actions" style="margin:.5rem 0 1rem">' +
+      '<button type="button" class="adm-save" onclick="HudaAdmin.addBook()">➕ إضافة الكتاب</button>' +
+      '</div>' +
+      '<div id="adm-books-list" class="adm-books-list"><p class="adm-hint">جاري التحميل...</p></div>' +
+      '<p class="adm-hint">الكتب تُحفظ داخل المتصفح (IndexedDB) وتظهر في قسم «الكتب» للزوار على نفس الجهاز. لملفات PDF كبيرة جدًا قد تحتاج مساحة تخزين كافية.</p>' +
+      '</section>' +
       '<section class="adm-card"><h3>🎨 تخصيص</h3>' +
       field('CSS مخصص', '<textarea id="adm-css" rows="5">' + esc(cfg.customCss) + '</textarea>') +
       field('ملاحظات المشرف', '<textarea id="adm-notes" rows="3">' + esc(cfg.notes) + '</textarea>') +
       '</section>' +
-      '<section class="adm-card"><h3>💾 حفظ</h3>' +
+      '<section class="adm-card"><h3>💾 حفظ الإعدادات</h3>' +
       '<div class="adm-actions">' +
       '<button type="button" class="adm-save" onclick="HudaAdmin.save()">حفظ وتطبيق</button>' +
       '<button type="button" class="adm-reset" onclick="HudaAdmin.reset()">استعادة الافتراضي</button>' +
       '</div>' +
       '<p class="adm-hint">الإعدادات تُحفظ على هذا الجهاز. لنشرها لكل الزوار يلزم ربط الخادم لاحقًا.</p></section>';
+
+    refreshBooksList();
+  }
+
+  async function refreshBooksList() {
+    var box = document.getElementById('adm-books-list');
+    if (!box) return;
+    if (!window.HudaBooks || !HudaBooks.adminList) {
+      box.innerHTML = '<p class="adm-hint">وحدة الكتب غير محمّلة.</p>';
+      return;
+    }
+    try {
+      var list = await HudaBooks.adminList();
+      if (!list.length) {
+        box.innerHTML = '<p class="adm-hint">لا توجد كتب مضافة بعد.</p>';
+        return;
+      }
+      box.innerHTML = list.map(function (b) {
+        var thumb = b.coverDataUrl
+          ? '<img class="adm-bk-thumb" src="' + b.coverDataUrl + '" alt=""/>'
+          : '<div class="adm-bk-thumb adm-bk-ph">📚</div>';
+        return '<div class="adm-bk-row">' + thumb +
+          '<div class="adm-bk-meta"><b>' + esc(b.title) + '</b><small>' + esc(b.author || '') +
+          (b.hasPdf ? ' · PDF' : '') + '</small></div>' +
+          '<button type="button" class="adm-bk-del" onclick="HudaAdmin.removeBook(\'' + b.id + '\')">حذف</button></div>';
+      }).join('');
+    } catch (e) {
+      box.innerHTML = '<p class="adm-hint">تعذّر تحميل قائمة الكتب.</p>';
+    }
+  }
+
+  async function addBook() {
+    if (!window.HudaBooks || !HudaBooks.adminAdd) {
+      alert('وحدة الكتب غير جاهزة');
+      return;
+    }
+    var title = val('adm-bk-title');
+    if (!title.trim()) { alert('اكتب عنوان الكتاب'); return; }
+    var author = val('adm-bk-author');
+    var cat = val('adm-bk-cat');
+    var coverInp = document.getElementById('adm-bk-cover');
+    var pdfInp = document.getElementById('adm-bk-pdf');
+    var coverFile = coverInp && coverInp.files && coverInp.files[0];
+    var pdfFile = pdfInp && pdfInp.files && pdfInp.files[0];
+    try {
+      await HudaBooks.adminAdd({ title: title, author: author, cat: cat }, coverFile || null, pdfFile || null);
+      if (coverInp) coverInp.value = '';
+      if (pdfInp) pdfInp.value = '';
+      var t = document.getElementById('adm-bk-title'); if (t) t.value = '';
+      var a = document.getElementById('adm-bk-author'); if (a) a.value = '';
+      var c = document.getElementById('adm-bk-cat'); if (c) c.value = '';
+      alert('تمت إضافة الكتاب');
+      refreshBooksList();
+      if (typeof HudaBooks.render === 'function') HudaBooks.render();
+    } catch (e) {
+      alert('فشل الحفظ: ' + (e && e.message ? e.message : 'خطأ'));
+    }
+  }
+
+  async function removeBook(id) {
+    if (!confirm('حذف هذا الكتاب؟')) return;
+    if (window.HudaBooks && HudaBooks.adminRemove) {
+      await HudaBooks.adminRemove(id);
+      refreshBooksList();
+      if (typeof HudaBooks.render === 'function') HudaBooks.render();
+    }
   }
 
   function val(id) {
@@ -259,6 +337,9 @@
     save: saveFromUi,
     reset: resetAll,
     tryUnlock: tryUnlock,
-    getConfig: load
+    getConfig: load,
+    addBook: addBook,
+    removeBook: removeBook,
+    refreshBooks: refreshBooksList
   };
 })();

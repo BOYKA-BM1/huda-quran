@@ -4136,3 +4136,46 @@ body:not(.paper-mode) .bk-paper{background:#f7f1e3;color:#1a1510}
   background: #8b1e1e; color: #fff; text-align: center; padding: .65rem 1rem;
   font-size: .9rem; box-shadow: 0 4px 16px rgba(0,0,0,.3);
 }
+
+/* Books grid + PDF */
+.bk-list { display: grid; grid-template-columns: 1fr 1fr; gap: .85rem; }
+@media (min-width: 720px) { .bk-list { grid-template-columns: 1fr 1fr 1fr; } }
+.bk-card { display: flex; flex-direction: column; background: rgba(255,255,255,.04); border: 1px solid rgba(201,168,76,.16); border-radius: 16px; overflow: hidden; }
+.bk-cover { position: relative; aspect-ratio: 3/4; background: linear-gradient(165deg, var(--bk,#0d3b2e), #030a06); border-bottom: 2px solid var(--ac,#c9a84c); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1rem .65rem; text-align: center; }
+.bk-cover-img { padding: 0; overflow: hidden; }
+.bk-cover-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.bk-cover-orn { color: var(--ac,#c9a84c); font-size: 1.3rem; margin-bottom: .35rem; }
+.bk-cover-title { font-family: "Scheherazade New", serif; color: #f5edd8; font-weight: 700; font-size: clamp(.9rem,3vw,1.1rem); line-height: 1.35; z-index: 1; }
+.bk-cover-author { font-size: .7rem; color: rgba(232,201,106,.85); margin-top: .3rem; }
+.bk-cover-line { width: 36%; height: 2px; margin-top: .45rem; background: linear-gradient(90deg,transparent,var(--ac,#c9a84c),transparent); }
+.bk-info { padding: .65rem .7rem .75rem; display: flex; flex-direction: column; gap: .15rem; flex: 1; }
+.bk-name { margin: 0; font-size: .9rem; color: var(--tl,#f0e6c8); font-weight: 700; }
+.bk-author { font-size: .72rem; color: rgba(255,255,255,.5); }
+.bk-cat { font-size: .68rem; color: rgba(201,168,76,.75); margin-bottom: .3rem; }
+.bk-actions { display: grid; grid-template-columns: 1fr 1fr; gap: .35rem; margin-top: auto; }
+.bk-btn { border-radius: 10px; padding: .45rem .2rem; font: inherit; font-size: .7rem; font-weight: 700; cursor: pointer; border: 1px solid rgba(201,168,76,.3); }
+.bk-read { background: linear-gradient(135deg,rgba(201,168,76,.28),rgba(201,168,76,.12)); color: #e8c96a; }
+.bk-dl { background: rgba(255,255,255,.05); color: rgba(255,255,255,.82); }
+.bk-dl.on { border-color: rgba(61,206,140,.45); color: #3dce8c; }
+.bk-empty { grid-column: 1/-1; text-align: center; color: rgba(255,255,255,.45); padding: 2rem; line-height: 1.6; }
+.bk-hero { background: linear-gradient(135deg,rgba(13,59,46,.96),rgba(3,16,12,.98)); border: 1px solid rgba(201,168,76,.3); border-radius: 18px; padding: 1.15rem; margin-bottom: 1rem; text-align: center; }
+.bk-hero h2 { margin: 0 0 .35rem; color: #f0e6c8; }
+.bk-hero p { margin: 0 0 .75rem; color: rgba(240,230,200,.7); font-size: .88rem; }
+#books-search { width: 100%; max-width: 420px; box-sizing: border-box; padding: .65rem 1rem; border-radius: 12px; border: 1px solid rgba(201,168,76,.28); background: rgba(0,0,0,.25); color: #f5f0e6; font: inherit; text-align: center; }
+.bk-reader-bar { display: flex; align-items: center; gap: .65rem; margin-bottom: .5rem; position: sticky; top: 0; z-index: 5; background: rgba(3,10,6,.94); padding: .4rem 0; }
+.bk-back { border: 1px solid rgba(201,168,76,.3); background: rgba(201,168,76,.1); color: #e8c96a; border-radius: 10px; padding: .4rem .7rem; font: inherit; cursor: pointer; }
+.bk-reader-head b { display: block; color: #f0e6c8; }
+.bk-reader-head small { color: rgba(255,255,255,.5); font-size: .8rem; }
+.bk-reader-body { border-radius: 12px; overflow: hidden; min-height: 60vh; }
+.bk-pdf-frame { width: 100%; height: calc(100vh - 200px); min-height: 60vh; border: none; background: #222; border-radius: 12px; }
+.bk-toast { position: fixed; bottom: 5.5rem; left: 50%; transform: translateX(-50%) translateY(12px); background: rgba(13,59,46,.96); color: #f0e6c8; border: 1px solid rgba(201,168,76,.35); padding: .65rem 1.1rem; border-radius: 999px; font-size: .88rem; opacity: 0; pointer-events: none; transition: .25s; z-index: 900; }
+.bk-toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+.adm-books-list { display: flex; flex-direction: column; gap: .5rem; max-height: 280px; overflow-y: auto; }
+.adm-bk-row { display: flex; align-items: center; gap: .6rem; padding: .45rem; background: rgba(0,0,0,.2); border-radius: 10px; }
+.adm-bk-thumb { width: 40px; height: 52px; border-radius: 6px; object-fit: cover; background: rgba(201,168,76,.15); display: grid; place-items: center; flex-shrink: 0; }
+.adm-bk-ph { font-size: 1.1rem; }
+.adm-bk-meta { flex: 1; min-width: 0; }
+.adm-bk-meta b { display: block; color: #f0e6c8; font-size: .88rem; }
+.adm-bk-meta small { color: rgba(255,255,255,.5); font-size: .75rem; }
+.adm-bk-del { border: 1px solid rgba(255,100,100,.3); background: rgba(255,80,80,.1); color: #e88; border-radius: 8px; padding: .35rem .55rem; font: inherit; font-size: .75rem; cursor: pointer; }
+#page-books { padding: 1rem 1rem 5rem; direction: rtl; }

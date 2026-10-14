@@ -146,7 +146,8 @@
       <button class="dnb" id="nav-favorites" onclick="closeMenu();SP('favorites')">⭐ المفضلة</button>
       <button class="dnb" id="nav-notes" onclick="closeMenu();SP('notes')">📝 ملاحظاتي</button>
       <button class="dnb" id="nav-tracker" onclick="closeMenu();SP('tracker')">☑️ متابعة الصلوات</button>
-<button class="dnb" id="nav-stats" onclick="closeMenu();SP('stats')">📊 إحصائياتي</button>
+<button class="dnb" id="nav-books" onclick="closeMenu();SP('books')">📚 الكتب</button>
+      <button class="dnb" id="nav-stats" onclick="closeMenu();SP('stats')">📊 إحصائياتي</button>
     </div>
 
     <div class="nav-sec">
@@ -233,7 +234,8 @@
       <button onclick="SP('zakat')" style="--c:#D08A1E"><i><svg class="ic" aria-hidden="true"><use href="#i-coin"/></svg></i><b>حاسبة الزكاة</b><small>احسب زكاة مالك</small></button>
       <button onclick="SP('hadiths')" style="--c:#C0504A"><i><svg class="ic" aria-hidden="true"><use href="#i-scroll"/></svg></i><b>الأحاديث</b><small>أحاديث نبوية مختارة</small></button>
       <button onclick="SP('nawawi')" style="--c:#8B6914"><i><svg class="ic" aria-hidden="true"><use href="#i-book"/></svg></i><b>الأربعون النووية</b><small>٤٢ حديثًا جامعة لأصول الدين</small></button>
-<button onclick="SP('khatma')" style="--c:#2A9BAA"><i><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></i><b>خطة الختمة</b><small>ختم القرآن بانتظام</small></button>
+<button onclick="SP('books')" style="--c:#8B6914"><i>📚</i><b>الكتب</b><small>مكتبة PDF وأغلفة</small></button>
+      <button onclick="SP('khatma')" style="--c:#2A9BAA"><i><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></i><b>خطة الختمة</b><small>ختم القرآن بانتظام</small></button>
       <button onclick="SP('hijri')" style="--c:#8C6F3A"><i><svg class="ic" aria-hidden="true"><use href="#i-home"/></svg></i><b>التقويم الهجري</b><small>المناسبات والأيام البيض</small></button>
       <button id="pwa-install-btn" onclick="installPWA()" style="--c:#5B6B63"><i><svg class="ic" aria-hidden="true"><use href="#i-down"/></svg></i><b>ثبّت التطبيق</b><small>للعمل بدون متصفح</small></button>
     </div>
@@ -1533,6 +1535,36 @@
 ══════════════════════════════════════════ -->
 
 <!-- ADMIN (hidden — unlock via Quran search code) -->
+
+<!-- BOOKS -->
+<div class="pg" id="page-books">
+  <div id="books-toast" class="bk-toast"></div>
+  <div id="books-library">
+    <div class="bk-hero">
+      <h2>📚 المكتبة الإسلامية</h2>
+      <p>تصفح الكتب · اقرأ PDF داخل التطبيق · احفظ للقراءة بدون إنترنت</p>
+      <input id="books-search" type="search" placeholder="🔍 ابحث عن كتاب..."/>
+    </div>
+    <div id="books-list" class="bk-list"></div>
+  </div>
+  <div id="books-reader" style="display:none">
+    <div class="bk-reader-bar">
+      <button type="button" class="bk-back" onclick="return HudaBooks.back(event)">› رجوع للكتب</button>
+      <div class="bk-reader-head">
+        <b id="bk-reader-title">—</b>
+        <small id="bk-reader-sub">—</small>
+      </div>
+    </div>
+    <div id="bk-toc" class="bk-toc" style="display:none"></div>
+    <div id="bk-reader-body" class="bk-reader-body"></div>
+    <div class="bk-nav">
+      <button type="button" id="bk-prev" style="display:none">السابق</button>
+      <span id="bk-reader-prog">—</span>
+      <button type="button" id="bk-next" style="display:none">التالي</button>
+    </div>
+  </div>
+</div>
+
 <div class="pg" id="page-admin">
   <div class="adm-wrap">
     <div class="adm-hero">
@@ -1587,6 +1619,7 @@
   </div>
 </div>
 <script src="js/config.js"></script>
+<script defer src="js/books.js"></script>
 <script defer src="js/admin.js"></script>
 <script src="js/quran-data.js"></script>
 <script src="js/app.01.js"></script>
