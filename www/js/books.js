@@ -185,7 +185,7 @@
   async function renderOnePage(n, container, width) {
     var page = await pdfDoc.getPage(n);
     var base = page.getViewport({ scale: 1 });
-    var cssScale = (width / base.width) * (zoomScale || 1);
+    var cssScale = width / base.width;
     var dpr = Math.min(window.devicePixelRatio || 1, 2.5);
     var viewport = page.getViewport({ scale: cssScale * dpr });
     var holder = document.createElement("div");
@@ -237,13 +237,7 @@
     if (!body) return;
 
     if (b.pdfBlob || b.pdfDataUrl) {
-      body.innerHTML =
-        '<div class="bk-zoom-bar">' +
-        '<button type="button" class="bk-zbtn" id="bk-zoom-out">−</button>' +
-        '<span id="bk-zoom-label">100%</span>' +
-        '<button type="button" class="bk-zbtn" id="bk-zoom-in">+</button>' +
-        '</div>' +
-        '<div class="bk-canvas-wrap bk-continuous" id="bk-canvas-wrap"><div class="bk-loading">جاري تحميل الكتاب…</div></div>';
+      body.innerHTML = '<div class="bk-canvas-wrap bk-continuous" id="bk-canvas-wrap"><div class="bk-loading">جاري تحميل الكتاب…</div></div>';
       try {
         await loadPdfJs();
         var data;
@@ -257,23 +251,6 @@
         var wrap = document.getElementById('bk-canvas-wrap');
         if (wrap) wrap.innerHTML = '';
         await renderContinuous();
-        var zin = document.getElementById('bk-zoom-in');
-        var zout = document.getElementById('bk-zoom-out');
-        var zlab = document.getElementById('bk-zoom-label');
-        function updateZoomLabel() {
-          if (zlab) zlab.textContent = Math.round((zoomScale || 1) * 100) + '%';
-        }
-        updateZoomLabel();
-        if (zin) zin.onclick = async function () {
-          zoomScale = Math.min(2.5, (zoomScale || 1) + 0.15);
-          updateZoomLabel();
-          await renderContinuous();
-        };
-        if (zout) zout.onclick = async function () {
-          zoomScale = Math.max(0.6, (zoomScale || 1) - 0.15);
-          updateZoomLabel();
-          await renderContinuous();
-        };
         window.addEventListener('resize', onResize);
       } catch (err) {
         body.innerHTML = '<div class="bk-paper"><p>تعذّر فتح ملف PDF.</p></div>';

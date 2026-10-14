@@ -4492,3 +4492,12 @@ body.bk-immersive .bk-reader-top-min {
   background: #fff;
 }
 .bk-loading { color: #444 !important; background: #fff; }
+
+.bk-zoom-bar,.bk-zbtn,#bk-zoom-label{display:none!important}
+body.bk-immersive .topbar,body.bk-immersive header,body.bk-immersive .drawer,body.bk-immersive .gplayer,body.bk-immersive #gplayer,body.bk-immersive .bottom-nav,body.bk-immersive .fab,body.bk-immersive .bk-reader-top,body.bk-immersive .bk-reader-top-min{display:none!important;height:0!important}
+#page-books.bk-reading,#books-reader.bk-reader-full{position:fixed!important;inset:0!important;z-index:30000!important;width:100vw!important;height:100vh!important;max-width:none!important;padding:0!important;margin:0!important;background:#fff!important}
+#books-reader.bk-reader-full{display:flex!important;flex-direction:column;z-index:30001!important}
+.bk-reader-body{flex:1 1 auto!important;width:100%!important;height:100%!important;min-height:100vh!important;overflow:hidden!important;background:#fff!important}
+.bk-canvas-wrap.bk-continuous{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;overflow-y:auto!important;overflow-x:hidden!important;background:#fff!important}
+.bk-page-sheet{width:100%!important;margin:0!important;padding:0!important;background:#fff!important;display:block!important}
+.bk-page-sheet .bk-pdf-canvas{display:block!important;width:100%!important;max-width:100%!important;height:auto!important;margin:0 auto!important}
