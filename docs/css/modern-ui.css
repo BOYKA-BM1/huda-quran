@@ -3969,3 +3969,115 @@ body.paper-mode .bk-meta b,
 body.paper-mode .bk-reader-head b { color: #1a1a1a; }
 body.paper-mode #books-search { background: #fff; color: #1a1a1a; }
 body.paper-mode .bk-reader-bar { background: rgba(247,241,227,.95); }
+
+/* ─── شبكة الكتب المحدثة ─── */
+.bk-list {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: .85rem !important;
+  flex-direction: unset !important;
+}
+@media (min-width: 720px) {
+  .bk-list { grid-template-columns: 1fr 1fr 1fr !important; }
+}
+.bk-card {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+.bk-cover {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(201,168,76,.18), transparent 55%),
+    linear-gradient(165deg, var(--bk, #0d3b2e) 0%, #030a06 100%);
+  border-bottom: 2px solid var(--ac, #c9a84c);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem .65rem;
+  text-align: center;
+  width: auto !important;
+  height: auto !important;
+  font-size: inherit !important;
+}
+.bk-cover::before {
+  content: "";
+  position: absolute; inset: 8px;
+  border: 1px solid rgba(201,168,76,.28);
+  border-radius: 8px;
+  pointer-events: none;
+}
+.bk-cover-orn {
+  font-size: 1.35rem;
+  color: var(--ac, #c9a84c);
+  margin-bottom: .4rem;
+}
+.bk-cover-title {
+  font-family: "Scheherazade New", "Amiri", serif;
+  font-size: clamp(.9rem, 3.1vw, 1.1rem);
+  font-weight: 700;
+  color: #f5edd8;
+  line-height: 1.35;
+  margin-bottom: .3rem;
+  z-index: 1;
+}
+.bk-cover-author {
+  font-size: .7rem;
+  color: rgba(232,201,106,.85);
+  z-index: 1;
+}
+.bk-cover-line {
+  width: 36%;
+  height: 2px;
+  margin-top: .5rem;
+  background: linear-gradient(90deg, transparent, var(--ac, #c9a84c), transparent);
+}
+.bk-info {
+  padding: .65rem .7rem .75rem;
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+  flex: 1;
+}
+.bk-name {
+  margin: 0;
+  font-size: .9rem;
+  color: var(--tl, #f0e6c8);
+  line-height: 1.3;
+  font-weight: 700;
+}
+.bk-author { font-size: .72rem; color: rgba(255,255,255,.5); }
+.bk-cat { font-size: .68rem; color: rgba(201,168,76,.75); margin-bottom: .3rem; }
+.bk-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: .35rem;
+  margin-top: auto;
+}
+.bk-btn {
+  border-radius: 10px;
+  padding: .45rem .2rem;
+  font: inherit;
+  font-size: .7rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid rgba(201,168,76,.3);
+  line-height: 1.2;
+}
+.bk-read {
+  background: linear-gradient(135deg, rgba(201,168,76,.28), rgba(201,168,76,.12));
+  color: #e8c96a;
+}
+.bk-dl {
+  background: rgba(255,255,255,.05);
+  color: rgba(255,255,255,.82);
+}
+.bk-dl.on {
+  border-color: rgba(61,206,140,.45);
+  color: #3dce8c;
+  background: rgba(61,206,140,.08);
+}
