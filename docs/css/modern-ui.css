@@ -4413,3 +4413,82 @@ body.bk-immersive .fab {
   font-size: 1rem;
 }
 .bk-page-bar { display: none !important; }
+
+/* Sharp continuous reader + zoom */
+body.bk-immersive .topbar,
+body.bk-immersive header,
+body.bk-immersive .app-header,
+body.bk-immersive .hdr,
+body.bk-immersive #hdr,
+body.bk-immersive .drawer,
+body.bk-immersive .menu-btn,
+body.bk-immersive .gplayer,
+body.bk-immersive #gplayer,
+body.bk-immersive .bottom-nav,
+body.bk-immersive .fab,
+body.bk-immersive .bk-reader-top,
+body.bk-immersive .bk-reader-top-min {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+#books-reader.bk-reader-full {
+  position: fixed !important;
+  top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+  z-index: 30000 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: none !important;
+  background: #fff !important;
+  color: #111 !important;
+}
+.bk-reader-body { color: #111 !important; background: #fff !important; }
+.bk-zoom-bar {
+  position: fixed;
+  bottom: 1.1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30001;
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  background: rgba(15, 25, 20, 0.92);
+  border: 1px solid rgba(201,168,76,.4);
+  border-radius: 999px;
+  padding: .35rem .55rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+.bk-zbtn {
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid rgba(201,168,76,.35);
+  background: rgba(201,168,76,.15);
+  color: #e8c96a;
+  font-size: 1.35rem;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1;
+}
+#bk-zoom-label {
+  color: #f0e6c8;
+  font-size: .85rem;
+  min-width: 3.2rem;
+  text-align: center;
+}
+.bk-canvas-wrap.bk-continuous {
+  width: 100% !important;
+  height: 100% !important;
+  background: #fff !important;
+  color: #111 !important;
+}
+.bk-page-sheet {
+  width: 100%;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+}
+.bk-page-sheet .bk-pdf-canvas {
+  image-rendering: auto;
+  background: #fff;
+}
+.bk-loading { color: #444 !important; background: #fff; }

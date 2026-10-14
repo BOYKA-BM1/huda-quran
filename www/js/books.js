@@ -4,7 +4,7 @@
 (function () {
   'use strict';
   var DB_NAME = 'huda_library_db', DB_VER = 1, STORE = 'books';
-  var dbp = null, current = null, pdfDoc = null, pageNum = 1, rendering = false;
+  var dbp = null, current = null, pdfDoc = null, pageNum = 1, rendering = false, zoomScale = 1;
   var pdfjsLib = null;
   var PDFJS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
   var PDFJS_WORKER = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
@@ -185,20 +185,21 @@
   async function renderOnePage(n, container, width) {
     var page = await pdfDoc.getPage(n);
     var base = page.getViewport({ scale: 1 });
-    var scale = width / base.width;
-    var viewport = page.getViewport({ scale: scale });
-    var holder = document.createElement('div');
-    holder.className = 'bk-page-sheet';
+    var cssScale = (width / base.width) * (zoomScale || 1);
+    var dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+    var viewport = page.getViewport({ scale: cssScale * dpr });
+    var holder = document.createElement("div");
+    holder.className = "bk-page-sheet";
     holder.dataset.page = String(n);
-    var canvas = document.createElement('canvas');
-    canvas.className = 'bk-pdf-canvas';
-    canvas.width = viewport.width;
-    canvas.height = viewport.height;
-    canvas.style.width = '100%';
-    canvas.style.height = 'auto';
+    var canvas = document.createElement("canvas");
+    canvas.className = "bk-pdf-canvas";
+    canvas.width = Math.floor(viewport.width);
+    canvas.height = Math.floor(viewport.height);
+    canvas.style.width = (viewport.width / dpr) + "px";
+    canvas.style.height = (viewport.height / dpr) + "px";
     holder.appendChild(canvas);
     container.appendChild(holder);
-    var ctx = canvas.getContext('2d');
+    var ctx = canvas.getContext("2d", { alpha: false });
     await page.render({ canvasContext: ctx, viewport: viewport }).promise;
     return holder;
   }
@@ -230,12 +231,19 @@
     var b = await getBook(id);
     if (!b) { toast('الكتاب غير موجود'); return; }
     current = b;
+    zoomScale = 1;
     showReaderShell(b.title, b.author);
     var body = document.getElementById('bk-reader-body');
     if (!body) return;
 
     if (b.pdfBlob || b.pdfDataUrl) {
-      body.innerHTML = '<div class="bk-canvas-wrap bk-continuous" id="bk-canvas-wrap"><div class="bk-loading">جاري تحميل الكتاب…</div></div>';
+      body.innerHTML =
+        '<div class="bk-zoom-bar">' +
+        '<button type="button" class="bk-zbtn" id="bk-zoom-out">−</button>' +
+        '<span id="bk-zoom-label">100%</span>' +
+        '<button type="button" class="bk-zbtn" id="bk-zoom-in">+</button>' +
+        '</div>' +
+        '<div class="bk-canvas-wrap bk-continuous" id="bk-canvas-wrap"><div class="bk-loading">جاري تحميل الكتاب…</div></div>';
       try {
         await loadPdfJs();
         var data;
@@ -249,6 +257,23 @@
         var wrap = document.getElementById('bk-canvas-wrap');
         if (wrap) wrap.innerHTML = '';
         await renderContinuous();
+        var zin = document.getElementById('bk-zoom-in');
+        var zout = document.getElementById('bk-zoom-out');
+        var zlab = document.getElementById('bk-zoom-label');
+        function updateZoomLabel() {
+          if (zlab) zlab.textContent = Math.round((zoomScale || 1) * 100) + '%';
+        }
+        updateZoomLabel();
+        if (zin) zin.onclick = async function () {
+          zoomScale = Math.min(2.5, (zoomScale || 1) + 0.15);
+          updateZoomLabel();
+          await renderContinuous();
+        };
+        if (zout) zout.onclick = async function () {
+          zoomScale = Math.max(0.6, (zoomScale || 1) - 0.15);
+          updateZoomLabel();
+          await renderContinuous();
+        };
         window.addEventListener('resize', onResize);
       } catch (err) {
         body.innerHTML = '<div class="bk-paper"><p>تعذّر فتح ملف PDF.</p></div>';
