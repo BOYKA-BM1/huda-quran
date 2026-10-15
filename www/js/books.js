@@ -57,19 +57,45 @@
     var candidates = [];
     if (b.pdfDataUrl) candidates.push(b.pdfDataUrl);
     if (b.pdfUrl) {
-      candidates.push(resolveAssetUrl(b.pdfUrl));
-      candidates.push(b.pdfUrl);
-      candidates.push('./' + String(b.pdfUrl).replace(/^\.\//, ''));
+      var u = String(b.pdfUrl).replace(/^\.\//, '').replace(/^\//, '');
+      candidates.push(resolveAssetUrl(u));
+      candidates.push(resolveAssetUrl('data/books/files/' + u.split('/').pop()));
+      candidates.push(u);
+      candidates.push('./' + u);
+      candidates.push('/' + u);
+      try {
+        if (/\.github\.io$/i.test(location.hostname)) {
+          var parts = location.pathname.split('/').filter(Boolean);
+          if (parts.length) {
+            candidates.push(location.origin + '/' + parts[0] + '/' + u);
+          }
+        }
+      } catch (e) {}
+    }
+    // unique
+    var seen = {};
+    var list = [];
+    for (var i = 0; i < candidates.length; i++) {
+      if (candidates[i] && !seen[candidates[i]]) { seen[candidates[i]] = 1; list.push(candidates[i]); }
     }
     var lastErr = null;
-    for (var i = 0; i < candidates.length; i++) {
+    for (var j = 0; j < list.length; j++) {
       try {
-        var res = await fetch(candidates[i], { cache: 'force-cache' });
-        if (!res.ok) { lastErr = new Error('HTTP ' + res.status + ' ' + candidates[i]); continue; }
-        return await res.arrayBuffer();
+        var res = await fetch(list[j], { cache: 'no-store' });
+        if (!res.ok) { lastErr = new Error('HTTP ' + res.status + ' @ ' + list[j]); continue; }
+        var buf = await res.arrayBuffer();
+        if (!buf.byteLength) { lastErr = new Error('empty @ ' + list[j]); continue; }
+        // basic PDF magic check
+        var head = new Uint8Array(buf.slice(0, 5));
+        var sig = String.fromCharCode.apply(null, head);
+        if (sig.indexOf('%PDF') !== 0) {
+          lastErr = new Error('ليس PDF صالحًا @ ' + list[j]);
+          continue;
+        }
+        return buf;
       } catch (e) { lastErr = e; }
     }
-    throw lastErr || new Error('تعذّر تحميل ملف PDF');
+    throw lastErr || new Error('تعذّر تحميل ملف PDF — تحقق من رفع الملف على GitHub');
   }
 
 
@@ -327,7 +353,7 @@
     document.body.classList.add('bk-noscroll', 'bk-immersive');
     // history: reading state so browser back returns to books list
     try {
-      history.pushState({ hudaBookReading: true, page: 'books' }, '', '#books/read');
+      history.pushState({ hudaBookReading: true, page: 'books' }, '', '#books');
     } catch (e) {}
   }
 
@@ -385,7 +411,9 @@
       ratio = wrap.scrollTop / wrap.scrollHeight;
     }
     wrap.innerHTML = '';
-    var width = Math.max(280, Math.floor(wrap.clientWidth || window.innerWidth));
+    var width = Math.floor(wrap.clientWidth || 0);
+    if (width < 100) width = Math.floor(window.innerWidth || 360);
+    width = Math.max(280, width);
     var total = pdfDoc.numPages;
     var batch = 4;
     async function nextBatch(start) {
@@ -407,6 +435,7 @@
     await nextBatch(1);
   }
 
+  
   async function openBook(id) {
     var b = await getBook(id);
     if (!b) { toast('الكتاب غير موجود'); return; }
@@ -414,60 +443,76 @@
     zoomScale = 1;
     showReaderShell(b.title, b.author);
     var body = document.getElementById('bk-reader-body');
-    if (!body) return;
+    if (!body) {
+      toast('عنصر القراءة غير موجود');
+      return;
+    }
 
-    if (b.pdfBlob || b.pdfDataUrl || b.pdfUrl) {
+    var hasPdf = !!(b.pdfBlob || b.pdfDataUrl || b.pdfUrl || b.hasPdf);
+    if (hasPdf) {
       body.innerHTML =
-        '<div class="bk-canvas-wrap bk-continuous" id="bk-canvas-wrap"><div class="bk-loading">جاري تحميل الكتاب…</div></div>' +
-        '<div class="bk-zoom-bar" id="bk-zoom-bar">' +
-        '<button type="button" class="bk-zbtn" id="bk-zoom-out" aria-label="تصغير">−</button>' +
-        '<span id="bk-zoom-label">100%</span>' +
-        '<button type="button" class="bk-zbtn" id="bk-zoom-in" aria-label="تكبير">+</button>' +
-        '</div>';
+        '<div class="bk-canvas-wrap bk-continuous" id="bk-canvas-wrap">' +
+        '<div class="bk-loading">جاري فتح الكتاب…</div></div>';
+
+      // wait layout so width > 0
+      await new Promise(function (r) { requestAnimationFrame(function () { requestAnimationFrame(r); }); });
+
+      var opened = false;
+      // Path A: PDF.js canvas
       try {
         await loadPdfJs();
         var data = await fetchPdfBytes(b);
-        if (!data || !data.byteLength) throw new Error('ملف PDF فارغ');
+        if (!data || !data.byteLength) throw new Error('ملف PDF فارغ أو غير موجود');
         pdfDoc = await pdfjsLib.getDocument({ data: data }).promise;
         pageNum = 1;
-        zoomScale = 1;
         var wrap = document.getElementById('bk-canvas-wrap');
         if (wrap) wrap.innerHTML = '';
         await renderContinuous(false);
-        var zin = document.getElementById('bk-zoom-in');
-        var zout = document.getElementById('bk-zoom-out');
-        var zlab = document.getElementById('bk-zoom-label');
-        function updateZoomLabel() {
-          if (zlab) zlab.textContent = Math.round((zoomScale || 1) * 100) + '%';
-        }
-        updateZoomLabel();
-        if (zin) zin.onclick = function () {
-          zoomScale = Math.min(2.5, Math.round(((zoomScale || 1) + 0.2) * 100) / 100);
-          updateZoomLabel();
-          renderContinuous(true);
-        };
-        if (zout) zout.onclick = function () {
-          zoomScale = Math.max(0.7, Math.round(((zoomScale || 1) - 0.2) * 100) / 100);
-          updateZoomLabel();
-          renderContinuous(true);
-        };
+        opened = true;
         window.addEventListener('resize', onResize);
       } catch (err) {
-        var msg = (err && err.message) ? err.message : String(err);
-        body.innerHTML = '<div class="bk-paper" style="padding:1.5rem;color:#222"><p><b>تعذّر فتح الكتاب</b></p><p style="font-size:.9rem;opacity:.8">' + msg + '</p><p style="font-size:.85rem">تأكد أن ملف PDF موجود في المسار الصحيح على GitHub (docs/data/books/files و www/data/books/files) وأن pdfUrl في catalog.json صحيح.</p></div>';
-        console.error(err);
+        console.error('PDF.js failed', err);
+        opened = false;
       }
-    } else if (b.chapters && b.chapters.length) {
+
+      // Path B: native iframe fallback (works when PDF.js blocked)
+      if (!opened) {
+        var src = '';
+        try {
+          if (b.pdfUrl) src = resolveAssetUrl(b.pdfUrl);
+          else if (b.pdfDataUrl) src = b.pdfDataUrl;
+          else if (b.pdfBlob) src = URL.createObjectURL(b.pdfBlob);
+        } catch (e) {}
+        if (src) {
+          body.innerHTML =
+            '<div class="bk-iframe-wrap">' +
+            '<iframe class="bk-pdf-frame" src="' + src + '#toolbar=0&navpanes=0" title="كتاب"></iframe>' +
+            '</div>';
+          opened = true;
+        } else {
+          body.innerHTML =
+            '<div class="bk-paper" style="padding:1.5rem;color:#111;background:#fff">' +
+            '<p><b>تعذّر فتح الكتاب</b></p>' +
+            '<p>تأكد أن ملف PDF مرفوع على GitHub في المسارين:</p>' +
+            '<p dir="ltr" style="font-size:.85rem">docs/data/books/files/ و www/data/books/files/</p>' +
+            '<p dir="ltr" style="font-size:.85rem">pdfUrl في catalog.json مثل: data/books/files/mybook.pdf</p>' +
+            '</div>';
+        }
+      }
+      return;
+    }
+
+    if (b.chapters && b.chapters.length) {
       body.innerHTML = '<div class="bk-paper-scroll">' + b.chapters.map(function (c) {
         return '<div class="bk-paper"><div class="bk-paper-head">' + esc(c.t) + '</div><p>' +
           esc(c.b).replace(/\n/g, '<br>') + '</p></div>';
       }).join('') + '</div>';
     } else {
-      body.innerHTML = '<div class="bk-paper"><p>لا يوجد محتوى.</p></div>';
+      body.innerHTML = '<div class="bk-paper" style="padding:1.5rem;color:#111"><p>لا يوجد محتوى لهذا الكتاب.</p></div>';
     }
   }
 
-  var resizeTimer;
+var resizeTimer;
   function onResize() {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(function () {
