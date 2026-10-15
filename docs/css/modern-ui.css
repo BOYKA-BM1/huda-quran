@@ -4647,3 +4647,67 @@ body.paper-mode .tafsir-popup{background:#f7f1e3 !important;}
 .khatma-day-item.done .khatma-day-check{color:#7ae87a;}
 .khatma-time-row{display:flex;gap:.5rem;align-items:center;margin:.5rem 0;}
 .khatma-time-row input[type=time]{background:rgba(13,59,46,.5);border:1px solid rgba(201,168,76,.3);color:#e8dfc0;border-radius:10px;padding:.4rem .6rem;font-family:Tajawal,sans-serif;}
+
+
+/* ===== RESPONSIVE FIX v62 ===== */
+.pr-date-row,
+.pt-date-box.pr-date-row{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  gap:.5rem !important;
+  width:100% !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+  overflow:hidden !important;
+  padding:0 .25rem !important;
+}
+.pr-date-card,
+.pt-date-box .date-card{
+  flex:1 1 calc(33.33% - .5rem) !important;
+  min-width:0 !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+  overflow:hidden !important;
+  padding:.65rem .45rem !important;
+}
+.pr-date-card .date-val,
+.date-card .date-val{
+  font-size:clamp(.75rem, 3.2vw, 1rem) !important;
+  word-break:break-word !important;
+  overflow-wrap:anywhere !important;
+  white-space:normal !important;
+  line-height:1.35 !important;
+}
+.pr-date-card .date-lbl,
+.date-card .date-lbl{
+  font-size:clamp(.62rem, 2.6vw, .78rem) !important;
+}
+.pr-date-card .date-sub,
+.date-card .date-sub{
+  font-size:clamp(.58rem, 2.4vw, .72rem) !important;
+  white-space:normal !important;
+}
+@media (max-width:420px){
+  .pr-date-card,
+  .pt-date-box .date-card{
+    flex:1 1 100% !important;
+  }
+}
+/* Hifz listen button overflow */
+#page-hifz, .hifz-wrap, .hifz-after-surah{
+  max-width:100% !important;
+  overflow-x:hidden !important;
+  box-sizing:border-box !important;
+}
+.hifz-play-row{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  gap:.4rem !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+}
+.hifz-play-btn, .hifz-play-row .name{
+  max-width:100% !important;
+  box-sizing:border-box !important;
+}
+.hifz-tabs{ flex-wrap:wrap !important; }

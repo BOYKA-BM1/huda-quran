@@ -232,19 +232,20 @@
       return list;
     }
 
-    // islamic.network سورة كاملة
-    var ed = editionFor(recId);
-    if (ed) {
-      list.push('https://cdn.islamic.network/quran/audio-surah/128/' + ed + '/' + s + '.mp3');
-      list.push('https://cdn.islamic.network/quran/audio-surah/64/' + ed + '/' + s + '.mp3');
-    }
+    // 1) mp3quran server (صوت الشيخ الحقيقي أولاً)
+    var rec = recById(recId);
+    if (rec && rec.base) list.push(rec.base + pad + '.mp3');
     if (typeof AUDIO_FALLBACKS !== 'undefined' && AUDIO_FALLBACKS[recId]) {
       AUDIO_FALLBACKS[recId].forEach(function (base) {
         if (base) list.push(base + pad + '.mp3');
       });
     }
-    var rec = recById(recId);
-    if (rec && rec.base) list.push(rec.base + pad + '.mp3');
+    // 2) islamic.network فقط إن كان للمعرّف نسخة مميزة (ليس null وليست مشتركة خطأ)
+    var ed = editionFor(recId);
+    if (ed) {
+      list.push('https://cdn.islamic.network/quran/audio-surah/128/' + ed + '/' + s + '.mp3');
+      list.push('https://cdn.islamic.network/quran/audio-surah/64/' + ed + '/' + s + '.mp3');
+    }
 
     var seen = {}, out = [];
     list.forEach(function (u) { if (u && !seen[u]) { seen[u] = 1; out.push(u); } });
@@ -544,6 +545,21 @@
       };
       au.onended = function () {
         if (G.token !== myToken) return;
+        // تكرار السورة
+        try {
+          if (typeof isRepeat !== 'undefined' && isRepeat) {
+            try { au.currentTime = 0; } catch (e) {}
+            var prr = au.play();
+            if (prr && prr.catch) prr.catch(function () {});
+            return;
+          }
+          if (G._loopSurah) {
+            try { au.currentTime = 0; } catch (e) {}
+            var pr2 = au.play();
+            if (pr2 && pr2.catch) pr2.catch(function () {});
+            return;
+          }
+        } catch (e) {}
         if (sNum < 114) playSurah(sNum + 1);
         else {
           G.active = false;
@@ -913,22 +929,49 @@
   window.tafsirPlay = function () {
     var s = +(_taf && _taf.s), a = +(_taf && _taf.a);
     if (!s || !a) {
-      // try from title / last selection
       try {
         var last = JSON.parse(localStorage.getItem('nq_last_ayah') || 'null');
         if (last && last.s && last.a) { s = +last.s; a = +last.a; }
-      } catch(e) {}
+      } catch (e) {}
     }
-    if (!s || !a) { if (typeof showToast==='function') showToast('اختر آية أولاً'); return; }
-    window._gaplessMode = true;
-    try { localStorage.setItem('nq_gapless','1'); } catch(e){}
-    if (typeof playAyahGapless === 'function') {
-      playAyahGapless(a, s);
-    } else if (typeof startPB === 'function') {
-      // last resort: start surah then seek is not available — still better than nothing
-      startPB((localStorage.getItem('nq_rec')||'alafasy'), s, false);
+    if (!s || !a) {
+      if (typeof toast === 'function') toast('اختر آية أولاً');
+      else if (typeof showToast === 'function') showToast('اختر آية أولاً');
+      return;
     }
-    if (typeof showToast==='function') showToast('▶ تشغيل الآية ' + a);
+    try { localStorage.setItem('nq_last_ayah', JSON.stringify({ s: s, a: a })); } catch (e) {}
+    var rec = (typeof curRec !== 'undefined' && curRec) || localStorage.getItem('nq_rec') || 'alafasy';
+    var pad = function (n) { n = String(n); while (n.length < 3) n = '0' + n; return n; };
+    var urls = [];
+    var folder = (window.EVERYAYAH_FOLDERS && window.EVERYAYAH_FOLDERS[rec]) || null;
+    if (folder) urls.push('https://everyayah.com/data/' + folder + '/' + pad(s) + pad(a) + '.mp3');
+    // islamic network ayah
+    var ed = (typeof ISLAMIC_NET_IDS !== 'undefined' && ISLAMIC_NET_IDS[rec]) || null;
+    if (ed) {
+      var ga = 0;
+      if (typeof SM !== 'undefined') {
+        for (var i = 0; i < s - 1; i++) ga += (SM[i] && SM[i].ay) ? SM[i].ay : 0;
+      }
+      ga += a;
+      urls.push('https://cdn.islamic.network/quran/audio/128/' + ed + '/' + ga + '.mp3');
+    }
+    // always alafasy everyayah fallback
+    urls.push('https://everyayah.com/data/Alafasy_128kbps/' + pad(s) + pad(a) + '.mp3');
+    var au = document.getElementById('aud');
+    if (!au) { au = new Audio(); au.id = 'aud'; document.body.appendChild(au); }
+    var idx = 0;
+    function tryPlay() {
+      if (idx >= urls.length) {
+        if (typeof toast === 'function') toast('تعذّر تشغيل الآية');
+        return;
+      }
+      au.onended = null;
+      au.onerror = function () { idx++; tryPlay(); };
+      au.src = urls[idx++];
+      var p = au.play();
+      if (p && p.catch) p.catch(function () { idx++; tryPlay(); });
+    }
+    tryPlay();
   };
   window.tafsirCopy = function () {
     var b = $('tafsir-body'); if (!b) return;

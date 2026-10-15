@@ -1910,7 +1910,7 @@ async function vbvPlay(){
 // Primary: mp3quran.net  |  Secondary: quranicaudio.com  |  Tertiary: alternative servers
 const AUDIO_FALLBACKS = {
   'alafasy': ['https://server8.mp3quran.net/afs/'],
-  'dosary': ['https://server11.mp3quran.net/yasser/'],
+  'dosary': ['https://server11.mp3quran.net/yasser/','https://server12.mp3quran.net/yasser/'],
   'sds': ['https://server11.mp3quran.net/sds/'],
   'shur': ['https://server12.mp3quran.net/shur/'],
   'basit': ['https://server7.mp3quran.net/basit/'],
@@ -1924,8 +1924,8 @@ const AUDIO_FALLBACKS = {
   'akhdar': ['https://cdn.mp3quran.net/audio/ibrahim-akhdar/r1/'],
   'ayyoub': ['https://cdn.mp3quran.net/audio/muhammad-ayyub/r1/'],
   'jhn': ['https://cdn.mp3quran.net/audio/abdullah-juhani/r1/'],
-  'sobhi': ['https://server14.mp3quran.net/islam/'],
-  'hazza': ['https://server8.mp3quran.net/hazza/'],
+  'sobhi': ['https://server14.mp3quran.net/islam/','https://server11.mp3quran.net/islam/','https://server8.mp3quran.net/islam/'],
+  'hazza': ['https://server8.mp3quran.net/hazza/','https://server12.mp3quran.net/hazza/','https://server11.mp3quran.net/hazza/'],
   'idrees': ['https://cdn.mp3quran.net/audio/idrees-abkar/r1/'],
   'lhdan': ['https://cdn.mp3quran.net/audio/muhammad-luhaidan/r1/'],
   'hudhaify': ['https://server9.mp3quran.net/hthfi/'],
@@ -1939,7 +1939,7 @@ const AUDIO_FALLBACKS = {
 // خريطة معرفات cdn.islamic.network — أكثر CDN استقراراً
 const ISLAMIC_NET_IDS = {
   'alafasy':   'ar.alafasy',
-  'dosary':    'ar.alafasy',
+  'dosary':    null,
   'sds':       'ar.abdurrahmaansudais',
   'shur':      'ar.saoodshuraym',
   'basit':     'ar.abdulbasitmurattal',
@@ -1953,11 +1953,14 @@ const ISLAMIC_NET_IDS = {
   'ayyoub':    'ar.muhammadayyoub',
   'jhn':       'ar.hudhaify',
   'husary_mj': 'ar.husarymujawwad',
-  'sobhi':     'ar.alafasy',
-  'hazza':     'ar.alafasy',
+  'sobhi':     null,
+  'hazza':     null,
   'idrees':    'ar.hudhaify',
   'lhdan':     'ar.mahermuaiqly',
   'shatri':    'ar.shaatree',
+  'ajmi':      'ar.ahmedajamy',
+  'hudhaify':  'ar.hudhaify',
+  'ghamdi':    null,
 };
 
 // مجلدات everyayah للأصوات غير المتوفرة آية بآية على islamic.network

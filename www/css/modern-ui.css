@@ -4557,3 +4557,157 @@ body.bk-immersive .topbar,body.bk-immersive .drawer,body.bk-immersive .gplayer,b
   padding: 2rem;
   text-align: center;
 }
+
+
+/* ===== TAFSIR READABILITY FIX v61 ===== */
+.tafsir-popup{
+  display:none;
+  flex-direction:column !important;
+  max-height:min(72vh, 640px) !important;
+  overflow:hidden !important;
+  background:linear-gradient(180deg,#0f2a22 0%,#0a1c16 100%) !important;
+  border:1px solid rgba(201,168,76,.35) !important;
+  box-shadow:0 -12px 40px rgba(0,0,0,.45) !important;
+}
+.tafsir-popup.show{display:flex !important;}
+.tafsir-popup-hdr{
+  flex:0 0 auto !important;
+  padding:.75rem 1rem !important;
+  border-bottom:1px solid rgba(201,168,76,.2) !important;
+}
+.tafsir-popup-title{
+  font-size:.95rem !important;
+  color:#f0d080 !important;
+  font-weight:700 !important;
+}
+.tafsir-popup-ayah{
+  flex:0 0 auto !important;
+  font-family:"Scheherazade New",Amiri,serif !important;
+  font-size:1.05rem !important;
+  line-height:1.85 !important;
+  color:#e8dfc0 !important;
+  padding:.55rem 1rem .4rem !important;
+  max-height:22vh !important;
+  overflow:auto !important;
+  opacity:.92 !important;
+  border-bottom:1px solid rgba(201,168,76,.12) !important;
+  text-align:center !important;
+}
+.tafsir-popup-body{
+  flex:1 1 auto !important;
+  overflow:auto !important;
+  -webkit-overflow-scrolling:touch !important;
+  padding:.85rem 1.1rem 1.1rem !important;
+  font-family:Tajawal,sans-serif !important;
+  font-size:1.08rem !important;
+  line-height:1.95 !important;
+  color:#f5f0e6 !important;
+  text-align:right !important;
+}
+.tafsir-popup-body > div{
+  font-size:1.08rem !important;
+  line-height:1.95 !important;
+  color:#f5f0e6 !important;
+}
+.tafsir-popup-actions{
+  flex:0 0 auto !important;
+  display:flex !important;
+  flex-wrap:wrap !important;
+  gap:.4rem !important;
+  padding:.65rem 1rem calc(.75rem + env(safe-area-inset-bottom,0px)) !important;
+  border-top:1px solid rgba(201,168,76,.15) !important;
+  background:rgba(0,0,0,.2) !important;
+}
+.tafsir-action-btn{
+  font-size:.78rem !important;
+  padding:.45rem .7rem !important;
+}
+/* Full tajweed rule colors */
+.tj-ghunnah,.tj-c0{color:#c62828 !important;font-weight:700 !important;}
+.tj-idgham,.tj-c1{color:#00838f !important;font-weight:700 !important;}
+.tj-ikhfa,.tj-c2{color:#f9a825 !important;font-weight:700 !important;}
+.tj-iqlab,.tj-c3{color:#2e7d32 !important;font-weight:700 !important;}
+.tj-qalqalah,.tj-c4{color:#6a1b9a !important;font-weight:700 !important;}
+.tj-madd,.tj-c5{color:#e65100 !important;font-weight:700 !important;}
+.tj-hamza,.tj-c6{color:#1565c0 !important;font-weight:700 !important;}
+.tj-lamshamsiya,.tj-c7{color:#ad1457 !important;font-weight:700 !important;}
+.tj-tafkhim,.tj-c8{color:#4e342e !important;font-weight:700 !important;}
+.tj-tarqiq,.tj-c9{color:#00695c !important;font-weight:700 !important;}
+body.paper-mode .tj-c0,body.paper-mode .tj-ghunnah{color:#b71c1c !important;}
+body.paper-mode .tj-c1,body.paper-mode .tj-idgham{color:#006064 !important;}
+body.paper-mode .tj-c2,body.paper-mode .tj-ikhfa{color:#f57f17 !important;}
+body.paper-mode .tj-c3,body.paper-mode .tj-iqlab{color:#1b5e20 !important;}
+body.paper-mode .tj-c4,body.paper-mode .tj-qalqalah{color:#4a148c !important;}
+body.paper-mode .tj-c5,body.paper-mode .tj-madd{color:#e65100 !important;}
+body.paper-mode .tafsir-popup-body,
+body.paper-mode .tafsir-popup-ayah{color:#1a1206 !important;}
+body.paper-mode .tafsir-popup{background:#f7f1e3 !important;}
+/* Khatma enhanced */
+.khatma-day-item.done{opacity:.75;border-color:rgba(122,232,122,.4)!important;background:rgba(46,125,50,.12)!important;}
+.khatma-day-item.done .khatma-day-check{color:#7ae87a;}
+.khatma-time-row{display:flex;gap:.5rem;align-items:center;margin:.5rem 0;}
+.khatma-time-row input[type=time]{background:rgba(13,59,46,.5);border:1px solid rgba(201,168,76,.3);color:#e8dfc0;border-radius:10px;padding:.4rem .6rem;font-family:Tajawal,sans-serif;}
+
+
+/* ===== RESPONSIVE FIX v62 ===== */
+.pr-date-row,
+.pt-date-box.pr-date-row{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  gap:.5rem !important;
+  width:100% !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+  overflow:hidden !important;
+  padding:0 .25rem !important;
+}
+.pr-date-card,
+.pt-date-box .date-card{
+  flex:1 1 calc(33.33% - .5rem) !important;
+  min-width:0 !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+  overflow:hidden !important;
+  padding:.65rem .45rem !important;
+}
+.pr-date-card .date-val,
+.date-card .date-val{
+  font-size:clamp(.75rem, 3.2vw, 1rem) !important;
+  word-break:break-word !important;
+  overflow-wrap:anywhere !important;
+  white-space:normal !important;
+  line-height:1.35 !important;
+}
+.pr-date-card .date-lbl,
+.date-card .date-lbl{
+  font-size:clamp(.62rem, 2.6vw, .78rem) !important;
+}
+.pr-date-card .date-sub,
+.date-card .date-sub{
+  font-size:clamp(.58rem, 2.4vw, .72rem) !important;
+  white-space:normal !important;
+}
+@media (max-width:420px){
+  .pr-date-card,
+  .pt-date-box .date-card{
+    flex:1 1 100% !important;
+  }
+}
+/* Hifz listen button overflow */
+#page-hifz, .hifz-wrap, .hifz-after-surah{
+  max-width:100% !important;
+  overflow-x:hidden !important;
+  box-sizing:border-box !important;
+}
+.hifz-play-row{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  gap:.4rem !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+}
+.hifz-play-btn, .hifz-play-row .name{
+  max-width:100% !important;
+  box-sizing:border-box !important;
+}
+.hifz-tabs{ flex-wrap:wrap !important; }
