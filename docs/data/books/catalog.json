@@ -1,11 +1,11 @@
 [
   {
     "id": "mybook1",
-    "title": "بويكا",
-    "author": "اسم المؤلف",
-    "cat": "فقه",
+    "title": "أنت تسأل والإسلام يجيب",
+    "author": "",
+    "cat": "فتاوى",
     "hasPdf": true,
-    "pdfUrl": "data/books/files/أنت تسأل والإسلام يجيب_32213_Foulabook.com_.pdf",
+    "pdfUrl": "data/books/files/anta-tasal-wal-islam-yujib.pdf",
     "coverUrl": "",
     "chapters": []
   }
