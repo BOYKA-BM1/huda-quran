@@ -121,58 +121,79 @@ var HOME_DUAS=[
 // ══════════════════════════════════════════════════
 // 🗺️ المساجد القريبة
 // ══════════════════════════════════════════════════
-function buildMosques(){}
+
+function buildMosques(){
+  var list = document.getElementById('mosques-list');
+  if (list && !list.dataset.loaded) {
+    list.dataset.loaded = '1';
+    setTimeout(function(){ try { locateMosques(); } catch(e){} }, 350);
+  }
+}
 function locateMosques(){
   var btn=document.getElementById('mosques-locate-btn');
   var status=document.getElementById('mosques-status');
   var list=document.getElementById('mosques-list');
   var mapLink=document.getElementById('mosques-map-link');
   if(!status)return;
-  if(!navigator.geolocation){status.innerHTML='<span style="color:#e87a7a">⚠️ المتصفح لا يدعم تحديد الموقع</span>';return;}
-  if(btn)btn.disabled=true;
-  status.innerHTML='<div style="color:var(--gold)">📍 جارٍ تحديد موقعك...</div>';
+  if(!navigator.geolocation){status.innerHTML='<span style="color:#e87a7a">المتصفح لا يدعم تحديد الموقع</span>';return;}
+  if(btn){ btn.disabled=true; }
+  status.innerHTML='<div style="color:var(--gold)">جارٍ تحديد موقعك...</div>';
+  if(list) list.innerHTML='';
+  function hav(lat1,lon1,lat2,lon2){
+    var R=6371000, tr=Math.PI/180;
+    var dLat=(lat2-lat1)*tr, dLon=(lon2-lon1)*tr;
+    var a=Math.sin(dLat/2)**2+Math.cos(lat1*tr)*Math.cos(lat2*tr)*Math.sin(dLon/2)**2;
+    return Math.round(R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)));
+  }
+  function render(lat,lng,elements){
+    var items=[];
+    (elements||[]).forEach(function(el){
+      var c=el.center||{};
+      var mlat=el.lat||c.lat, mlng=el.lon||c.lon;
+      if(mlat==null||mlng==null) return;
+      var tags=el.tags||{};
+      items.push({name:tags['name:ar']||tags.name||tags['name:en']||'مسجد',lat:mlat,lng:mlng,dist:hav(lat,lng,mlat,mlng)});
+    });
+    items.sort(function(a,b){return a.dist-b.dist;});
+    if(!items.length){
+      status.innerHTML='<div style="color:var(--tm)">لم يُعثر على مساجد — جرّب مرة أخرى أو افتح الخريطة</div>';
+      if(btn) btn.disabled=false;
+      return;
+    }
+    status.innerHTML='<div style="color:#7ae87a">وُجد '+items.length+' مسجد قريب</div>';
+    var html='';
+    items.slice(0,20).forEach(function(m){
+      var d=m.dist>=1000?(m.dist/1000).toFixed(1)+' كم':m.dist+' م';
+      html+='<div style="background:rgba(13,59,46,.4);border:1px solid rgba(201,168,76,.15);border-radius:12px;padding:.9rem 1rem;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="window.open(\'https://www.google.com/maps/dir/?api=1&destination='+m.lat+','+m.lng+'\',\'_blank\')"><div><div style="font-family:Scheherazade New,serif;font-size:1rem;color:#f0d080;">🕌 '+m.name+'</div><div style="font-size:.72rem;color:var(--tm);margin-top:.2rem;">'+d+' — اضغط للاتجاهات</div></div><span style="color:var(--gold)">↗</span></div>';
+    });
+    if(list) list.innerHTML=html;
+    if(mapLink){ mapLink.href='https://www.google.com/maps/search/mosque/@'+lat+','+lng+',15z'; mapLink.style.display='block'; }
+    if(btn) btn.disabled=false;
+  }
+  function q(lat,lng,r){
+    var qq='[out:json][timeout:25];(node["amenity"="place_of_worship"]["religion"="muslim"](around:'+r+','+lat+','+lng+');way["amenity"="place_of_worship"]["religion"="muslim"](around:'+r+','+lat+','+lng+');node["building"="mosque"](around:'+r+','+lat+','+lng+');way["building"="mosque"](around:'+r+','+lat+','+lng+'););out center 30;';
+    return fetch('https://overpass-api.de/api/interpreter',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'data='+encodeURIComponent(qq)}).then(function(r){return r.json();});
+  }
   navigator.geolocation.getCurrentPosition(function(pos){
-    var lat=pos.coords.latitude;
-    var lng=pos.coords.longitude;
-    status.innerHTML='<div style="color:#7ae87a">✅ تم تحديد الموقع — جارٍ البحث عن المساجد...</div>';
-    // Overpass API - free, no key needed
-    var overpassQuery='[out:json][timeout:15];(node["amenity"="place_of_worship"]["religion"="muslim"](around:2000,'+lat+','+lng+');way["amenity"="place_of_worship"]["religion"="muslim"](around:2000,'+lat+','+lng+'););out center 15;';
-    fetch('https://overpass-api.de/api/interpreter?data='+encodeURIComponent(overpassQuery))
-      .then(function(r){return r.json();})
-      .then(function(data){
-        var elements=data.elements||[];
-        if(!elements.length){status.innerHTML='<div style="color:var(--tm)">لم يُعثر على مساجد في دائرة 2 كم</div>';return;}
-        status.innerHTML='<div style="color:#7ae87a">✅ وُجد '+elements.length+' مسجد قريب</div>';
-        var html='';
-        elements.slice(0,12).forEach(function(el){
-          var center=el.center||{};
-          var mlat=el.lat||center.lat||lat;
-          var mlng=el.lon||center.lon||lng;
-          var tags=el.tags||{};
-          var name=tags.name||tags['name:ar']||tags['name:en']||'مسجد';
-          var dist=Math.round(Math.sqrt(Math.pow((mlat-lat)*111000,2)+Math.pow((mlng-lng)*111000*Math.cos(lat*Math.PI/180),2)));
-          html+='<div style="background:rgba(13,59,46,.4);border:1px solid rgba(201,168,76,.15);border-radius:12px;padding:.9rem 1rem;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center;" onclick="window.open(\'https://www.google.com/maps/dir/?api=1&destination='+mlat+','+mlng+'\',\'_blank\')">'
-            +'<div><div style="font-family:\'Scheherazade New\',serif;font-size:1rem;color:#f0d080;">🕌 '+name+'</div>'
-            +'<div style="font-size:.72rem;color:var(--tm);margin-top:.2rem;">'+dist+' متر — اضغط للاتجاهات</div></div>'
-            +'<span style="color:var(--gold);font-size:.85rem;">📍</span></div>';
-        });
-        if(list)list.innerHTML=html;
-        if(mapLink)mapLink.innerHTML='<a href="https://www.google.com/maps/search/مساجد+قريبة/@'+lat+','+lng+',15z" target="_blank" style="color:var(--gold);font-size:.82rem;text-decoration:none;border:1px solid rgba(201,168,76,.3);padding:.4rem .9rem;border-radius:8px;">🗺️ فتح خريطة Google</a>';
-      })
-      .catch(function(){
-        status.innerHTML='<div style="color:#e87a7a">⚠️ تعذّر البحث. تحقق من الإنترنت</div>';
-        if(mapLink)mapLink.innerHTML='<a href="https://www.google.com/maps/search/مسجد/@'+lat+','+lng+',15z" target="_blank" style="color:var(--gold);font-size:.82rem;text-decoration:none;border:1px solid rgba(201,168,76,.3);padding:.5rem 1rem;border-radius:10px;display:inline-block;">🗺️ ابحث على Google Maps</a>';
-      });
-    if(btn){btn.disabled=false;btn.textContent='🔄 تحديث';}
-  },function(){
-    status.innerHTML='<div style="color:#e87a7a">⚠️ رُفض الإذن بتحديد الموقع. فعّل الموقع في إعدادات المتصفح</div>';
-    if(btn)btn.disabled=false;
-  });
+    var lat=pos.coords.latitude, lng=pos.coords.longitude;
+    status.innerHTML='<div style="color:var(--gold)">جارٍ البحث عن المساجد...</div>';
+    q(lat,lng,2500).then(function(data){
+      var els=data.elements||[];
+      if(els.length){ render(lat,lng,els); return null; }
+      return q(lat,lng,6000);
+    }).then(function(data){ if(data) render(lat,lng,data.elements||[]); }).catch(function(){
+      status.innerHTML='<div style="color:#e87a7a">تعذّر الاتصال — افتح الخرائط يدويًا</div>';
+      if(mapLink){ mapLink.href='https://www.google.com/maps/search/mosque/@'+lat+','+lng+',15z'; mapLink.style.display='block'; }
+      if(btn) btn.disabled=false;
+    });
+  }, function(err){
+    var msg='تعذّر تحديد الموقع';
+    if(err&&err.code===1) msg='اسمح بإذن الموقع من الإعدادات';
+    status.innerHTML='<span style="color:#e87a7a">'+msg+'</span>';
+    if(btn) btn.disabled=false;
+  }, {enableHighAccuracy:true, timeout:20000, maximumAge:15000});
 }
 
-// ══════════════════════════════════════════════════
-// 🌙 وضع رمضان
-// ══════════════════════════════════════════════════
 function buildRamadan(){
   var box=document.getElementById('ramadan-main');
   if(!box)return;

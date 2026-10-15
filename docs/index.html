@@ -671,7 +671,11 @@
         <div class="khatma-lbl">📆 تاريخ البداية</div>
         <input class="khatma-inp" id="k-start" type="date" style="width:140px;">
       </div>
-      <button class="khatma-btn" onclick="calcKhatma()">📊 احسب الخطة</button>
+      <div class="khatma-form-row">
+        <div class="khatma-lbl">⏰ وقت التذكير اليومي</div>
+        <input class="khatma-inp" id="k-time" type="time" value="21:00" style="width:140px;">
+      </div>
+      <button class="khatma-btn" onclick="calcKhatma()">📊 احسب الخطة واحفظها</button>
     </div>
 
     <div id="khatma-result" style="display:none;"></div>

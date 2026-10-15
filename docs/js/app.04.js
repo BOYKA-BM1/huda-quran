@@ -638,8 +638,104 @@ function calcKhatma(){
       </button>
     </div>`;
 
+  
+  try{
+    var _kDailyTime=(document.getElementById('k-time')||{}).value||'21:00';
+    var _kStartDate=(document.getElementById('k-start')||{}).value||'';
+    var _kTotalUnits=({page:604,juz:30,hizb:60,surah:114}[unit]||604)*parseInt(times);
+    var _kPer=Math.ceil(_kTotalUnits/parseInt(days));
+    var _kDayItems=[];
+    for(var _kd=0;_kd<parseInt(days);_kd++){
+      var _kf=_kd*_kPer+1, _kt=Math.min(_kTotalUnits,(_kd+1)*_kPer);
+      _kDayItems.push({i:_kd+1,from:_kf,to:_kt,pageHint:unit==='page'?_kt:Math.min(604,Math.ceil(_kt*604/_kTotalUnits)),surahHint:1});
+    }
+    var prev=loadKhatmaState()||{};
+    var keepDone = arguments[0] ? (prev.done||{}) : {};
+    saveKhatmaState({totalDays:parseInt(days),times:parseInt(times),unit:unit,startDate:_kStartDate,dailyTime:_kDailyTime,days:_kDayItems,done:keepDone,bookmark:prev.bookmark||null,savedAt:Date.now()});
+    scheduleKhatmaReminder(); updateKhatmaBookmarkUI();
+    var st2=loadKhatmaState();
+    var list=box.querySelector('.khatma-day-list');
+    if(list&&st2){
+      list.querySelectorAll('.khatma-day-item').forEach(function(el,idx){
+        var day=idx+1;
+        var btn=document.createElement('button'); btn.type='button';
+        btn.textContent=(st2.done&&st2.done[String(day)])?'مكتمل':'إكمال اليوم';
+        btn.style.cssText='margin-top:.35rem;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);color:var(--gold);border-radius:8px;padding:.3rem .6rem;font-size:.72rem;cursor:pointer;font-family:Tajawal,sans-serif';
+        btn.onclick=function(){ markKhatmaDayDone(day); };
+        el.appendChild(btn);
+        if(st2.done&&st2.done[String(day)]) el.classList.add('done');
+      });
+    }
+  }catch(e){ console.warn(e); }
+
   box.scrollIntoView({behavior:'smooth', block:'start'});
 }
+
+
+// ===== KHATMA PLAN PERSISTENCE v61 =====
+function loadKhatmaState(){ try { return JSON.parse(localStorage.getItem('huda_khatma_plan_v1')||'null'); } catch(e){ return null; } }
+function saveKhatmaState(st){ try { localStorage.setItem('huda_khatma_plan_v1', JSON.stringify(st)); } catch(e){} }
+function markKhatmaDayDone(dayIndex){
+  var st = loadKhatmaState(); if(!st) return;
+  st.done = st.done || {}; st.done[String(dayIndex)] = true;
+  var d = (st.days||[]).filter(function(x){return x.i===dayIndex;})[0];
+  if(d) st.bookmark = { unit: st.unit, from: d.from, to: d.to, day: dayIndex, page: d.pageHint||1, surah: d.surahHint||1, ayah: 1, ts: Date.now() };
+  saveKhatmaState(st);
+  if(typeof toast==='function') toast('تم تسجيل إنجاز اليوم '+dayIndex);
+  if(typeof calcKhatma==='function') calcKhatma(true);
+}
+function goToKhatmaBookmark(){
+  var st = loadKhatmaState(); var bm = st && st.bookmark;
+  if(!bm){ try{ bm = JSON.parse(localStorage.getItem('huda_khatma_bm')||'null'); }catch(e){} }
+  if(!bm){ if(typeof toast==='function') toast('لا يوجد موضع محفوظ'); return; }
+  if(typeof SP==='function') SP('quran');
+  setTimeout(function(){
+    try{
+      if(window.HudaMushaf && HudaMushaf.goPage && bm.page) HudaMushaf.goPage(bm.page);
+      else if(typeof goToPage==='function' && bm.page) goToPage(bm.page);
+      else if(typeof loadSurah==='function' && bm.surah) loadSurah(bm.surah);
+      if(typeof toast==='function') toast('انتقلت لموضع خطتك');
+    }catch(e){}
+  }, 220);
+}
+function resetKhatmaBookmark(){
+  if(!confirm('حذف خطة الختمة بالكامل؟')) return;
+  try{ localStorage.removeItem('huda_khatma_plan_v1'); localStorage.removeItem('huda_khatma_bm'); }catch(e){}
+  var box=document.getElementById('khatma-result'); if(box) box.innerHTML='';
+  if(typeof toast==='function') toast('تم حذف الخطة');
+  updateKhatmaBookmarkUI();
+}
+function updateKhatmaBookmarkUI(){
+  var st=loadKhatmaState();
+  var title=document.getElementById('khatma-bm-title');
+  var sub=document.getElementById('khatma-bm-sub');
+  if(!title) return;
+  if(st && st.bookmark){ title.textContent='آخر موضع في خطتك'; sub.textContent='اليوم '+(st.bookmark.day||'—')+' · '+(st.bookmark.from||'')+'-'+(st.bookmark.to||''); }
+  else if(st){ title.textContent='خطة محفوظة'; sub.textContent=(st.totalDays||'?')+' يوم'; }
+  else { title.textContent='الإشارة المرجعية'; sub.textContent='لم تُحدَّد موضع القراءة بعد'; }
+  if(st){
+    var d=document.getElementById('k-days'); if(d) d.value=st.totalDays||30;
+    var tm=document.getElementById('k-times'); if(tm) tm.value=st.times||1;
+    var u=document.getElementById('k-unit'); if(u) u.value=st.unit||'page';
+    var s=document.getElementById('k-start'); if(s&&st.startDate) s.value=st.startDate;
+    var tt=document.getElementById('k-time'); if(tt&&st.dailyTime) tt.value=st.dailyTime;
+  }
+}
+function scheduleKhatmaReminder(){ var st=loadKhatmaState(); if(!st||!st.dailyTime) return; if('Notification' in window && Notification.permission==='default'){ try{ Notification.requestPermission(); }catch(e){} } }
+setInterval(function(){
+  try{
+    var st=loadKhatmaState(); if(!st||!st.dailyTime) return;
+    if(!('Notification' in window) || Notification.permission!=='granted') return;
+    var now=new Date();
+    var hh=String(now.getHours()).padStart(2,'0');
+    var mm=String(now.getMinutes()).padStart(2,'0');
+    var key=st.dailyTime+'|'+now.toDateString();
+    if(hh+':'+mm===st.dailyTime && localStorage.getItem('huda_khatma_rem_fired')!==key){
+      localStorage.setItem('huda_khatma_rem_fired', key);
+      new Notification('هُدى القرآن — تذكير الختمة', { body:'حان وقت وردك اليومي 📖', lang:'ar' });
+    }
+  }catch(e){}
+}, 30000);
 
 function saveKhatmaToCalendar(){
   const days  = document.getElementById('k-days')?.value||30;

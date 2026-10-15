@@ -156,9 +156,9 @@
   }
   function tap() {
     S.counts[S.i] = cnt() + 1; S.total++; var k = today(); S.days[k] = (S.days[k] || 0) + 1; save();
-    if (S.vib && navigator.vibrate) navigator.vibrate(12);
+    if (S.vib && navigator.vibrate) navigator.vibrate(30);
     var done = S.target && cnt() % S.target === 0;
-    if (done) { if (S.vib && navigator.vibrate) navigator.vibrate([70, 40, 70]); toast('✨ أتممت ' + ar(S.target) + ' — تقبّل الله منك'); }
+    if (done) { if (S.vib && navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 140]); toast('✨ أتممت ' + ar(S.target) + ' — تقبّل الله منك'); }
     render(); var b = $('tb-tap'); b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
   }
   function reset() { if (cnt() && !confirm('تصفير عدّاد هذا الذكر؟')) return; S.counts[S.i] = 0; save(); render(); }
