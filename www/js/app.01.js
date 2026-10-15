@@ -896,6 +896,7 @@ function SP(id, pushHistory){
   if(id==='themes')  setTimeout(buildThemes, 50);
   if(id==='gsearch') setTimeout(function(){ var i=document.getElementById('gs-inp'); if(i)i.focus(); },200);
   if(id==='notifs')  setTimeout(buildNotifs, 50);
+  if(id==='prayer'||id==='adhan'){ setTimeout(function(){ try{ if(typeof calcPrayers==='function') calcPrayers(); if(typeof initAdhan2Page==='function') initAdhan2Page(); if(typeof updateAdhan2Next==='function') updateAdhan2Next(); }catch(e){} }, 80); }
   if(id==='site-settings') setTimeout(buildSiteSettings, 80);
   if(id==='favorites') setTimeout(buildFavoritesPage, 50);
   
@@ -1271,8 +1272,15 @@ function filterS(v){renderSList(v);}
   // ── Audio ──
   window.msPlayFrom = function(ayahN){
     document.querySelectorAll('.ms-vn').forEach(function(v){ v.classList.remove('playing'); });
-    if(typeof playAyahGapless==='function') playAyahGapless(ayahN);
-    else if(typeof startPB==='function') startPB(recId||'alafasy', curS, false);
+    var sn = (typeof curS!=='undefined' && curS) ? curS : 1;
+    try {
+      var pos = JSON.parse(localStorage.getItem('nq_pos')||'null');
+      if (pos && pos.s) sn = +pos.s || sn;
+    } catch(e){}
+    ayahN = +ayahN || 1;
+    if (typeof playAyahPrecise === 'function') playAyahPrecise(sn, ayahN);
+    else if (typeof playAyahGapless === 'function') playAyahGapless(ayahN, sn);
+    else if (typeof startPB === 'function') startPB(recId||'alafasy', sn, false);
   };
   window.msTogglePlay = function(){
     if(playing){

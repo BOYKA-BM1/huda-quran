@@ -368,7 +368,45 @@
 
   /** معطّل — دائماً سورة كاملة */
   function playAyahPrecise(s, a) {
-    playSurah(+s || currentSurah());
+    s = +s || currentSurah() || 1;
+    a = +a || 1;
+    var rec = resolveRec();
+    var urls = ayahUrlList(rec, s, a);
+    var au = getAudio();
+    var myToken = ++G.token;
+    G.s = s; G.a = a; G.active = true; G.session = true; G.mode = 'ayah'; G.rec = rec;
+    try { localStorage.setItem('nq_last_ayah', JSON.stringify({ s: s, a: a })); } catch (e) {}
+    try { localStorage.setItem('nq_pos', JSON.stringify({ s: s, a: a })); } catch (e) {}
+    updatePlayerUI(true);
+    applyHighlight(s, a);
+    var idx = 0;
+    function tryNext() {
+      if (G.token !== myToken) return;
+      if (idx >= urls.length) {
+        if (typeof toast === 'function') toast('تعذّر تشغيل الآية');
+        G.active = false; updatePlayerUI(false);
+        return;
+      }
+      var url = urls[idx++];
+      au.onended = au.onerror = null;
+      au.src = url;
+      try { au.load(); } catch (e) {}
+      au.onerror = function () { if (G.token === myToken) tryNext(); };
+      au.onended = function () {
+        if (G.token !== myToken) return;
+        // بعد الآية: أكمل السورة من الآية التالية إن أمكن
+        var next = nextAyah(s, a);
+        if (next) {
+          G.a = next[1];
+          playSurah(next[0]); // يكمل بالسورة (من أولها) — أفضل من الصمت
+        } else {
+          G.active = false; updatePlayerUI(false); clearHighlight();
+        }
+      };
+      var pr = au.play();
+      if (pr && pr.catch) pr.catch(function () { if (G.token === myToken) tryNext(); });
+    }
+    tryNext();
   }
 
   /** شريط التقدم — موضع داخل الآية + نسبة السورة */
@@ -622,10 +660,12 @@
     playSurah(+sNum || currentSurah());
     G._forceReload = false;
   };
+  window.playAyahPrecise = playAyahPrecise;
   window.playAyahGapless = function (a, surahOverride) {
-    var s = +(surahOverride || currentSurah());
+    var s = +(surahOverride || currentSurah() || 1);
+    a = +a || 1;
     window._gaplessMode = false;
-    playSurah(s); // سورة كاملة فقط
+    playAyahPrecise(s, a);
   };
   window.nextGaplessAyah = function () {
     var s = currentSurah();

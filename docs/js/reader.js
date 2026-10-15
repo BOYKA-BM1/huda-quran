@@ -125,8 +125,10 @@
   M.act = function (k) {
     if (!R.sel) return; var s = R.sel.s, a = R.sel.a, t = selText();
     if (k === 'play' || k === 'playFrom') {
-      if (typeof playSurahContinuous === 'function') playSurahContinuous(s); else if (typeof startPB === 'function') startPB((typeof curRec!=='undefined'&&curRec)||'alafasy', s, false); else if (typeof playAyahGapless === 'function') playAyahGapless(1, s);
       try { localStorage.setItem('nq_last_ayah', JSON.stringify({s:s,a:a})); } catch(e){}
+      if (typeof playAyahPrecise === 'function') playAyahPrecise(s, a);
+      else if (typeof playAyahGapless === 'function') playAyahGapless(a, s);
+      else if (typeof startPB === 'function') startPB((typeof curRec!=='undefined'&&curRec)||'alafasy', s, false);
     }
     else if (k === 'tafsir') { if (typeof openTafsirPopup === 'function') openTafsirPopup(s, a); }
     else if (k === 'fav') { if (typeof toggleFav === 'function') toggleFav(s, a, t); }

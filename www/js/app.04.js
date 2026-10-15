@@ -673,8 +673,8 @@ function calcKhatma(){
 
 
 // ===== KHATMA PLAN PERSISTENCE v61 =====
-function loadKhatmaState(){ try { return JSON.parse(localStorage.getItem('huda_khatma_plan_v1')||'null'); } catch(e){ return null; } }
-function saveKhatmaState(st){ try { localStorage.setItem('huda_khatma_plan_v1', JSON.stringify(st)); } catch(e){} }
+function loadKhatmaState(){ try { var r=localStorage.getItem('huda_khatma_plan_v1')||localStorage.getItem('huda_khatma_plan_backup')||sessionStorage.getItem('huda_khatma_plan_v1'); return r?JSON.parse(r):null; } catch(e){ return null; } }
+function saveKhatmaState(st){ try { var j=JSON.stringify(st); localStorage.setItem('huda_khatma_plan_v1', j); localStorage.setItem('huda_khatma_plan_backup', j); sessionStorage.setItem('huda_khatma_plan_v1', j); if(window.HudaPersist&&HudaPersist.save) HudaPersist.save(); } catch(e){} }
 function markKhatmaDayDone(dayIndex){
   var st = loadKhatmaState(); if(!st) return;
   st.done = st.done || {}; st.done[String(dayIndex)] = true;
@@ -2186,3 +2186,6 @@ function loadTajweedSurah(){
     };
   }
 })();
+
+// updateKhatmaBookmarkUI on load
+document.addEventListener('DOMContentLoaded', function(){ setTimeout(function(){ try{ updateKhatmaBookmarkUI(); }catch(e){} }, 400); });

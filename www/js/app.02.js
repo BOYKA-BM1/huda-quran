@@ -4058,7 +4058,15 @@ function updateAdhan2Notif(){
 
 function updateAdhan2Next(){
   const pt=window.prayerTimes||prayerTimes;
-  if(!pt||!Object.keys(pt).length){ setTimeout(updateAdhan2Next,2000); return; }
+  if(!pt||!Object.keys(pt).length){
+    var el0=document.getElementById('adhan2-np-name');
+    if(el0 && el0.textContent.indexOf('جاري')>=0){
+      // حاول حساب المواقيت فورًا
+      if(typeof calcPrayers==='function'){ try{ calcPrayers(); }catch(e){} }
+    }
+    setTimeout(updateAdhan2Next,1500);
+    return;
+  }
   const PNAMES={fajr:'الفجر 🌙',dhuhr:'الظهر ☀️',asr:'العصر 🌤️',maghrib:'المغرب 🌇',isha:'العشاء 🌃'};
   const now=new Date();
   function d2t(dec){
@@ -4090,6 +4098,8 @@ function syncAdhan2Cards(){
 }
 
 function initAdhan2Page(){
+  try{ if(typeof calcPrayers==='function') calcPrayers(); }catch(e){}
+
   _selectedAdhanIdx=parseInt(localStorage.getItem('nq_adhan_idx')||'0');
   var savedVol=parseInt(localStorage.getItem('nq_adhan_vol')||'100');
   var volEl=document.getElementById('adhan2-vol');
