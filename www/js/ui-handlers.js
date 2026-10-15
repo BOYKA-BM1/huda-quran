@@ -919,6 +919,7 @@
   var _taf = { s: 0, a: 0 };
   window.openTafsirPopup = function (s, a) {
     _taf = { s: +s, a: +a };
+    window._taf = _taf;
     var pop = $('tafsir-popup'), ov = $('tafsir-overlay'); if (!pop) return;
     $('tafsir-title').textContent = 'تفسير سورة ' + (typeof surahName === 'function' ? surahName(s) : s) + ' — الآية ' + (typeof toAr === 'function' ? toAr(a) : a);
     $('tafsir-ayah-text').textContent = '';
@@ -967,7 +968,7 @@
   document.addEventListener('DOMContentLoaded', function(){ try{ closeTafsir(); }catch(e){} });
 
   window.tafsirPlay = function () {
-    var s = +(_taf && _taf.s), a = +(_taf && _taf.a);
+    var s = +((window._taf || _taf) && (window._taf || _taf).s), a = +((window._taf || _taf) && (window._taf || _taf).a);
     if (!s || !a) {
       try {
         var last = JSON.parse(localStorage.getItem('nq_last_ayah') || 'null');

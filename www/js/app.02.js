@@ -4057,38 +4057,63 @@ function updateAdhan2Notif(){
 }
 
 function updateAdhan2Next(){
-  const pt=window.prayerTimes||prayerTimes;
-  if(!pt||!Object.keys(pt).length){
-    var el0=document.getElementById('adhan2-np-name');
-    if(el0 && el0.textContent.indexOf('جاري')>=0){
-      // حاول حساب المواقيت فورًا
-      if(typeof calcPrayers==='function'){ try{ calcPrayers(); }catch(e){} }
-    }
-    setTimeout(updateAdhan2Next,1500);
+  var pt = window.prayerTimes || (typeof prayerTimes !== 'undefined' ? prayerTimes : null);
+  if (!pt || !Object.keys(pt).length) {
+    try { if (typeof calcPrayers === 'function') calcPrayers(); } catch (e) {}
+    setTimeout(updateAdhan2Next, 1200);
     return;
   }
-  const PNAMES={fajr:'الفجر 🌙',dhuhr:'الظهر ☀️',asr:'العصر 🌤️',maghrib:'المغرب 🌇',isha:'العشاء 🌃'};
-  const now=new Date();
-  function d2t(dec){
-    if(!dec||isNaN(dec))return null;
-    const t=((dec%24)+24)%24,h=Math.floor(t),m=Math.floor((t-h)*60);
-    return new Date(now.getFullYear(),now.getMonth(),now.getDate(),h,m,0);
+  var PNAMES = { fajr: 'الفجر', dhuhr: 'الظهر', asr: 'العصر', maghrib: 'المغرب', isha: 'العشاء' };
+  var now = new Date();
+  function d2t(dec) {
+    if (dec == null || isNaN(dec)) return null;
+    var t = ((dec % 24) + 24) % 24;
+    var h = Math.floor(t), m = Math.floor((t - h) * 60);
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0);
   }
-  let nTime=null,nName='',nDate=null;
-  ['fajr','dhuhr','asr','maghrib','isha'].forEach(k=>{
-    const d=d2t(pt[k]); if(d&&d>now&&(!nTime||d<nTime)){nTime=d;nName=PNAMES[k];nDate=d;}
+  var nTime = null, nName = '', nKey = '';
+  ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'].forEach(function (k) {
+    var d = d2t(pt[k]);
+    if (d && d > now && (!nTime || d < nTime)) { nTime = d; nName = PNAMES[k] || k; nKey = k; }
   });
-  const ne=document.getElementById('adhan2-np-name');
-  const ce=document.getElementById('adhan2-cdown');
-  const te=document.getElementById('adhan2-time');
-  if(ne&&nName){
-    ne.textContent=nName;
-    const diff=nDate-now,h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
-    if(ce) ce.textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-    if(te) te.textContent=nDate.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
+  if (!nTime && pt.fajr != null) {
+    var f = d2t(pt.fajr);
+    if (f) { nTime = new Date(f.getTime() + 86400000); nName = PNAMES.fajr; nKey = 'fajr'; }
   }
-  setTimeout(updateAdhan2Next,1000);
+  var nameEl = document.getElementById('adhan2-np-name');
+  var timeEl = document.getElementById('adhan2-time');
+  var cdEl = document.getElementById('adhan2-cdown');
+  var npName = document.getElementById('np-name');
+  var npTime = document.getElementById('np-time');
+  if (nTime) {
+    var hh = String(nTime.getHours()).padStart(2, '0');
+    var mm = String(nTime.getMinutes()).padStart(2, '0');
+    var tStr = hh + ':' + mm;
+    if (nameEl) nameEl.textContent = nName;
+    if (timeEl) timeEl.textContent = tStr;
+    if (npName) npName.textContent = nName;
+    if (npTime) npTime.textContent = tStr;
+    var diff = Math.max(0, Math.floor((nTime - now) / 1000));
+    var h = Math.floor(diff / 3600), m = Math.floor((diff % 3600) / 60), s = diff % 60;
+    var cd = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+    if (cdEl) cdEl.textContent = cd;
+  } else {
+    if (nameEl) nameEl.textContent = '—';
+    if (cdEl) cdEl.textContent = '--:--:--';
+  }
+  // حدّث التاريخ أيضاً
+  try {
+    var g = document.getElementById('greg-date');
+    var gd = document.getElementById('greg-day');
+    var ct = document.getElementById('current-time');
+    var now2 = new Date();
+    if (g) g.textContent = now2.getDate() + '/' + (now2.getMonth()+1) + '/' + now2.getFullYear();
+    if (gd) gd.textContent = now2.toLocaleDateString('ar-EG', { weekday: 'long' });
+    if (ct) ct.textContent = now2.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+  } catch (e) {}
+  setTimeout(updateAdhan2Next, 1000);
 }
+
 
 function syncAdhan2Cards(){
   // استعادة المؤذن المختار من localStorage
