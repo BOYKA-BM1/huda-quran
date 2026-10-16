@@ -1,0 +1,10 @@
+html{scroll-behavior:auto!important}
+body,.pg,.drawer,.side-drawer,#side-menu,.ms-content,.mbox{-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.pg:not(.on){content-visibility:hidden;contain:layout style paint}
+.pg.on{content-visibility:visible}
+@supports (backdrop-filter:blur(1px)){.bottom-nav,#fab-menu,.drawer,.side-drawer{backdrop-filter:blur(8px)!important;-webkit-backdrop-filter:blur(8px)!important}}
+#loc-select,.loc-sel{min-height:44px;font-size:1rem;color:var(--tx,#f5f0e0);background:rgba(0,0,0,.28)}
+#loc-select option,.loc-sel option{color:#111;background:#fff}
+.pr-date-row,.pt-date-box{display:grid!important;grid-template-columns:1fr 1fr 1fr;gap:.5rem;width:100%;max-width:100%;box-sizing:border-box;overflow:hidden}
+.pr-date-card,.date-card{min-width:0!important;max-width:100%;overflow:hidden}
+@media (max-width:380px){.pr-date-row,.pt-date-box{grid-template-columns:1fr}}
