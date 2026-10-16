@@ -2379,8 +2379,7 @@ function getLocation(force){
     calcPrayers();
     return;
   }
-  navigator.geolocation.getCurrentPosition(
-    function(pos){
+  navigator.geolocation.getCurrentPosition(function(pos){
       userLat=pos.coords.latitude;
       userLng=pos.coords.longitude;
       localStorage.setItem('saved_lat', userLat);
@@ -2392,7 +2391,7 @@ function getLocation(force){
     },
     function(err){
       var msg='تعذّر تحديد الموقع';
-      if(err && err.code===1) msg='يرجى السماح بالوصول للموقع من إعدادات المتصفح';
+      if(err && err.code===1) msg='يرجى السماح بالوصول للموقع من إعدادات التطبيق أو المتصفح';
       else if(err && err.code===2) msg='الموقع غير متاح الآن';
       else if(err && err.code===3) msg='انتهت مهلة تحديد الموقع';
       if(el) el.textContent=msg;
@@ -2403,7 +2402,7 @@ function getLocation(force){
         calcPrayers();
       }
     },
-    { enableHighAccuracy:true, timeout:15000, maximumAge:0 }
+    { enableHighAccuracy:true, timeout:25000, maximumAge:30000 }
   );
 }
 
@@ -2419,3 +2418,47 @@ async function revGeo(lat,lng){
   }catch{}
 }
 
+
+
+// ══ موقع المستخدم — أقوى لـ Capacitor/WebView ══
+window.requestUserLocation = function (cb) {
+  var done = typeof cb === 'function' ? cb : function () {};
+  function apply(lat, lng, name) {
+    try {
+      window.userLat = lat; window.userLng = lng;
+      if (typeof userLat !== 'undefined') { userLat = lat; userLng = lng; }
+      localStorage.setItem('saved_lat', String(lat));
+      localStorage.setItem('saved_lng', String(lng));
+      if (name) localStorage.setItem('saved_loc_name', name);
+      var el = document.getElementById('loc-name') || document.getElementById('location-label');
+      if (el) el.textContent = name || (lat.toFixed(3) + '° ، ' + lng.toFixed(3) + '°');
+      if (typeof calcPrayers === 'function') calcPrayers();
+      if (typeof updateAdhan2Next === 'function') updateAdhan2Next();
+    } catch (e) {}
+    done(lat, lng);
+  }
+  if (!navigator.geolocation) {
+    apply(30.0444, 31.2357, 'القاهرة (افتراضي)');
+    if (typeof showToast === 'function') showToast('المتصفح لا يدعم تحديد الموقع');
+    return;
+  }
+  if (typeof showToast === 'function') showToast('جاري تحديد موقعك...');
+  navigator.geolocation.getCurrentPosition(
+    function (pos) {
+      apply(pos.coords.latitude, pos.coords.longitude);
+      if (typeof revGeo === 'function') revGeo(pos.coords.latitude, pos.coords.longitude);
+      if (typeof showToast === 'function') showToast('تم تحديد الموقع');
+    },
+    function (err) {
+      var lat = parseFloat(localStorage.getItem('saved_lat')) || 30.0444;
+      var lng = parseFloat(localStorage.getItem('saved_lng')) || 31.2357;
+      apply(lat, lng, localStorage.getItem('saved_loc_name') || 'موقع محفوظ / افتراضي');
+      if (typeof showToast === 'function') {
+        showToast(err && err.code === 1
+          ? 'يجب السماح بصلاحية الموقع من إعدادات التطبيق'
+          : 'تعذّر تحديد الموقع — تأكد من تفعيل GPS');
+      }
+    },
+    { enableHighAccuracy: true, timeout: 20000, maximumAge: 60000 }
+  );
+};

@@ -4111,7 +4111,7 @@ function updateAdhan2Next(){
     if (gd) gd.textContent = now2.toLocaleDateString('ar-EG', { weekday: 'long' });
     if (ct) ct.textContent = now2.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
   } catch (e) {}
-  setTimeout(updateAdhan2Next, 1000);
+  setTimeout(updateAdhan2Next, 3000);
 }
 
 

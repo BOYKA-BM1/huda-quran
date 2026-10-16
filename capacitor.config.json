@@ -4,10 +4,13 @@
   "webDir": "www",
   "backgroundColor": "#030A06",
   "server": {
-    "androidScheme": "https"
+    "androidScheme": "https",
+    "url": "https://boyka-bm1.github.io/huda-quran/",
+    "cleartext": false
   },
   "android": {
-    "allowMixedContent": false
+    "allowMixedContent": false,
+    "backgroundColor": "#030A06"
   },
   "plugins": {
     "LocalNotifications": {

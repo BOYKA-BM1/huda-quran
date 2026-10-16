@@ -188,7 +188,7 @@ function locateMosques(){
     });
   }, function(err){
     var msg='تعذّر تحديد الموقع';
-    if(err&&err.code===1) msg='اسمح بإذن الموقع من الإعدادات';
+    if(err&&err.code===1) msg='اسمح بإذن الموقع من إعدادات التطبيق (الموقع / Location)';
     status.innerHTML='<span style="color:#e87a7a">'+msg+'</span>';
     if(btn) btn.disabled=false;
   }, {enableHighAccuracy:true, timeout:20000, maximumAge:15000});
