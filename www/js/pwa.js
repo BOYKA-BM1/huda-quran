@@ -25,7 +25,42 @@
     deferred = null; hideBtn(); toast('✅ هُدى القرآن مثبّت على جهازك');
   });
 
+  /** رابط تحميل تطبيق أندرويد الأصلي (APK) */
+  window.HUDA_APK_URL = window.HUDA_APK_URL ||
+    'https://github.com/BOYKA-BM1/huda-quran/releases/download/v1.0.0/Huda-Al-Quran.apk';
+
   window.installPWA = async function () {
+    // داخل التطبيق الأصلي: لا حاجة
+    if (isNative) { toast('أنت بالفعل داخل التطبيق'); return; }
+    if (isStandalone) { toast('التطبيق مثبّت ومفتوح بالفعل'); return; }
+
+    // أندرويد: تحميل APK الأصلي مباشرة
+    var ua = navigator.userAgent || '';
+    var isAndroid = /android/i.test(ua);
+    if (isAndroid || !isIOS) {
+      toast('جاري تحميل تطبيق هُدى القرآن...');
+      try {
+        var a = document.createElement('a');
+        a.href = window.HUDA_APK_URL;
+        a.download = 'Huda-Al-Quran.apk';
+        a.rel = 'noopener';
+        a.target = '_blank';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function () { try { a.remove(); } catch (e) {} }, 500);
+      } catch (e) {
+        window.location.href = window.HUDA_APK_URL;
+      }
+      return;
+    }
+
+    // iOS: إضافة للشاشة الرئيسية
+    if (isIOS) {
+      toast('على آيفون: اضغط مشاركة ثم «إضافة إلى الشاشة الرئيسية»');
+      return;
+    }
+
+    // احتياطي PWA
     if (deferred) {
       deferred.prompt();
       try {
@@ -35,14 +70,7 @@
       deferred = null;
       return;
     }
-    if (isStandalone) { toast('التطبيق مثبّت ومفتوح بالفعل'); return; }
-    if (!window.isSecureContext) {
-      toast('التثبيت يحتاج رابط https (أو localhost). افتح الموقع بعد رفعه على استضافة https');
-      return;
-    }
-    toast(isIOS
-      ? 'على آيفون: اضغط مشاركة ثم «إضافة إلى الشاشة الرئيسية»'
-      : 'من قائمة المتصفح ⋮ اختَر «تثبيت التطبيق» أو «إضافة إلى الشاشة الرئيسية»');
+    toast('اضغط الزر لتحميل التطبيق، أو من قائمة المتصفح ⋮ «تثبيت التطبيق»');
   };
 
   if (isNative || !('serviceWorker' in navigator) || location.protocol === 'file:') return;
