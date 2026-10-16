@@ -4101,17 +4101,8 @@ function updateAdhan2Next(){
     if (nameEl) nameEl.textContent = '—';
     if (cdEl) cdEl.textContent = '--:--:--';
   }
-  // حدّث التاريخ أيضاً
-  try {
-    var g = document.getElementById('greg-date');
-    var gd = document.getElementById('greg-day');
-    var ct = document.getElementById('current-time');
-    var now2 = new Date();
-    if (g) g.textContent = now2.getDate() + '/' + (now2.getMonth()+1) + '/' + now2.getFullYear();
-    if (gd) gd.textContent = now2.toLocaleDateString('ar-EG', { weekday: 'long' });
-    if (ct) ct.textContent = now2.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
-  } catch (e) {}
-  setTimeout(updateAdhan2Next, 3000);
+  // التاريخ يُحدَّث من updateClock فقط — لا نلمسه هنا لتجنب الوميض
+  setTimeout(updateAdhan2Next, 5000);
 }
 
 

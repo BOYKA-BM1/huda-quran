@@ -25,42 +25,56 @@
     deferred = null; hideBtn(); toast('✅ هُدى القرآن مثبّت على جهازك');
   });
 
-  /** رابط تحميل تطبيق أندرويد الأصلي (APK) */
-  window.HUDA_APK_URL = window.HUDA_APK_URL ||
-    'https://github.com/BOYKA-BM1/huda-quran/releases/download/v1.0.0/Huda-Al-Quran.apk';
+  /** روابط تحميل APK (Release ثم latest) */
+  window.HUDA_APK_URLS = window.HUDA_APK_URLS || [
+    'https://github.com/BOYKA-BM1/huda-quran/releases/download/v1.0.0/Huda-Al-Quran.apk',
+    'https://github.com/BOYKA-BM1/huda-quran/releases/latest/download/Huda-Al-Quran.apk'
+  ];
+  window.HUDA_APK_URL = window.HUDA_APK_URLS[0];
 
   window.installPWA = async function () {
-    // داخل التطبيق الأصلي: لا حاجة
     if (isNative) { toast('أنت بالفعل داخل التطبيق'); return; }
     if (isStandalone) { toast('التطبيق مثبّت ومفتوح بالفعل'); return; }
 
-    // أندرويد: تحميل APK الأصلي مباشرة
     var ua = navigator.userAgent || '';
     var isAndroid = /android/i.test(ua);
+
+    // أندرويد أو سطح المكتب: تحميل APK مباشرة بدون فتح صفحة خطأ
     if (isAndroid || !isIOS) {
       toast('جاري تحميل تطبيق هُدى القرآن...');
-      try {
+      var urls = window.HUDA_APK_URLS.slice();
+      function tryDownload(i) {
+        if (i >= urls.length) {
+          toast('تعذّر التحميل — افتح الرابط من Releases');
+          window.open('https://github.com/BOYKA-BM1/huda-quran/releases/tag/v1.0.0', '_blank');
+          return;
+        }
+        var url = urls[i];
+        // استخدام iframe مخفي أضمن على أندرويد من فتح صفحة GitHub
+        var iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = url;
+        document.body.appendChild(iframe);
+        setTimeout(function () {
+          try { iframe.remove(); } catch (e) {}
+        }, 60000);
+        // احتياطي: رابط مباشر
         var a = document.createElement('a');
-        a.href = window.HUDA_APK_URL;
-        a.download = 'Huda-Al-Quran.apk';
+        a.href = url;
+        a.setAttribute('download', 'Huda-Al-Quran.apk');
         a.rel = 'noopener';
-        a.target = '_blank';
         document.body.appendChild(a);
-        a.click();
-        setTimeout(function () { try { a.remove(); } catch (e) {} }, 500);
-      } catch (e) {
-        window.location.href = window.HUDA_APK_URL;
+        try { a.click(); } catch (e) {}
+        setTimeout(function () { try { a.remove(); } catch (e) {} }, 1000);
       }
+      tryDownload(0);
       return;
     }
 
-    // iOS: إضافة للشاشة الرئيسية
     if (isIOS) {
       toast('على آيفون: اضغط مشاركة ثم «إضافة إلى الشاشة الرئيسية»');
       return;
     }
-
-    // احتياطي PWA
     if (deferred) {
       deferred.prompt();
       try {
@@ -70,7 +84,7 @@
       deferred = null;
       return;
     }
-    toast('اضغط الزر لتحميل التطبيق، أو من قائمة المتصفح ⋮ «تثبيت التطبيق»');
+    toast('اضغط الزر لتحميل التطبيق');
   };
 
   if (isNative || !('serviceWorker' in navigator) || location.protocol === 'file:') return;
