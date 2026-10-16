@@ -1,0 +1,19 @@
+هُدى القرآن — تثبيت APK من الموقع
+================================
+
+1) ارفع ملف APK على GitHub Releases:
+   - Tag: v1.0.0
+   - اسم الملف: Huda-Al-Quran.apk
+   - الرابط المتوقع:
+     https://github.com/BOYKA-BM1/huda-quran/releases/download/v1.0.0/Huda-Al-Quran.apk
+
+2) أو انسخ الـ APK داخل مجلد docs و www:
+   cp ~/Downloads/Huda-Al-Quran.apk docs/
+   cp ~/Downloads/Huda-Al-Quran.apk www/
+
+   ثم غيّر الرابط في المتصفح (Console) إن لزم:
+   window.HUDA_APK_URL = 'Huda-Al-Quran.apk'
+
+3) زر «تحميل التطبيق» في الصفحة الرئيسية يحمّل الـ APK مباشرة على أندرويد.
+
+4) بعد الرفع: git add + commit + push ثم Ctrl+Shift+R

@@ -27,7 +27,8 @@
 
   /** روابط تحميل APK (Release ثم latest) */
   window.HUDA_APK_URLS = window.HUDA_APK_URLS || [
-    'https://github.com/BOYKA-BM1/huda-quran/releases/download/v1.0.0/Huda-Al-Quran.apk',
+    'https://boyka-bm1.github.io/huda-quran/Huda-Al-Quran.apk',
+    'Huda-Al-Quran.apk',
     'https://github.com/BOYKA-BM1/huda-quran/releases/latest/download/Huda-Al-Quran.apk'
   ];
   window.HUDA_APK_URL = window.HUDA_APK_URLS[0];
