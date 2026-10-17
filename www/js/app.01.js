@@ -925,19 +925,14 @@ window.addEventListener('popstate', function(e){
   if(_backBusy) return;
   _backBusy = true;
   setTimeout(function(){ _backBusy = false; }, 350);
-  // Prefer sub-page back (hisn etc.)
-  if(typeof window.hudaGoBack === 'function'){
-    var used = window.hudaGoBack();
-    if(used) return;
-  }
+  // Sub-pages first (hisn category view)
+  if(typeof window.hudaGoBack === 'function' && window.hudaGoBack()) return;
   if(_pageHistory.length > 1){
     _pageHistory.pop();
     var prev = _pageHistory[_pageHistory.length-1] || 'home';
     SP(prev, false);
   } else {
-    if(_exitWarned){
-      clearTimeout(_exitTimer);
-    } else {
+    if(!_exitWarned){
       try{history.pushState({page:'home'},'','#home');}catch(e){}
       _exitWarned = true;
       _showExitToast();
