@@ -775,15 +775,21 @@ setInterval(showDuaNotif, 90 * 1000);
 // ════════════════════════════════════════════════
 let _hadithCat = 'الكل';
 function renderHadithPage() {
-  // تصنيفات
-  const cats = ['الكل', ...new Set(HADITHS.map(h => h.cat).filter(Boolean))];
-  const cEl = document.getElementById('hadith-cats');
-  if (cEl && !cEl.children.length) {
-    cEl.innerHTML = cats.map(c =>
-      `<button class="hcat-btn${c===_hadithCat?' on':''}" onclick="setHadithCat('${c}',this)">${c}</button>`
-    ).join('');
-  }
-  filterHadiths();
+  try {
+    if (typeof HADITHS === 'undefined' || !HADITHS || !HADITHS.length) {
+      window.HADITHS = window.HADITHS || [];
+      console.warn('HADITHS empty');
+    }
+    var list = (typeof HADITHS !== 'undefined' && HADITHS) ? HADITHS : [];
+    const cats = ['الكل'].concat(Array.from(new Set(list.map(function(h){ return h.cat; }).filter(Boolean))));
+    const cEl = document.getElementById('hadith-cats');
+    if (cEl) {
+      cEl.innerHTML = cats.map(function(c){
+        return '<button type="button" class="hcat-btn'+(c===_hadithCat?' on':'')+'" data-cat="'+c+'" onclick="setHadithCat(\''+c+'\',this)">'+c+'</button>';
+      }).join('');
+    }
+    filterHadiths();
+  } catch (e) { console.error('renderHadithPage', e); }
 }
 function setHadithCat(cat, btn) {
   _hadithCat = cat;
@@ -803,10 +809,10 @@ function filterHadiths() {
   if (counter) counter.textContent = `${list.length} حديث`;
   if (!el) return;
   el.innerHTML = list.map((h,i) => `
-    <div class="hadith-card" title="انقر للنسخ">
-      ${h.cat ? `<div class="hadith-cat-badge">🏷️ ${h.cat}</div>` : ''}
-      <div class="hadith-ar">${h.ar}</div>
-      <div class="hadith-src">📚 ${h.src||''}</div>
+    <div class="hadith-card" title="انقر للنسخ" style="background:rgba(0,0,0,.25);border:1px solid rgba(201,168,76,.2);border-radius:14px;padding:1rem;margin:.75rem 0;">
+      ${h.cat ? `<div class="hadith-cat-badge" style="color:#c9a84c;font-size:.75rem;margin-bottom:.4rem;">🏷️ ${h.cat}</div>` : ''}
+      <div class="hadith-ar" style="color:#f5f0e0;font-size:1.15rem;line-height:1.95;direction:rtl;text-align:right;font-family:'Amiri Quran','Scheherazade New',serif;">${h.ar||''}</div>
+      <div class="hadith-src" style="color:#c9a84c;font-size:.8rem;margin-top:.45rem;">📚 ${h.src||''}</div>
       <button onclick="copyHadithText(this)" data-text="${encodeURIComponent((h.ar||'')+'\n📚 '+(h.src||''))}" style="background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.18);color:var(--gold);font-family:'Tajawal',sans-serif;font-size:.72rem;padding:.25rem .75rem;border-radius:20px;cursor:pointer;margin-top:.5rem;transition:all .25s;" onmouseover="this.style.background='rgba(201,168,76,.18)'" onmouseout="this.style.background='rgba(201,168,76,.07)'">📋 نسخ الحديث</button>
     </div>
   `).join('');

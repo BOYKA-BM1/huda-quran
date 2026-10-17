@@ -1426,27 +1426,42 @@ function _startOrientation(){
   window.addEventListener('deviceorientation',_onOrient,true);
 }
 
+var _qSmoothH = null;
+var _qLastApply = 0;
+var _qFrozenRot = null;
 function _onOrient(e){
-  if(_qBearing===null) return;
-  let h=0;
-  if(e.absolute && e.alpha!==null){
-    h=360-e.alpha;
-  } else if(typeof e.webkitCompassHeading!=='undefined' && e.webkitCompassHeading!==null){
-    h=e.webkitCompassHeading;
-  } else if(e.alpha!==null){
-    h=360-e.alpha;
-  } else return;
-
-  const rot=(_qBearing-h+360)%360;
-  const d=document.getElementById('qibla-dial');
-  if(d) d.style.transform='rotate('+rot+'deg)';
-
-  const aligned=(rot<12||rot>348);
-  const c=document.getElementById('qibla-compass');
-  if(c){ c.classList.toggle('aligned',aligned); }
-  const st=document.getElementById('qibla-status');
-  if(aligned && st) st.textContent='✅ أنت تواجه القبلة الآن!';
-  else if(st) st.textContent='البوصلة تعمل — '+Math.round(_qBearing)+'° من الشمال';
+  if(!_qLive || _qBearing===null) return;
+  var h = null;
+  if(typeof e.webkitCompassHeading==='number' && !isNaN(e.webkitCompassHeading)){
+    h = e.webkitCompassHeading;
+  } else if(e.absolute === true && typeof e.alpha === 'number'){
+    h = (360 - e.alpha) % 360;
+  } else if(typeof e.alpha === 'number'){
+    h = (360 - e.alpha) % 360;
+  }
+  if(h === null || isNaN(h)) return;
+  // Low-pass filter to stop jitter when phone is still
+  if(_qSmoothH === null) _qSmoothH = h;
+  var dh = ((h - _qSmoothH + 540) % 360) - 180;
+  // Dead zone: ignore tiny noise
+  if(Math.abs(dh) < 2.2) h = _qSmoothH;
+  else _qSmoothH = (_qSmoothH + dh * 0.22 + 360) % 360, h = _qSmoothH;
+  var now = Date.now();
+  if(now - _qLastApply < 50) return; // max ~20fps
+  _qLastApply = now;
+  var rot = (_qBearing - h + 360) % 360;
+  _qFrozenRot = rot;
+  var d = document.getElementById('qibla-dial');
+  if(d) d.style.transform = 'rotate(' + rot + 'deg)';
+  var diff = rot > 180 ? 360 - rot : rot;
+  var aligned = diff < 10;
+  var c = document.getElementById('qibla-compass');
+  if(c) c.classList.toggle('aligned', aligned);
+  var st = document.getElementById('qibla-status');
+  if(st){
+    if(aligned) st.textContent = '✅ أنت تواجه القبلة الآن!';
+    else st.textContent = 'الفرق عن القبلة ' + Math.round(diff) + '° · حرّك الهاتف ببطء';
+  }
 }
 
 function stopLiveQibla(){
@@ -1454,10 +1469,18 @@ function stopLiveQibla(){
   window.removeEventListener('deviceorientationabsolute',_onOrient,true);
   window.removeEventListener('deviceorientation',_onOrient,true);
   document.getElementById('qibla-compass')?.classList.remove('live','aligned');
+  // Freeze dial at last angle
+  var d=document.getElementById('qibla-dial');
+  if(d && typeof _qFrozenRot === 'number'){
+    d.style.transform='rotate('+_qFrozenRot+'deg)';
+  } else if(d && _qBearing!=null){
+    d.style.transform='rotate('+_qBearing+'deg)';
+  }
+  _qSmoothH = null;
   const btn=document.getElementById('qibla-live-btn');
   if(btn){ btn.textContent='🧭 تفعيل البوصلة الحية'; btn.classList.remove('active'); }
   const st=document.getElementById('qibla-status');
-  if(st) st.textContent='توقفت البوصلة. اضغط للتفعيل مجدداً.';
+  if(st) st.textContent='البوصلة متوقفة — الاتجاه ثابت';
 }
 
 function _fallbackNoCompass(){
@@ -3908,6 +3931,7 @@ var HADITHS_DB = {
 const HADITHS = Object.entries(HADITHS_DB).flatMap(([cat, items]) =>
   items.map(item => ({cat, ar: item.t, src: item.s}))
 );
+try { window.HADITHS = HADITHS; } catch (e) {}
 
 // ── تحويل PROPHETS_DB إلى قائمة ──
 // (يُستخدم في صفحة الأنبياء عبر renderProphetStory)

@@ -916,20 +916,27 @@ function SP(id, pushHistory){
   if(id==='tajweed') setTimeout(buildTajweed, 50);
   if(id==='prophets' && typeof renderProphets==='function') setTimeout(renderProphets,50);
   if(id==='quiz'    && typeof initQuizPage==='function') initQuizPage();
-  if(id==='hadiths' && typeof renderHadithPage==='function') renderHadithPage();
+  if(id==='hadiths') setTimeout(function(){ try{ if(typeof renderHadithPage==='function') renderHadithPage(); }catch(e){ console.error(e);} }, 30);
 }
 
 // Handle browser back button
+var _backBusy = false;
 window.addEventListener('popstate', function(e){
+  if(_backBusy) return;
+  _backBusy = true;
+  setTimeout(function(){ _backBusy = false; }, 350);
+  // Prefer sub-page back (hisn etc.)
+  if(typeof window.hudaGoBack === 'function'){
+    var used = window.hudaGoBack();
+    if(used) return;
+  }
   if(_pageHistory.length > 1){
     _pageHistory.pop();
-    var prev = _pageHistory[_pageHistory.length-1];
+    var prev = _pageHistory[_pageHistory.length-1] || 'home';
     SP(prev, false);
   } else {
-    // On home page — double back to exit
     if(_exitWarned){
       clearTimeout(_exitTimer);
-      // Confirmed exit — do nothing (browser will handle)
     } else {
       try{history.pushState({page:'home'},'','#home');}catch(e){}
       _exitWarned = true;

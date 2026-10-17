@@ -72,7 +72,7 @@
     var ring = el('div', 'tb-ringw');
     ring.innerHTML = '<svg viewBox="0 0 240 240" aria-hidden="true"><circle cx="120" cy="120" r="104" fill="none" stroke="rgba(212,176,90,.22)" stroke-width="7"/><circle id="tb-arc" cx="120" cy="120" r="104" fill="none" stroke="#D4B05A" stroke-width="7" stroke-linecap="round" stroke-dasharray="' + CIRC.toFixed(1) + '" stroke-dashoffset="' + CIRC.toFixed(1) + '" transform="rotate(-90 120 120)"/></svg>';
     var btn = el('button', 'tb-tap'); btn.id = 'tb-tap'; btn.setAttribute('aria-label', 'سبّح — اضغط للعد');
-    btn.appendChild(el('b', null, '٠')); btn.lastChild.id = 'tb-n'; btn.appendChild(el('span', null, 'اضغط للتسبيح')); btn.onclick = tap; ring.appendChild(btn); card.appendChild(ring);
+    btn.appendChild(el('b', null, '٠')); btn.lastChild.id = 'tb-n'; btn.appendChild(el('span', null, 'اضغط للتسبيح')); ring.appendChild(btn); card.appendChild(ring);
     var tgBar = el('div', 'tb-tg-bar');
     var addTg = el('button', 'tb-add', '+ إضافة هدف');
     addTg.type = 'button'; addTg.onclick = addTarget;
@@ -154,12 +154,29 @@
       g.appendChild(b);
     });
   }
-  function tap() {
+  var _lock = 0;
+  function tap(e) {
+    if (e) { try { e.preventDefault(); e.stopPropagation(); } catch (err) {} }
+    var now = Date.now();
+    if (now - _lock < 300) return;
+    _lock = now;
     S.counts[S.i] = cnt() + 1; S.total++; var k = today(); S.days[k] = (S.days[k] || 0) + 1; save();
-    if (S.vib && navigator.vibrate) navigator.vibrate(30);
+    if (S.vib && navigator.vibrate) navigator.vibrate(18);
     var done = S.target && cnt() % S.target === 0;
-    if (done) { if (S.vib && navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 140]); toast('✨ أتممت ' + ar(S.target) + ' — تقبّل الله منك'); }
-    render(); var b = $('tb-tap'); b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+    if (done) { if (S.vib && navigator.vibrate) navigator.vibrate([80, 40, 80]); toast('✨ أتممت ' + ar(S.target) + ' — تقبّل الله منك'); }
+    render();
+    var b = $('tb-tap');
+    if (b) { b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); }
+  }
+  function bindTap() {
+    var b = $('tb-tap');
+    if (!b || b._hudaBound) return;
+    b._hudaBound = true;
+    b.onclick = null;
+    b.addEventListener('pointerup', function (e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      tap(e);
+    }, { passive: false });
   }
   function reset() { if (cnt() && !confirm('تصفير عدّاد هذا الذكر؟')) return; S.counts[S.i] = 0; save(); render(); }
 
@@ -191,6 +208,6 @@
     window.scrollTo(0, 0);
   }
 
-  window.initTasbeeh = function () { load(); if (!built || !$('tb-tap')) build(); render(); };
-  window.tasbeehClick = tap;
+  window.initTasbeeh = function () { load(); if (!built || !$('tb-tap')) build(); bindTap(); render(); };
+  window.tasbeehClick = function () { tap(); };
 })();
