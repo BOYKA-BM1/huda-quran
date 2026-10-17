@@ -43,7 +43,7 @@
         var t = new Date(); t.setDate(t.getDate() + d); t.setHours(Math.floor(dec), Math.round((dec % 1) * 60), 0, 0);
         if (t.getTime() > now) {
           items.push({ id: 1000 + d * 10 + k, title: 'حان وقت صلاة ' + p.name, body: 'اللهم اجعلنا من المقيمين الصلاة على وقتها',
-            channelId: CHANNEL, schedule: { at: t, allowWhileIdle: true }, smallIcon: 'ic_stat_icon_config_sample' });
+            channelId: CHANNEL, schedule: { at: t, allowWhileIdle: true }, smallIcon: 'ic_stat_huda' });
         }
         var tp = new Date(t.getTime() - 15 * 60000);
         if (pre && tp.getTime() > now) {

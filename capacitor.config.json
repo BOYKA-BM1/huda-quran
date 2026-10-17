@@ -5,7 +5,6 @@
   "backgroundColor": "#030A06",
   "server": {
     "androidScheme": "https",
-    "url": "https://boyka-bm1.github.io/huda-quran/",
     "cleartext": false
   },
   "android": {
@@ -14,7 +13,8 @@
   },
   "plugins": {
     "LocalNotifications": {
-      "iconColor": "#C9A84C"
+      "iconColor": "#C9A84C",
+      "smallIcon": "ic_stat_huda"
     }
   }
 }
