@@ -776,11 +776,13 @@ setInterval(showDuaNotif, 90 * 1000);
 let _hadithCat = 'الكل';
 function renderHadithPage() {
   try {
-    if (typeof HADITHS === 'undefined' || !HADITHS || !HADITHS.length) {
-      window.HADITHS = window.HADITHS || [];
+    var list = (window.HADITHS && window.HADITHS.length) ? window.HADITHS
+      : ((typeof HADITHS !== 'undefined' && HADITHS && HADITHS.length) ? HADITHS : []);
+    if (!list.length) {
       console.warn('HADITHS empty');
+      var el0 = document.getElementById('hadith-list');
+      if (el0) el0.innerHTML = '<p style="text-align:center;color:var(--tm);padding:2rem">جاري تحميل الأحاديث...</p>';
     }
-    var list = (typeof HADITHS !== 'undefined' && HADITHS) ? HADITHS : [];
     const cats = ['الكل'].concat(Array.from(new Set(list.map(function(h){ return h.cat; }).filter(Boolean))));
     const cEl = document.getElementById('hadith-cats');
     if (cEl) {
@@ -799,9 +801,11 @@ function setHadithCat(cat, btn) {
 }
 function filterHadiths() {
   const q = (document.getElementById('hadith-search')?.value || '').trim();
-  const list = HADITHS.filter(h => {
+  const all = (window.HADITHS && window.HADITHS.length) ? window.HADITHS
+    : ((typeof HADITHS !== 'undefined' && HADITHS) ? HADITHS : []);
+  const list = all.filter(h => {
     const catOk = _hadithCat === 'الكل' || h.cat === _hadithCat;
-    const searchOk = !q || h.ar.includes(q) || (h.src||'').includes(q);
+    const searchOk = !q || (h.ar||'').includes(q) || (h.src||'').includes(q) || (h.cat||'').includes(q);
     return catOk && searchOk;
   });
   const el = document.getElementById('hadith-list');

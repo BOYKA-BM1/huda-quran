@@ -34,9 +34,16 @@
 </style>
 
 <style id="hv-cd-stable">
-#hv-cd{font-variant-numeric:tabular-nums!important;font-feature-settings:"tnum"!important;
-letter-spacing:.02em;direction:ltr!important;unicode-bidi:isolate!important;
-min-width:9ch;text-align:center;display:inline-block;font-family:ui-monospace,Menlo,Consolas,monospace!important}
+#hv-cd,.hv-cd{
+  display:block!important;width:100%!important;max-width:100%!important;
+  text-align:center!important;margin:.35rem auto .15rem!important;
+  font-variant-numeric:tabular-nums!important;font-feature-settings:"tnum"!important;
+  letter-spacing:.06em;direction:ltr!important;unicode-bidi:isolate!important;
+  font-family:"Tajawal",ui-monospace,Menlo,Consolas,monospace!important;
+  font-size:clamp(1.85rem,7vw,2.4rem)!important;font-weight:700!important;
+  color:var(--gold,#C9A84C)!important;line-height:1.2!important;
+}
+.hv-card .hv-cd{padding:.15rem 0 .35rem}
 </style>
 </head>
 <body>
@@ -2035,7 +2042,7 @@ window.togPlay = function(){ if(window.__hudaTogPlay) return window.__hudaTogPla
 </div>
 <script src="js/huda-stable-v79.js?v=795"></script>
 <script src="js/huda-prayer-fix.js?v=796"></script>
-<script src="js/huda-net-gps.js?v=797"></script>
+<script src="js/huda-net-gps.js?v=798"></script>
 <script>
 (function(){
   if(!('serviceWorker' in navigator)) return;
