@@ -22,6 +22,21 @@
 <link rel="stylesheet" href="css/upgrade.css">
 <link rel="stylesheet" href="css/dock.css">
 <link rel="stylesheet" href="css/modern-ui.css">
+
+<style id="huda-net-hard">
+#ofbadge{position:fixed!important;top:8px!important;left:8px!important;z-index:100000!important;
+  padding:0!important;margin:0!important;background:transparent!important;border:none!important;
+  width:8px!important;height:8px!important;pointer-events:none}
+#odot,.offline-dot{width:7px!important;height:7px!important;min-width:7px!important;max-width:7px!important;
+  border-radius:50%!important;display:block!important;background:#ef4444!important;
+  box-shadow:0 0 5px #ef4444!important;transition:background .25s,box-shadow .25s}
+#odot.online,.offline-dot.online{background:#22c55e!important;box-shadow:0 0 5px #22c55e!important}
+#huda-offline-banner{display:none;position:fixed;top:0;left:0;right:0;z-index:100001;
+  background:#b91c1c;color:#fff;text-align:center;font-size:12px;padding:7px 10px;
+  font-family:Tajawal,sans-serif;direction:rtl}
+#hv-cd,#np-cdown{direction:ltr!important;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+</style>
+
 </head>
 <body>
 
@@ -2017,7 +2032,15 @@ window.togPlay = function(){ if(window.__hudaTogPlay) return window.__hudaTogPla
     <p class="al-footer">هُدى القرآن</p>
   </div>
 </div>
-<script src="js/huda-stable-v79.js?v=793"></script>
-<script src="js/huda-prayer-fix.js?v=793"></script>
+<script src="js/huda-stable-v79.js?v=793b"></script>
+<script src="js/huda-prayer-fix.js?v=793b"></script>
+<script>
+(function(){
+  if(!('serviceWorker' in navigator)) return;
+  navigator.serviceWorker.getRegistrations().then(function(rs){
+    rs.forEach(function(r){ try{ r.update(); }catch(e){} });
+  });
+})();
+</script>
 </body>
 </html>

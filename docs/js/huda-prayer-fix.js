@@ -1,4 +1,4 @@
-/* Huda v79.3 — net dot, Latin countdown, offline msgs, notifs, khatma */
+/* Huda v79.3b HARD — net dot, Latin countdown, offline msgs, notifs, khatma */
 (function () {
   'use strict';
 
@@ -211,51 +211,53 @@
   var _wasOffline = false;
   function ensureOfflineBanner() {
     var b = $('huda-offline-banner');
-    if (b) return b;
-    b = document.createElement('div');
-    b.id = 'huda-offline-banner';
-    b.setAttribute('dir', 'rtl');
-    b.style.cssText = 'display:none;position:fixed;top:0;left:0;right:0;z-index:99999;background:#b91c1c;color:#fff;text-align:center;font-size:12px;padding:6px 10px;font-family:Tajawal,sans-serif;';
-    b.textContent = 'غير متصل بالإنترنت — بعض الميزات تحتاج اتصال';
-    document.body.appendChild(b);
+    if (!b) {
+      b = document.createElement('div');
+      b.id = 'huda-offline-banner';
+      b.setAttribute('dir', 'rtl');
+      b.textContent = 'غير متصل بالإنترنت — بعض الميزات تحتاج اتصال';
+      if (document.body) document.body.insertBefore(b, document.body.firstChild);
+    }
+    b.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:100001;background:#b91c1c;color:#fff;text-align:center;font-size:12px;padding:7px 10px;font-family:Tajawal,sans-serif;direction:rtl';
     return b;
   }
   function paintNet() {
     var d = $('odot') || document.querySelector('.offline-dot');
     var badge = $('ofbadge');
     if (d) {
-      d.style.width = '6px';
-      d.style.height = '6px';
-      d.style.minWidth = '6px';
-      d.style.borderRadius = '50%';
-      d.style.display = 'inline-block';
+      ['width','height','minWidth','maxWidth'].forEach(function(k){ d.style.setProperty(k==='minWidth'?'min-width':k==='maxWidth'?'max-width':k, '7px', 'important'); });
+      d.style.setProperty('border-radius', '50%', 'important');
+      d.style.setProperty('display', 'block', 'important');
       if (navigator.onLine) {
-        d.classList.add('online');
-        d.classList.remove('offline');
-        d.style.background = '#22c55e';
-        d.style.boxShadow = '0 0 4px #22c55e';
-        d.title = 'متصل';
+        d.classList.add('online'); d.classList.remove('offline');
+        d.style.setProperty('background', '#22c55e', 'important');
+        d.style.setProperty('box-shadow', '0 0 5px #22c55e', 'important');
+        d.title = 'متصل بالإنترنت';
       } else {
-        d.classList.remove('online');
-        d.classList.add('offline');
-        d.style.background = '#ef4444';
-        d.style.boxShadow = '0 0 4px #ef4444';
+        d.classList.remove('online'); d.classList.add('offline');
+        d.style.setProperty('background', '#ef4444', 'important');
+        d.style.setProperty('box-shadow', '0 0 5px #ef4444', 'important');
         d.title = 'غير متصل';
       }
     }
     if (badge) {
-      badge.style.padding = '2px';
-      badge.style.opacity = '0.9';
+      badge.style.setProperty('padding', '0', 'important');
+      badge.style.setProperty('background', 'transparent', 'important');
+      badge.style.setProperty('border', 'none', 'important');
     }
     var ban = ensureOfflineBanner();
     if (!navigator.onLine) {
-      ban.style.display = 'block';
-      if (!_wasOffline && typeof showToast === 'function') showToast('غير متصل بالإنترنت');
-      _wasOffline = true;
+      ban.style.setProperty('display', 'block', 'important');
+      if (!_wasOffline) {
+        if (typeof showToast === 'function') showToast('غير متصل بالإنترنت');
+        _wasOffline = true;
+      }
     } else {
-      ban.style.display = 'none';
-      if (_wasOffline && typeof showToast === 'function') showToast('✅ عاد الاتصال بالإنترنت');
-      _wasOffline = false;
+      ban.style.setProperty('display', 'none', 'important');
+      if (_wasOffline) {
+        if (typeof showToast === 'function') showToast('✅ عاد الاتصال بالإنترنت');
+        _wasOffline = false;
+      }
     }
   }
   window.updateNetStatus = paintNet;
