@@ -24,7 +24,7 @@ rm -f android/app/src/main/res/drawable/ic_launcher_background.xml 2>/dev/null |
 rm -f android/app/src/main/res/drawable-v24/ic_launcher_foreground.xml 2>/dev/null || true
 
 ICON_SRC=""
-for c in www/icons/icon-512-solid.png www/icons/logo-transparent.png www/icons/logo.png www/icons/icon-512.png; do
+for c in www/icons/logo.png www/icons/icon-512.png www/icons/icon-192.png; do
   [ -f "$c" ] && ICON_SRC="$c" && break
 done
 echo "ICON_SRC=$ICON_SRC"
@@ -33,11 +33,11 @@ if [ -n "$ICON_SRC" ] && command -v convert >/dev/null; then
   for pair in "48:mdpi" "72:hdpi" "96:xhdpi" "144:xxhdpi" "192:xxxhdpi"; do
     s="${pair%%:*}"; dens="${pair##*:}"
     mkdir -p "android/app/src/main/res/mipmap-$dens"
-    convert "$ICON_SRC" -resize ${s}x${s} -background "#030A06" -gravity center -extent ${s}x${s} \
+    convert "$ICON_SRC" -resize ${s}x${s} -background white -gravity center -extent ${s}x${s} \
       "android/app/src/main/res/mipmap-$dens/ic_launcher.png"
-    convert "$ICON_SRC" -resize ${s}x${s} -background "#030A06" -gravity center -extent ${s}x${s} \
+    convert "$ICON_SRC" -resize ${s}x${s} -background white -gravity center -extent ${s}x${s} \
       "android/app/src/main/res/mipmap-$dens/ic_launcher_round.png"
-    convert "$ICON_SRC" -resize ${s}x${s} -background "#030A06" -gravity center -extent ${s}x${s} \
+    convert "$ICON_SRC" -resize ${s}x${s} -background white -gravity center -extent ${s}x${s} \
       "android/app/src/main/res/mipmap-$dens/ic_launcher_foreground.png"
   done
   mkdir -p android/app/src/main/res/drawable

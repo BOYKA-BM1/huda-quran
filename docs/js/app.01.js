@@ -1854,7 +1854,7 @@ async function modalPlay(){
 // AUDIO ENGINE — Full Surah Continuous Playback
 // ════════════════════════════════════════════════
 const aud=document.getElementById('aud');
-let curRec=null,curSurahN=0,curIdx=0,curList=[],isRepeat=false,isAutoN=true,isPlay=false,curRecObj=null; // auto-next surah ON by default
+let curRec=null,curSurahN=0,curIdx=0,curList=[],isRepeat=false,isAutoN=true,isPlay=false,curRecObj=null; try{isRepeat=false;}catch(e){} // auto-next surah ON by default
 let vbvMode=false,vbvAyahs=[],vbvIdx=0,vbvSurahN=0,vbvAutoPlay=false;
 
 function getSurahAudioURL(recObj,surahNum){
@@ -2143,18 +2143,30 @@ function hlAyah(n){
   if(el){ el.classList.add('playing','pa'); try{el.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){} }
   if(typeof highlightPlayingAyah==='function' && curSurahN) highlightPlayingAyah(curSurahN, n);
 }
-aud.addEventListener('ended',()=>{
-  isPlay=false;updUI();
-  if(isRepeat){aud.currentTime=0;aud.play();return;}
-  if(isAutoN&&curSurahN<114&&curRec){
-    setTimeout(function(){
-      var next = curSurahN + 1;
-      startPB(curRec, next);
-      // Change mushaf page to the new surah
-      if (typeof HudaMushaf !== 'undefined' && HudaMushaf.goSurah) {
-        try { HudaMushaf.goSurah(next); } catch(e){}
-      }
-    }, 800);
+aud.addEventListener('ended',function(){
+  isPlay=false; try{updUI();}catch(e){}
+  // تكرار فقط بزر التكرار
+  if (isRepeat === true) {
+    try { aud.currentTime = 0; } catch (e) {}
+    var p = aud.play(); if (p && p.catch) p.catch(function(){});
+    return;
+  }
+  // أكمل باقي السور
+  var next = (curSurahN | 0) + 1;
+  if (next >= 1 && next <= 114) {
+    setTimeout(function () {
+      try {
+        if (typeof playSurahContinuous === 'function') {
+          playSurahContinuous(next);
+        } else if (curRec && typeof startPB === 'function') {
+          startPB(curRec, next);
+        }
+        if (typeof HudaMushaf !== 'undefined' && HudaMushaf.goSurah) {
+          try { HudaMushaf.goSurah(next); } catch (e) {}
+        }
+        curSurahN = next;
+      } catch (e) { console.warn('next surah', e); }
+    }, 500);
   }
 });
 aud.addEventListener('timeupdate',()=>{

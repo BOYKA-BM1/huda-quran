@@ -269,17 +269,16 @@
   };
 
   function getAudio() {
-    // عنصر واحد فقط — #aud — حتى لا يتصارع محركان
     var el = document.getElementById('aud');
-    if (el) {
-      G.audio = el;
-      return el;
+    if (!el) {
+      el = document.createElement('audio');
+      el.id = 'aud';
+      el.preload = 'auto';
+      el.setAttribute('playsinline', '');
+      (document.body || document.documentElement).appendChild(el);
     }
-    if (!G.audio) {
-      G.audio = new Audio();
-      G.audio.preload = 'auto';
-    }
-    return G.audio;
+    G.audio = el;
+    return el;
   }
 
   function clearHighlight() {
@@ -394,17 +393,21 @@
       au.onerror = function () { if (G.token === myToken) tryNext(); };
       au.onended = function () {
         if (G.token !== myToken) return;
-        // أكمل للسورة التالية (لا تعِد نفس السورة)
-        try {
-          if (typeof isRepeat !== 'undefined' && isRepeat) {
-            try { au.currentTime = 0; } catch (e0) {}
-            var pr0 = au.play(); if (pr0 && pr0.catch) pr0.catch(function () {});
-            return;
-          }
-        } catch (e1) {}
-        var ns = (s || G.s || 1) + 1;
-        if (ns <= 114) playSurah(ns);
-        else { G.active = false; updatePlayerUI(false); clearHighlight(); }
+        var repeatOn = false;
+        try { repeatOn = (typeof isRepeat !== 'undefined' && isRepeat === true); } catch (e) {}
+        if (repeatOn) {
+          try { au.currentTime = 0; } catch (e0) {}
+          var pr0 = au.play(); if (pr0 && pr0.catch) pr0.catch(function () {});
+          return;
+        }
+        var ns = ((s || G.s || 1) | 0) + 1;
+        if (ns <= 114) {
+          setTimeout(function () {
+            if (G.token !== myToken) return;
+            try { G._forceReload = true; G._resumeAt = 0; G.session = false; } catch (e) {}
+            playSurah(ns);
+          }, 400);
+        } else { G.active = false; updatePlayerUI(false); clearHighlight(); }
       };
       var pr = au.play();
       if (pr && pr.catch) pr.catch(function () { if (G.token === myToken) tryNext(); });
@@ -597,26 +600,22 @@
       };
       au.onended = function () {
         if (G.token !== myToken) return;
-        // تكرار فقط إذا المستخدم فعّله صراحة (isRepeat)
-        try {
-          if (typeof isRepeat !== 'undefined' && isRepeat === true) {
-            try { au.currentTime = 0; } catch (e) {}
-            var prr = au.play();
-            if (prr && prr.catch) prr.catch(function () {});
-            return;
-          }
-          // لا تستخدم G._loopSurah إلا إذا isRepeat مفعّل
-          G._loopSurah = false;
-        } catch (e) {}
-        // السورة التالية تلقائيًا
-        if (sNum < 114) {
-          try {
-            if (typeof isAutoN !== 'undefined' && isAutoN === false) {
-              G.active = false; updatePlayerUI(false); clearHighlight();
-              return;
-            }
-          } catch (e2) {}
-          playSurah(sNum + 1);
+        var repeatOn = false;
+        try { repeatOn = (typeof isRepeat !== 'undefined' && isRepeat === true); } catch (e) {}
+        if (repeatOn) {
+          try { au.currentTime = 0; } catch (e) {}
+          var prr = au.play();
+          if (prr && prr.catch) prr.catch(function () {});
+          return;
+        }
+        try { G._loopSurah = false; } catch (e) {}
+        var nextS = (sNum | 0) + 1;
+        if (nextS >= 1 && nextS <= 114) {
+          setTimeout(function () {
+            if (G.token !== myToken) return;
+            try { G._forceReload = true; G._resumeAt = 0; G.session = false; } catch (e) {}
+            playSurah(nextS);
+          }, 400);
         } else {
           G.active = false;
           updatePlayerUI(false);
