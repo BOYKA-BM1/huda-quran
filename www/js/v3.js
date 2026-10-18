@@ -66,7 +66,7 @@
     var nx = nextPrayer(pt, now), left = Math.max(0, Math.round((nx.t - now) * 3600));
     var h = Math.floor(left / 3600), m = Math.floor((left % 3600) / 60), s = left % 60;
     $('hv-next').textContent = PR[nx.i][1] + ' · ' + fmt12(pt[PR[nx.i][0]]);
-    $('hv-cd').textContent = ar(('0' + h).slice(-2) + ':' + ('0' + m).slice(-2) + ':' + ('0' + s).slice(-2));
+    $('hv-cd').textContent = (('0' + h).slice(-2) + ':' + ('0' + m).slice(-2) + ':' + ('0' + s).slice(-2)); /* latin digits only */
     var box = $('hv-pts');
     if (!box.firstChild) PR.forEach(function (p) { var dv = el('div'); dv.appendChild(document.createTextNode(p[1])); dv.appendChild(el('b')); box.appendChild(dv); });
     PR.forEach(function (p, i) { var dv = box.children[i]; dv.lastChild.textContent = fmt12(pt[p[0]]); dv.className = i === nx.i && !nx.tomorrow ? 'on' : (!nx.tomorrow && pt[p[0]] <= now ? 'past' : (nx.tomorrow ? 'past' : '')); if (nx.tomorrow && i === 0) dv.className = 'on'; });
