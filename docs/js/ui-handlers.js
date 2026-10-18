@@ -394,14 +394,17 @@
       au.onerror = function () { if (G.token === myToken) tryNext(); };
       au.onended = function () {
         if (G.token !== myToken) return;
-        // بعد الآية: أكمل السورة من الآية التالية إن أمكن
-        var next = nextAyah(s, a);
-        if (next) {
-          G.a = next[1];
-          playSurah(next[0]); // يكمل بالسورة (من أولها) — أفضل من الصمت
-        } else {
-          G.active = false; updatePlayerUI(false); clearHighlight();
-        }
+        // أكمل للسورة التالية (لا تعِد نفس السورة)
+        try {
+          if (typeof isRepeat !== 'undefined' && isRepeat) {
+            try { au.currentTime = 0; } catch (e0) {}
+            var pr0 = au.play(); if (pr0 && pr0.catch) pr0.catch(function () {});
+            return;
+          }
+        } catch (e1) {}
+        var ns = (s || G.s || 1) + 1;
+        if (ns <= 114) playSurah(ns);
+        else { G.active = false; updatePlayerUI(false); clearHighlight(); }
       };
       var pr = au.play();
       if (pr && pr.catch) pr.catch(function () { if (G.token === myToken) tryNext(); });
@@ -500,8 +503,19 @@
     function tryNextUrl() {
       if (G.token !== myToken) return;
       if (G.urlIndex >= G.urls.length) {
-        if (sNum < 114) playSurah(sNum + 1);
-        else { G.active = false; updatePlayerUI(false); }
+        // لا تتخطَّ السور عند فشل التحميل (خصوصًا بدون نت)
+        G.active = false;
+        updatePlayerUI(false);
+        try {
+          var offline = (typeof navigator !== 'undefined' && navigator.onLine === false) ||
+            (typeof window.hudaIsOnline === 'function' && !window.hudaIsOnline());
+          if (offline) {
+            if (typeof toast === 'function') toast('يرجى الاتصال بالإنترنت');
+            else if (typeof showToast === 'function') showToast('يرجى الاتصال بالإنترنت');
+          } else if (typeof toast === 'function') {
+            toast('تعذّر تشغيل هذه السورة');
+          }
+        } catch (e) {}
         return;
       }
       var url = G.urls[G.urlIndex++];
@@ -583,23 +597,27 @@
       };
       au.onended = function () {
         if (G.token !== myToken) return;
-        // تكرار السورة
+        // تكرار فقط إذا المستخدم فعّله صراحة (isRepeat)
         try {
-          if (typeof isRepeat !== 'undefined' && isRepeat) {
+          if (typeof isRepeat !== 'undefined' && isRepeat === true) {
             try { au.currentTime = 0; } catch (e) {}
             var prr = au.play();
             if (prr && prr.catch) prr.catch(function () {});
             return;
           }
-          if (G._loopSurah) {
-            try { au.currentTime = 0; } catch (e) {}
-            var pr2 = au.play();
-            if (pr2 && pr2.catch) pr2.catch(function () {});
-            return;
-          }
+          // لا تستخدم G._loopSurah إلا إذا isRepeat مفعّل
+          G._loopSurah = false;
         } catch (e) {}
-        if (sNum < 114) playSurah(sNum + 1);
-        else {
+        // السورة التالية تلقائيًا
+        if (sNum < 114) {
+          try {
+            if (typeof isAutoN !== 'undefined' && isAutoN === false) {
+              G.active = false; updatePlayerUI(false); clearHighlight();
+              return;
+            }
+          } catch (e2) {}
+          playSurah(sNum + 1);
+        } else {
           G.active = false;
           updatePlayerUI(false);
           clearHighlight();
