@@ -13,7 +13,7 @@ npx cap sync android
 
 MAN=android/app/src/main/AndroidManifest.xml
 if [ -f "$MAN" ]; then
-  for p in ACCESS_FINE_LOCATION ACCESS_COARSE_LOCATION POST_NOTIFICATIONS VIBRATE RECEIVE_BOOT_COMPLETED SCHEDULE_EXACT_ALARM; do
+  for p in ACCESS_FINE_LOCATION ACCESS_COARSE_LOCATION POST_NOTIFICATIONS VIBRATE RECEIVE_BOOT_COMPLETED SCHEDULE_EXACT_ALARM WAKE_LOCK FOREGROUND_SERVICE; do
     grep -q "android.permission.$p" "$MAN" || sed -i "s|<application|    <uses-permission android:name=\"android.permission.$p\" />\n    <application|" "$MAN"
   done
 fi
