@@ -56,7 +56,14 @@
   function load() {
     loadCustom();
     var d = {}; try { d = JSON.parse(localStorage.getItem('nq_tsb') || '{}') || {}; } catch (e) {}
+    // تثبيت نظيف: لو مفيش مفتاح إصدار المسبحة → عدّادات صفر (أول استخدام / بعد إعادة التثبيت)
+    var fresh = !localStorage.getItem('nq_tsb_v');
+    if (fresh) {
+      try { localStorage.setItem('nq_tsb_v', '1'); } catch (e) {}
+      d = {};
+    }
     S = { i: Math.min(Math.max(0, +d.i || 0), Math.max(0, ZK.length - 1)), counts: d.counts || {}, days: d.days || {}, total: +d.total || 0, target: TARGETS.indexOf(+d.target) >= 0 ? +d.target : 33, vib: d.vib !== false };
+    if (fresh) { S.counts = {}; S.days = {}; S.total = 0; S.i = 0; }
   }
   function save() { try { localStorage.setItem('nq_tsb', JSON.stringify(S)); } catch (e) {} }
   function cnt() { return +S.counts[S.i] || 0; }
@@ -158,7 +165,7 @@
   function tap(e) {
     if (e) { try { e.preventDefault(); e.stopPropagation(); } catch (err) {} }
     var now = Date.now();
-    if (now - _lock < 300) return;
+    if (now - _lock < 140) return;
     _lock = now;
     S.counts[S.i] = cnt() + 1; S.total++; var k = today(); S.days[k] = (S.days[k] || 0) + 1; save();
     if (S.vib && navigator.vibrate) navigator.vibrate(18);
@@ -173,10 +180,13 @@
     if (!b || b._hudaBound) return;
     b._hudaBound = true;
     b.onclick = null;
-    b.addEventListener('pointerup', function (e) {
+    b.onpointerdown = null;
+    b.addEventListener('pointerdown', function (e) {
       if (e.pointerType === 'mouse' && e.button !== 0) return;
       tap(e);
     }, { passive: false });
+    // prevent synthetic click double-count
+    b.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); }, true);
   }
   function reset() { if (cnt() && !confirm('تصفير عدّاد هذا الذكر؟')) return; S.counts[S.i] = 0; save(); render(); }
 

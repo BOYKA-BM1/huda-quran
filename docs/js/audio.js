@@ -111,17 +111,9 @@
 
   /* ───────── حفظ ملف MP3 على الجهاز ───────── */
   function saveFile(rec, n, onProg) {
-    var nm = (typeof SM !== 'undefined' && SM[n - 1]) ? SM[n - 1].ar : n;
-    var rn = (typeof RD !== 'undefined' ? (RD.filter(function (x) { return x.id === rec; })[0] || {}).name : '') || rec;
-    var fname = 'سورة-' + nm + '-' + rn + '.mp3';
-    function out(blob) { var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = fname; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 30000); }
-    if (has(rec, n)) return blobURL(rec, n).then(function (u) { return fetch(u).then(function (r) { return r.blob(); }); }).then(function (b) { out(b); return true; });
-    var urls = surahURLs(rec, n), i = 0;
-    function tryNext() {
-      if (i >= urls.length) { window.open(urls[0], '_blank'); return Promise.resolve(false); }
-      return fetchBlob(urls[i++], onProg).then(function (r) { if (r.blob.size < 100 * 1024) throw new Error('bad'); out(r.blob); return true; }).catch(tryNext);
-    }
-    return urls.length ? tryNext() : Promise.resolve(false);
+    /* v801: حفظ MP3 على الجهاز مُلغى بناءً على طلب المستخدم */
+    if (typeof toast === 'function') toast('حفظ الملفات على الجهاز غير متاح');
+    return Promise.resolve();
   }
 
   function fmtMB(b) { return (b / 1048576).toFixed(b < 10485760 ? 1 : 0) + ' MB'; }

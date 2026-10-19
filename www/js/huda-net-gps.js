@@ -1,9 +1,8 @@
-/* Huda v797 — no net-dot; stable countdown; next-surah enforce; bg audio */
+/* Huda v801 — stable countdown (no minute jump), online helpers, bg audio */
 (function () {
   'use strict';
   function $(id) { return document.getElementById(id); }
 
-  // Remove net indicator if still in DOM
   function killDot() {
     ['ofbadge', 'odot'].forEach(function (id) {
       var el = $(id); if (el) try { el.remove(); } catch (e) {}
@@ -21,35 +20,67 @@
     return false;
   };
 
-  /* Stable countdown — single writer, tabular nums */
-  var _lastCd = '', _nextEndMs = 0;
-  function computeNextEnd() {
+  /* ── Countdown: fixed end timestamp, integer remaining seconds ── */
+  var _lastCd = '';
+  var _nextEndMs = 0;
+  var _endDay = -1;
+  var _ptSig = '';
+
+  function ptSignature(pt) {
+    if (!pt) return '';
+    return ['fajr','dhuhr','asr','maghrib','isha'].map(function (k) {
+      return k + ':' + (pt[k] != null ? Math.round(Number(pt[k]) * 3600) : '');
+    }).join('|');
+  }
+
+  /** decimal hours → ms at local date, seconds=0, minutes rounded from total minutes */
+  function decToMs(dec, baseDate) {
+    var t = ((Number(dec) % 24) + 24) % 24;
+    var totalMin = Math.round(t * 60);
+    if (totalMin >= 24 * 60) totalMin = 24 * 60 - 1;
+    var h = Math.floor(totalMin / 60);
+    var m = totalMin % 60;
+    return new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate(), h, m, 0, 0).getTime();
+  }
+
+  function computeNextEnd(force) {
     var pt = window.prayerTimes;
     if (!pt || typeof pt.fajr !== 'number') return 0;
     var now = new Date();
-    function decToMs(dec) {
-      var h = Math.floor(dec), m = Math.floor((dec - h) * 60);
-      var s = Math.round(((dec - h) * 60 - m) * 60);
-      return new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, s, 0).getTime();
+    var day = now.getDate();
+    var sig = ptSignature(pt);
+    if (!force && _nextEndMs && _endDay === day && _ptSig === sig && _nextEndMs > now.getTime()) {
+      return _nextEndMs;
     }
-    var keys = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'], best = 0;
+    _ptSig = sig;
+    _endDay = day;
+    var keys = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
+    var best = 0;
+    var nowMs = now.getTime();
     for (var i = 0; i < keys.length; i++) {
-      if (pt[keys[i]] == null) continue;
-      var t = decToMs(pt[keys[i]]);
-      if (t > now.getTime() + 500 && (!best || t < best)) best = t;
+      if (pt[keys[i]] == null || isNaN(pt[keys[i]])) continue;
+      var t = decToMs(pt[keys[i]], now);
+      if (t > nowMs + 999 && (!best || t < best)) best = t;
     }
-    if (!best && pt.fajr != null) best = decToMs(pt.fajr) + 86400000;
+    if (!best && pt.fajr != null) {
+      var tom = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+      best = decToMs(pt.fajr, tom);
+    }
     _nextEndMs = best;
     return best;
   }
+
   function tickCd() {
     var el = $('hv-cd');
     if (!el) return;
-    if (!_nextEndMs || _nextEndMs < Date.now() - 1500) computeNextEnd();
+    var now = Date.now();
+    if (!_nextEndMs || _nextEndMs <= now) computeNextEnd(true);
+    else computeNextEnd(false);
     if (!_nextEndMs) return;
-    var diff = Math.max(0, Math.floor((_nextEndMs - Date.now()) / 1000));
-    if (diff === 0) { computeNextEnd(); diff = Math.max(0, Math.floor((_nextEndMs - Date.now()) / 1000)); }
-    var h = Math.floor(diff / 3600), m = Math.floor((diff % 3600) / 60), s = diff % 60;
+    var diff = Math.max(0, Math.floor((_nextEndMs - now) / 1000));
+    var h = Math.floor(diff / 3600);
+    var m = Math.floor((diff % 3600) / 60);
+    var s = diff % 60;
     var pad = function (n) { return (n < 10 ? '0' : '') + n; };
     var txt = pad(h) + ':' + pad(m) + ':' + pad(s);
     if (txt !== _lastCd) {
@@ -58,73 +89,39 @@
     }
   }
 
-  /* Enforce isRepeat false unless user toggled; next surah on ended */
   function enforceNextSurah() {
     try {
       if (window.G) window.G._loopSurah = false;
     } catch (e) {}
-    var au = document.getElementById('aud');
-    if (!au || au._huda797ended) return;
-    au._huda797ended = true;
-    au.addEventListener('ended', function () {
-      var repeatOn = false;
-      try { repeatOn = (typeof isRepeat !== 'undefined' && isRepeat === true); } catch (e) {}
-      if (repeatOn) {
-        try { au.currentTime = 0; au.play(); } catch (e) {}
-        return;
-      }
-      var cur = 0;
-      try {
-        if (window.G && G.s) cur = G.s | 0;
-        else if (typeof curSurahN !== 'undefined') cur = curSurahN | 0;
-      } catch (e) {}
-      var next = cur + 1;
-      if (next < 1 || next > 114) return;
-      setTimeout(function () {
-        try {
-          if (typeof isRepeat !== 'undefined' && isRepeat === true) return;
-          if (window.G) { G._forceReload = true; G._resumeAt = 0; G.session = false; }
-          if (typeof playSurahContinuous === 'function') playSurahContinuous(next);
-          else if (typeof window.forcePlaySurah === 'function') window.forcePlaySurah(next);
-          try { curSurahN = next; } catch (e) {}
-          if (window.HudaMushaf && HudaMushaf.goSurah) try { HudaMushaf.goSurah(next); } catch (e) {}
-        } catch (e) {}
-      }, 450);
+  }
+
+  function setupMediaSession() {
+    try {
+      if (!('mediaSession' in navigator)) return;
+      navigator.mediaSession.setActionHandler('play', function () {
+        var a = document.getElementById('aud');
+        if (a) a.play().catch(function () {});
+      });
+      navigator.mediaSession.setActionHandler('pause', function () {
+        var a = document.getElementById('aud');
+        if (a) a.pause();
+      });
+    } catch (e) {}
+  }
+
+  function init() {
+    killDot();
+    setupMediaSession();
+    enforceNextSurah();
+    computeNextEnd(true);
+    tickCd();
+    setInterval(tickCd, 250);
+    setInterval(killDot, 3000);
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden) { computeNextEnd(true); tickCd(); }
     });
   }
 
-  function setupBgAudio() {
-    function getAud() { return document.getElementById('aud'); }
-    function bind() {
-      if (!('mediaSession' in navigator)) return;
-      try {
-        navigator.mediaSession.metadata = new MediaMetadata({
-          title: 'هُدى القرآن', artist: 'تلاوة', album: 'Huda Al Quran'
-        });
-        navigator.mediaSession.setActionHandler('play', function () { var a = getAud(); if (a) a.play().catch(function () {}); });
-        navigator.mediaSession.setActionHandler('pause', function () { var a = getAud(); if (a) a.pause(); });
-      } catch (e) {}
-    }
-    var a = getAud();
-    if (a && !a._bg797) {
-      a._bg797 = true;
-      a.addEventListener('play', bind);
-    }
-  }
-
-  function boot() {
-    killDot();
-    setInterval(killDot, 3000);
-    computeNextEnd();
-    setInterval(computeNextEnd, 30000);
-    setInterval(tickCd, 1000);
-    setInterval(enforceNextSurah, 2000);
-    enforceNextSurah();
-    setupBgAudio();
-    // ensure isRepeat starts false
-    try { if (typeof isRepeat !== 'undefined') isRepeat = false; } catch (e) {}
-    try { if (window.G) G._loopSurah = false; } catch (e) {}
-  }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { setTimeout(boot, 120); });
-  else setTimeout(boot, 120);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
 })();

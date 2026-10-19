@@ -184,13 +184,12 @@ function inits(n) { var p = String(n || '').trim().split(/\s+/).filter(Boolean);
     m.innerHTML =
       (done ? '<button data-act="del" class="rcp-bad">🗑 حذف التحميل المحفوظ (سورة ' + esc(sName(n)) + ')</button>'
             : '<button data-act="off">⬇ حفظ سورة ' + esc(sName(n)) + ' للاستماع بدون إنترنت</button>') +
-      '<button data-act="file">💾 حفظ ملف MP3 على الجهاز</button>' +
       '<button data-act="juz">📦 تحميل جزء عمّ كاملاً (٣٧ سورة)</button>' +
       '<button data-act="full">📖 تحميل المصحف الصوتي كاملاً (١١٤ سورة)</button>';
     row.appendChild(m);
     m.onclick = function (e) {
       var b = e.target.closest('button'); if (!b) return; var a = b.dataset.act; closeMenus();
-      if (a === 'off') saveOffline(id, n); else if (a === 'file') saveFile(id, n); else if (a === 'juz') juzAmma(id); else if (a === 'full') fullMushaf(id);
+      if (a === 'off') saveOffline(id, n); else if (a === 'juz') juzAmma(id); else if (a === 'full') fullMushaf(id);
       else if (a === 'del') HudaAudio.remove(id, n).then(function () { toast('تم الحذف'); build(); });
     };
   }

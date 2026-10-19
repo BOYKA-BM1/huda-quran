@@ -20,7 +20,7 @@
   var M = window.HudaMushaf || {};
   var _pageGo = M.go, _pageGoAyah = M.goAyah;
   var R = { mode: lsGet('nq_rdmode', 'scroll') === 'page' ? 'page' : 'scroll', loaded: [], first: 0, last: 0, sel: null, cur: null,
-            fs: parseInt(lsGet('nq_rdfs', '36'), 10) || 36, speed: parseInt(lsGet('nq_rdspeed', '2'), 10) || 2, auto: false, raf: 0, loading: false, io: null,
+            fs: parseInt(lsGet('nq_rdfs', '22'), 10) || 22, speed: parseInt(lsGet('nq_rdspeed', '2'), 10) || 2, auto: false, raf: 0, loading: false, io: null,
             trans: lsGet('nq_rdtr', ''), hifz: false /* always start with text visible */, goal: parseInt(lsGet('nq_goal_t', '5'), 10) || 5 };
 
   /* ───────── عرض السورة ───────── */
@@ -250,7 +250,7 @@
     }
   }
   M.fs = function (d) {
-    R.fs = Math.max(18, Math.min(56, (R.fs || 36) + d));
+    R.fs = Math.max(16, Math.min(56, (R.fs || 22) + d));
     lsSet('nq_rdfs', String(R.fs));
     applyFs();
     if (typeof showToast === 'function') showToast('حجم الخط: ' + ar(R.fs));

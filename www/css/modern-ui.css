@@ -4711,3 +4711,44 @@ body.paper-mode .tafsir-popup{background:#f7f1e3 !important;}
   box-sizing:border-box !important;
 }
 .hifz-tabs{ flex-wrap:wrap !important; }
+
+
+/* v801 paper high-contrast — all text clearly readable */
+body.theme-paper,
+body.theme-paper .pg {
+  color: #1a1206 !important;
+  background: #f6f0e2 !important;
+}
+body.theme-paper p,
+body.theme-paper span,
+body.theme-paper small,
+body.theme-paper li,
+body.theme-paper label,
+body.theme-paper .ss-desc,
+body.theme-paper .text-muted,
+body.theme-paper .hadith-src,
+body.theme-paper .comm-hero-sub {
+  color: #2a1c08 !important;
+}
+body.theme-paper h1,
+body.theme-paper h2,
+body.theme-paper h3,
+body.theme-paper b,
+body.theme-paper strong,
+body.theme-paper .ss-lbl,
+body.theme-paper .ss-section-title {
+  color: #5c3f08 !important;
+}
+body.theme-paper .hadith-ar,
+body.theme-paper .ay,
+body.theme-paper .mushaf-ayah,
+body.theme-paper .wird-ayah-ar {
+  color: #140e04 !important;
+}
+body.theme-paper .card,
+body.theme-paper .hv-card,
+body.theme-paper .hadith-card,
+body.theme-paper .ss-section {
+  background: rgba(255, 252, 242, 0.96) !important;
+  border-color: rgba(92, 63, 8, 0.2) !important;
+}
