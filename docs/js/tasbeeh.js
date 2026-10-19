@@ -163,9 +163,9 @@
   }
   var _lock = 0;
   function tap(e) {
-    if (e) { try { e.preventDefault(); e.stopPropagation(); } catch (err) {} }
+    if (e) { try { e.preventDefault(); e.stopPropagation(); if (e.stopImmediatePropagation) e.stopImmediatePropagation(); } catch (err) {} }
     var now = Date.now();
-    if (now - _lock < 140) return;
+    if (now - _lock < 320) return; // ضغطة واحدة فقط
     _lock = now;
     S.counts[S.i] = cnt() + 1; S.total++; var k = today(); S.days[k] = (S.days[k] || 0) + 1; save();
     if (S.vib && navigator.vibrate) navigator.vibrate(18);
@@ -177,16 +177,23 @@
   }
   function bindTap() {
     var b = $('tb-tap');
-    if (!b || b._hudaBound) return;
-    b._hudaBound = true;
+    if (!b) return;
+    // أعد الربط دائمًا بعد rebuild — مع قفل عام يمنع التكرار
     b.onclick = null;
     b.onpointerdown = null;
-    b.addEventListener('pointerdown', function (e) {
+    b.onpointerup = null;
+    if (b._hudaTapHandler) {
+      try { b.removeEventListener('pointerup', b._hudaTapHandler, true); } catch (e) {}
+    }
+    b._hudaTapHandler = function (e) {
       if (e.pointerType === 'mouse' && e.button !== 0) return;
       tap(e);
-    }, { passive: false });
-    // prevent synthetic click double-count
-    b.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); }, true);
+    };
+    b.addEventListener('pointerup', b._hudaTapHandler, true);
+    b.addEventListener('click', function (e) {
+      e.preventDefault(); e.stopPropagation();
+      if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+    }, true);
   }
   function reset() { if (cnt() && !confirm('تصفير عدّاد هذا الذكر؟')) return; S.counts[S.i] = 0; save(); render(); }
 

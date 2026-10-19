@@ -82,43 +82,7 @@
     try { if (navigator.vibrate) navigator.vibrate(12); } catch (e) {}
   };
 
-  /* ══════ 2) Tasbeeh: ONE count per press ══════ */
-  var _tbLock = 0;
-  function tbOnce(e) {
-    var t = e.target;
-    if (!t) return;
-    var btn = (t.id === 'tb-tap') ? t : (t.closest && t.closest('#tb-tap'));
-    if (!btn) return;
-    var now = Date.now();
-    if (now - _tbLock < 280) {
-      e.preventDefault();
-      e.stopPropagation();
-      return;
-    }
-    _tbLock = now;
-    // prevent the synthetic click after pointerup
-    e.preventDefault();
-    e.stopPropagation();
-    if (typeof window.tasbeehClick === 'function') window.tasbeehClick();
-  }
-  // Only pointerup (not pointerdown+click)
-  document.addEventListener('pointerup', function (e) {
-    if (e.pointerType === 'mouse' && e.button !== 0) return;
-    var t = e.target;
-    if (!t) return;
-    if (t.id === 'tb-tap' || (t.closest && t.closest('#tb-tap'))) tbOnce(e);
-  }, true);
-  // Block duplicate click
-  document.addEventListener('click', function (e) {
-    var t = e.target;
-    if (!t) return;
-    if (t.id === 'tb-tap' || (t.closest && t.closest('#tb-tap'))) {
-      if (Date.now() - _tbLock < 400) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    }
-  }, true);
+    /* ══════ 2) Tasbeeh: handled ONLY in tasbeeh.js (v802) ══════ */
 
   /* ══════ 3) Home: update countdown only if text changes ══════ */
   var _lastCd = '', _lastNext = '';
